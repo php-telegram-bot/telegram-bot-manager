@@ -33,31 +33,83 @@ class BotManager
      */
     public $test_output;
 
-    /** vitals */
-    public $api_key;
+    /**
+     * @var string Telegram Bot API key
+     */
+    protected $api_key = '';
+
+    /**
+     * @var string Telegram Bot name
+     */
     public $botname;
+
+    /**
+     * @var string Secret string to validate calls
+     */
     public $secret;
 
-    public $action;
+    /**
+     * @var string Action to be executed
+     */
+    public $action = 'handle';
+
+    /**
+     * @var string URI of the webhook
+     */
     public $webhook;
+
+    /**
+     * @var string Path to the self-signed certificate
+     */
     public $selfcrt;
 
-	/**
-	 * BotManager constructor that assigns all necessary member variables.
-	 *
-	 * @param array $vars
-	 *
-	 * @throws \Exception
-	 */
+    /**
+     * @var array List of valid actions that can be called
+     */
+    private static $valid_actions = [
+        'set',
+        'unset',
+        'reset',
+        'handle'
+    ];
+
+    /**
+     * @var array List of valid extra parameters that can be passed
+     */
+    private static $valid_params = [
+        'api_key',
+        'botname',
+        'secret',
+        'webhook',
+        'selfcrt',
+        'logging',
+        'admins',
+        'mysql',
+        'download_path',
+        'upload_path',
+        'commands_paths',
+        'command_configs',
+        'botan_token',
+        'custom_input'
+    ];
+
+
+    /**
+     * BotManager constructor that assigns all necessary member variables.
+     *
+     * @param array $vars
+     *
+     * @throws \Exception
+     */
     public function __construct(array $vars)
     {
         if (!isset($vars['api_key'], $vars['botname'], $vars['secret'])) {
             throw new \Exception('Some vital info is missing (api_key, botname or secret)');
         }
 
-        // Set all important info.
+        // Set all vital and extra parameters.
         foreach ($vars as $var => $value) {
-            $this->$var = $value;
+            in_array($var, self::$valid_params, true) && $this->$var = $value;
         }
     }
 
@@ -95,6 +147,16 @@ class BotManager
     }
 
     /**
+     * Check if this script is being called from CLI.
+     *
+     * @return bool
+     */
+    public function isCli()
+    {
+        return PHP_SAPI === 'cli';
+    }
+
+    /**
      * Allow this script to be called via CLI.
      *
      * $ php entry.php s=<secret> a=<action> l=<loop>
@@ -102,7 +164,7 @@ class BotManager
     public function makeCliFriendly()
     {
         // If we're running from CLI, properly set $_GET.
-        if (PHP_SAPI === 'cli') {
+        if ($this->isCli()) {
             // We don't need the first arg (the file name).
             $args = array_slice($_SERVER['argv'], 1);
 
@@ -134,13 +196,19 @@ class BotManager
     /**
      * Make sure the passed secret is valid.
      *
+     * @param bool $force Force validation, even on CLI.
+     *
+     * @return $this
      * @throws \Exception
      */
-    public function validateSecret()
+    public function validateSecret($force = false)
     {
-        $secretGet = isset($_GET['s']) ? (string)$_GET['s'] : '';
-        if (empty($this->secret) || $secretGet !== $this->secret) {
-            throw new \Exception('Invalid access');
+        // If we're running from CLI, secret isn't necessary.
+        if ($force || !$this->isCli()) {
+            $secretGet = isset($_GET['s']) ? (string)$_GET['s'] : '';
+            if (empty($this->secret) || $secretGet !== $this->secret) {
+                throw new \Exception('Invalid access');
+            }
         }
 
         return $this;
@@ -153,9 +221,10 @@ class BotManager
      */
     public function validateAndSetAction()
     {
-        $validActions = ['set', 'unset', 'reset', 'handle'];
-        $this->action = isset($_GET['a']) ? (string)$_GET['a'] : '';
-        if (!$this->isAction($validActions)) {
+        // Only set the action if it has been passed, else use the default.
+        isset($_GET['a']) && $this->action = (string)$_GET['a'];
+
+        if (!$this->isAction(self::$valid_actions)) {
             throw new \Exception('Invalid action');
         }
 
@@ -177,7 +246,10 @@ class BotManager
             $this->test_output = $this->telegram->unsetWebHook()->getDescription();
         }
         if ($this->isAction(['set', 'reset'])) {
-            $this->test_output = $this->telegram->setWebHook($this->webhook . '?a=handle&s=' . $this->secret, $this->selfcrt)->getDescription();
+            $this->test_output = $this->telegram->setWebHook(
+                $this->webhook . '?a=handle&s=' . $this->secret,
+                $this->selfcrt
+            )->getDescription();
         }
 
         (@constant('PHPUNIT_TEST') !== true) && print($this->test_output . PHP_EOL);
@@ -243,6 +315,8 @@ class BotManager
      * Loop the getUpdates method for the passed amount of seconds.
      *
      * @param $loop_time_in_seconds int
+     *
+     * @return $this
      */
     public function handleGetUpdatesLoop($loop_time_in_seconds)
     {
@@ -277,15 +351,15 @@ class BotManager
             /** @var Entities\Update $result */
             foreach ($results as $result) {
                 $chat_id = 0;
-                $text = 'Nothing';
+                $text    = 'Nothing';
 
                 $update_content = $result->getUpdateContent();
                 if ($update_content instanceof Entities\Message) {
                     $chat_id = $update_content->getFrom()->getId();
-                    $text = $update_content->getText();
+                    $text    = $update_content->getText();
                 } elseif ($update_content instanceof Entities\InlineQuery || $update_content instanceof Entities\ChosenInlineResult) {
                     $chat_id = $update_content->getFrom()->getId();
-                    $text = $update_content->getQuery();
+                    $text    = $update_content->getQuery();
                 }
 
                 printf(

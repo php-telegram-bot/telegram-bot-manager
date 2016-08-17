@@ -63,15 +63,13 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     public function testSetParameters()
     {
         $botManager = new BotManager(array_merge($this->vitalParams, [
-           'param1' => 'param1value',
-           'param2' => 'param2value',
-           'param3' => 'param3value',
+            'admins'      => 1,              // valid
+            'upload_path' => '/upload/path', // valid
+            'paramX'      => 'something'     // invalid
         ]));
-        self::assertEquals('param1value', $botManager->param1);
-        self::assertEquals('param2value', $botManager->param2);
-        self::assertEquals('param3value', $botManager->param3);
-
-        self::assertObjectNotHasAttribute('param4', $botManager);
+        self::assertEquals(1, $botManager->admins);
+        self::assertEquals('/upload/path', $botManager->upload_path);
+        self::assertObjectNotHasAttribute('paramX', $botManager);
     }
 
     /**
@@ -161,24 +159,20 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         $_GET = ['s' => 'NOT_my_secret_12345'];
         $botManager = new BotManager(array_merge($this->vitalParams, ['secret' => 'my_secret_12345']));
 
-        $botManager->validateSecret();
+        $botManager->validateSecret(true);
     }
 
     public function testValidateSecretSuccess()
     {
-        $_GET = ['s' => 'my_secret_12345'];
         $botManager = new BotManager(array_merge($this->vitalParams, ['secret' => 'my_secret_12345']));
 
-        self::assertEquals($botManager, $botManager->validateSecret());
-    }
+        // Force validation to test non-CLI scenario.
+        $_GET = ['s' => 'my_secret_12345'];
+        $botManager->validateSecret(true);
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Invalid action
-     */
-    public function testValidateAndSetActionFailWithoutAction()
-    {
-        (new BotManager($this->vitalParams))->validateAndSetAction();
+        // Calling from CLI doesn't require a secret.
+        $_GET = ['s' => 'whatever_on_cli'];
+        $botManager->validateSecret();
     }
 
     /**
@@ -194,6 +188,9 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     public function testValidateAndSetActionSuccess()
     {
         $botManager = new BotManager($this->vitalParams);
+
+        // Default value.
+        self::assertEquals('handle', $botManager->validateAndSetAction()->action);
 
         $validActions = ['set', 'unset', 'reset', 'handle'];
         foreach ($validActions as $action) {
@@ -220,7 +217,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         $botManager->telegram->expects(static::any())
             ->method('getDescription')
             ->will(static::onConsecutiveCalls(
-            // set
+                // set
                 'Webhook set',
                 'Webhook already set',
                 // unset
