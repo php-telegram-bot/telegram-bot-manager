@@ -63,11 +63,11 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     public function testSetParameters()
     {
         $botManager = new BotManager(array_merge($this->vitalParams, [
-            'admins'      => 1,              // valid
+            'admins'      => [1],            // valid
             'upload_path' => '/upload/path', // valid
             'paramX'      => 'something'     // invalid
         ]));
-        self::assertEquals(1, $botManager->admins);
+        self::assertEquals([1], $botManager->admins);
         self::assertEquals('/upload/path', $botManager->upload_path);
         self::assertObjectNotHasAttribute('paramX', $botManager);
     }

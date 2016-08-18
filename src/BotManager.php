@@ -64,6 +64,51 @@ class BotManager
     public $selfcrt;
 
     /**
+     * @var array Array of logger files to set
+     */
+    public $logging;
+
+    /**
+     * @var array List of admins to enable
+     */
+    public $admins;
+
+    /**
+     * @var array MySQL credentials to use
+     */
+    public $mysql;
+
+    /**
+     * @var string Custom download path to set
+     */
+    public $download_path;
+
+    /**
+     * @var string Custom upload path to set
+     */
+    public $upload_path;
+
+    /**
+     * @var array Custom commands paths to set
+     */
+    public $commands_paths;
+
+    /**
+     * @var array List of custom command configs
+     */
+    public $command_configs;
+
+    /**
+     * @var string Botan token to enable botan.io support
+     */
+    public $botan_token;
+
+    /**
+     * @var string Custom raw JSON string to use as input
+     */
+    public $custom_input;
+
+    /**
      * @var array List of valid actions that can be called
      */
     private static $valid_actions = [
@@ -182,7 +227,7 @@ class BotManager
      */
     public function initLogging()
     {
-        if (isset($this->logging) && is_array($this->logging)) {
+        if (is_array($this->logging)) {
             foreach ($this->logging as $logger => $logfile) {
                 ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
                 ('error' === $logger) && TelegramLog::initErrorLog($logfile);
@@ -260,7 +305,7 @@ class BotManager
     /**
      * Check if the current action is one of the passed ones.
      *
-     * @param $actions
+     * @param string|array $actions
      *
      * @return bool
      */
@@ -314,7 +359,7 @@ class BotManager
     /**
      * Loop the getUpdates method for the passed amount of seconds.
      *
-     * @param $loop_time_in_seconds int
+     * @param int $loop_time_in_seconds
      *
      * @return $this
      */
@@ -392,15 +437,15 @@ class BotManager
      */
     public function setBotExtras()
     {
-        isset($this->admins)         && $this->telegram->enableAdmins((array)$this->admins);
-        isset($this->mysql)          && $this->telegram->enableMySql($this->mysql);
-        isset($this->botan_token)    && $this->telegram->enableBotan($this->botan_token);
-        isset($this->commands_paths) && $this->telegram->addCommandsPaths((array)$this->commands_paths);
-        isset($this->custom_input)   && $this->telegram->setCustomInput($this->custom_input);
-        isset($this->download_path)  && $this->telegram->setDownloadPath($this->download_path);
-        isset($this->upload_path)    && $this->telegram->setUploadPath($this->upload_path);
+        $this->admins         && $this->telegram->enableAdmins($this->admins);
+        $this->mysql          && $this->telegram->enableMySql($this->mysql);
+        $this->botan_token    && $this->telegram->enableBotan($this->botan_token);
+        $this->commands_paths && $this->telegram->addCommandsPaths($this->commands_paths);
+        $this->custom_input   && $this->telegram->setCustomInput($this->custom_input);
+        $this->download_path  && $this->telegram->setDownloadPath($this->download_path);
+        $this->upload_path    && $this->telegram->setUploadPath($this->upload_path);
 
-        if (isset($this->command_configs) && is_array($this->command_configs)) {
+        if (is_array($this->command_configs)) {
             foreach ($this->command_configs as $command => $config) {
                 $this->telegram->setCommandConfig($command, $config);
             }
