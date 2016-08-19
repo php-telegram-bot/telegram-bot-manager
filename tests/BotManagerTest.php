@@ -221,11 +221,16 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testSetBotExtras()
     {
-        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
-            'admins'        => [1, 2, 3],
-            'download_path' => __DIR__ . '/Download',
-            'upload_path'   => __DIR__ . '/Upload',
-        ]));
+        $extras     = [
+            'admins'          => [1, 2, 3],
+            'download_path'   => __DIR__ . '/Download',
+            'upload_path'     => __DIR__ . '/Upload',
+            'command_configs' => [
+                'weather' => ['owm_api_key' => 'owm_api_key_12345'],
+            ],
+        ];
+        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, $extras));
+
         TestHelpers::setObjectProperty(
             $botManager,
             'telegram',
@@ -234,11 +239,13 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
                 ParamsTest::$demo_vital_params['botname']
             )
         );
+
         $botManager->setBotExtras();
         $telegram = $botManager->getTelegram();
 
-        self::assertEquals([1, 2, 3], $telegram->getAdminList());
-        self::assertEquals(__DIR__ . '/Download', $telegram->getDownloadPath());
-        self::assertEquals(__DIR__ . '/Upload', $telegram->getUploadPath());
+        self::assertEquals($extras['admins'], $telegram->getAdminList());
+        self::assertEquals($extras['download_path'], $telegram->getDownloadPath());
+        self::assertEquals($extras['upload_path'], $telegram->getUploadPath());
+        self::assertEquals($extras['command_configs']['weather'], $telegram->getCommandConfig('weather'));
     }
 }
