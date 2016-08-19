@@ -148,21 +148,21 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'set');
         $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook set', $botManager->test_output);
+        self::assertSame('Webhook set' . PHP_EOL, $botManager->getOutput());
 
         $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook already set', $botManager->test_output);
+        self::assertSame('Webhook already set' . PHP_EOL, $botManager->getOutput());
 
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'unset');
         $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook deleted', $botManager->test_output);
+        self::assertSame('Webhook deleted' . PHP_EOL, $botManager->getOutput());
 
         $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook does not exist', $botManager->test_output);
+        self::assertSame('Webhook does not exist' . PHP_EOL, $botManager->getOutput());
 
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'reset');
         $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook set', $botManager->test_output);
+        self::assertSame('Webhook deleted' . PHP_EOL . 'Webhook set' . PHP_EOL, $botManager->getOutput());
     }
 
     /**
@@ -247,5 +247,21 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertEquals($extras['download_path'], $telegram->getDownloadPath());
         self::assertEquals($extras['upload_path'], $telegram->getUploadPath());
         self::assertEquals($extras['command_configs']['weather'], $telegram->getCommandConfig('weather'));
+    }
+
+    public function testGetOutput()
+    {
+        $botManager = new BotManager(ParamsTest::$demo_vital_params);
+        self::assertEmpty($botManager->getOutput());
+
+        TestHelpers::setObjectProperty($botManager, 'output', 'some demo output');
+
+        self::assertEquals('some demo output', $botManager->getOutput());
+        self::assertEmpty($botManager->getOutput());
+
+        TestHelpers::callObjectMethod($botManager, 'handleOutput', ['some more demo output...']);
+        TestHelpers::callObjectMethod($botManager, 'handleOutput', ['...and even more!!']);
+        self::assertEquals('some more demo output......and even more!!', $botManager->getOutput());
+        self::assertEmpty($botManager->getOutput());
     }
 }

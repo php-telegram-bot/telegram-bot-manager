@@ -26,7 +26,7 @@ class BotManager
     /**
      * @var string The output for testing, instead of echoing
      */
-    public $test_output;
+    private $output;
 
     /**
      * @var \Longman\TelegramBot\Telegram
@@ -170,18 +170,32 @@ class BotManager
         }
 
         if ($this->action->isAction(['unset', 'reset'])) {
-            $this->test_output = $this->telegram->unsetWebHook()->getDescription();
+            $this->handleOutput($this->telegram->unsetWebHook()->getDescription() . PHP_EOL);
         }
         if ($this->action->isAction(['set', 'reset'])) {
-            $this->test_output = $this->telegram->setWebHook(
-                $webhook . '?a=handle&s=' . $this->params->getBotParam('secret'),
-                $selfcrt
-            )->getDescription();
+            $this->handleOutput(
+                $this->telegram->setWebHook(
+                    $webhook . '?a=handle&s=' . $this->params->getBotParam('secret'),
+                    $selfcrt
+                )->getDescription() . PHP_EOL
+            );
         }
 
-        (@constant('PHPUNIT_TEST') !== true) && print($this->test_output . PHP_EOL);
-
         return $this;
+    }
+
+    /**
+     * Save the test output and echo it if we're not in a test.
+     *
+     * @param string $output
+     */
+    private function handleOutput($output)
+    {
+        $this->output .= $output;
+
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST !== true) {
+            echo $output;
+        }
     }
 
     /**
@@ -279,13 +293,13 @@ class BotManager
      */
     public function handleGetUpdates()
     {
-        echo date('Y-m-d H:i:s', time()) . ' - ';
+        $output = date('Y-m-d H:i:s', time()) . ' - ';
 
         $response = $this->telegram->handleGetUpdates();
         if ($response->isOk()) {
             $results = array_filter((array)$response->getResult());
 
-            printf('Updates processed: %d' . PHP_EOL, count($results));
+            $output .= sprintf('Updates processed: %d' . PHP_EOL, count($results));
 
             /** @var Entities\Update $result */
             foreach ($results as $result) {
@@ -301,15 +315,17 @@ class BotManager
                     $text    = $update_content->getQuery();
                 }
 
-                printf(
+                $output .= sprintf(
                     '%d: %s' . PHP_EOL,
                     $chat_id,
                     preg_replace('/\s+/', ' ', trim($text))
                 );
             }
         } else {
-            printf('Failed to fetch updates: %s' . PHP_EOL, $response->printError());
+            $output .= sprintf('Failed to fetch updates: %s' . PHP_EOL, $response->printError());
         }
+
+        $this->handleOutput($output);
 
         return $this;
     }
@@ -324,5 +340,17 @@ class BotManager
         $this->telegram->handle();
 
         return $this;
+    }
+
+    /**
+     * Return the current test output and clear it.
+     *
+     * @return string
+     */
+    public function getOutput()
+    {
+        $output = $this->output;
+        $this->output = '';
+        return $output;
     }
 }
