@@ -276,7 +276,7 @@ class BotManager
         // Remember the time we started this loop.
         $now = time();
 
-        echo 'Looping getUpdates until ' . date('Y-m-d H:i:s', $now + $loop_time_in_seconds) . PHP_EOL;
+        $this->handleOutput('Looping getUpdates until ' . date('Y-m-d H:i:s', $now + $loop_time_in_seconds) . PHP_EOL);
 
         while ($now > time() - $loop_time_in_seconds) {
             $this->handleGetUpdates();

@@ -281,4 +281,24 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         $botManager->run();
         self::assertContains('Updates processed: 0', $botManager->getOutput());
     }
+
+    public function testGetUpdatesLoop()
+    {
+        // Looping for 5 seconds should be enough to get a result.
+        $_GET = ['l' => 5];
+        $botManager = new BotManager([
+            'api_key' => getenv('API_KEY'),
+            'botname' => getenv('BOTNAME'),
+            'secret'  => 'super-secret',
+            'mysql'   => [
+                'host'     => PHPUNIT_DB_HOST,
+                'database' => PHPUNIT_DB_NAME,
+                'user'     => PHPUNIT_DB_USER,
+                'password' => PHPUNIT_DB_PASS,
+            ],
+        ]);
+        $output = $botManager->run()->getOutput();
+        self::assertContains('Looping getUpdates until', $output);
+        self::assertContains('Updates processed: 0', $output);
+    }
 }
