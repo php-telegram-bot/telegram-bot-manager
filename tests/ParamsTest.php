@@ -28,7 +28,12 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
         'webhook'         => 'https://php.telegram.bot/manager.php',
         'selfcrt'         => __DIR__ . '/server.crt',
         'admins'          => [1],
-        'mysql'           => ['host' => '127.0.0.1', 'user' => 'root', 'password' => 'root', 'database' => 'telegram_bot'],
+        'mysql'           => [
+            'host'     => '127.0.0.1',
+            'user'     => 'root',
+            'password' => 'root',
+            'database' => 'telegram_bot',
+        ],
         'download_path'   => __DIR__ . '/Download',
         'upload_path'     => __DIR__ . '/Upload',
         'commands_paths'  => __DIR__ . '/CustomCommands',
@@ -95,16 +100,16 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
     public function testSetAndGetScriptParams()
     {
         $_SERVER['argv'] = [basename(__FILE__)];
-        $params = new Params(self::$demo_vital_params);
+        $params          = new Params(self::$demo_vital_params);
         self::assertEmpty($params->getScriptParams());
 
         $_SERVER['argv'] = [basename(__FILE__), 'l='];
-        $params = new Params(self::$demo_vital_params);
+        $params          = new Params(self::$demo_vital_params);
         self::assertEquals('', $params->getScriptParam('l'));
         self::assertEquals(['l' => ''], $params->getScriptParams());
 
         $_SERVER['argv'] = [basename(__FILE__), 'a=handle', 's=secret_12345'];
-        $params = new Params(self::$demo_vital_params);
+        $params          = new Params(self::$demo_vital_params);
         self::assertEquals('handle', $params->getScriptParam('a'));
         self::assertEquals('secret_12345', $params->getScriptParam('s'));
         self::assertEquals(['a' => 'handle', 's' => 'secret_12345'], $params->getScriptParams());
@@ -119,7 +124,7 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
     public function testSetAndGetBotParams()
     {
         $all_params = array_merge(self::$demo_vital_params, self::$demo_extra_params);
-        $params = new Params($all_params);
+        $params     = new Params($all_params);
 
         // All params.
         self::assertEquals($all_params, $params->getBotParams());

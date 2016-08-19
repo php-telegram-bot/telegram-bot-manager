@@ -44,16 +44,6 @@ class Action
     }
 
     /**
-     * Return the current action.
-     *
-     * @return string
-     */
-    public function getAction()
-    {
-        return $this->action;
-    }
-
-    /**
      * Check if the current action is one of the passed ones.
      *
      * @param string|array $actions
@@ -63,5 +53,15 @@ class Action
     public function isAction($actions)
     {
         return in_array($this->action, (array)$actions, true);
+    }
+
+    /**
+     * Return the current action.
+     *
+     * @return string
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 }

@@ -29,7 +29,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
             'upload_path' => '/upload/path', // valid
             'paramX'      => 'something'     // invalid
         ]));
-        $params = $botManager->getParams();
+        $params     = $botManager->getParams();
         self::assertEquals([1], $params->getBotParam('admins'));
         self::assertEquals('/upload/path', $params->getBotParam('upload_path'));
         self::assertNull($params->getBotParam('paramX'));
@@ -66,7 +66,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
                 'debug'  => '/tmp/php-telegram-bot-debuglog.log',
                 'error'  => '/tmp/php-telegram-bot-errorlog.log',
                 'update' => '/tmp/php-telegram-bot-updatelog.log',
-            ]
+            ],
         ]));
 
         self::assertFalse(TelegramLog::isDebugLogActive());
@@ -86,7 +86,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateSecretFail()
     {
-        $_GET = ['s' => 'NOT_my_secret_12345'];
+        $_GET       = ['s' => 'NOT_my_secret_12345'];
         $botManager = new BotManager(array_merge(
             ParamsTest::$demo_vital_params,
             ['secret' => 'my_secret_12345']
@@ -113,7 +113,6 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     }
 
 
-
     public function testValidateAndSetWebhookSuccess()
     {
         $botManager = new BotManager(array_merge(
@@ -122,29 +121,29 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         ));
 
         $botManager->telegram = $this->getMockBuilder(Telegram::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['setWebHook', 'unsetWebHook', 'getDescription'])
-            ->getMock();
+                                     ->disableOriginalConstructor()
+                                     ->setMethods(['setWebHook', 'unsetWebHook', 'getDescription'])
+                                     ->getMock();
         $botManager->telegram->expects(static::any())
-            ->method('setWebHook')
-            ->with('https://web/hook.php?a=handle&s=secret_12345')
-            ->will(static::returnSelf());
+                             ->method('setWebHook')
+                             ->with('https://web/hook.php?a=handle&s=secret_12345')
+                             ->will(static::returnSelf());
         $botManager->telegram->expects(static::any())
-            ->method('unsetWebHook')
-            ->will(static::returnSelf());
+                             ->method('unsetWebHook')
+                             ->will(static::returnSelf());
         $botManager->telegram->expects(static::any())
-            ->method('getDescription')
-            ->will(static::onConsecutiveCalls(
-                // set
-                'Webhook set',
-                'Webhook already set',
-                // unset
-                'Webhook deleted',
-                'Webhook does not exist',
-                // reset
-                'Webhook deleted',
-                'Webhook set'
-            ));
+                             ->method('getDescription')
+                             ->will(static::onConsecutiveCalls(
+                             // set
+                                 'Webhook set',
+                                 'Webhook already set',
+                                 // unset
+                                 'Webhook deleted',
+                                 'Webhook does not exist',
+                                 // reset
+                                 'Webhook deleted',
+                                 'Webhook set'
+                             ));
 
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'set');
         $botManager->validateAndSetWebhook();
@@ -171,7 +170,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateAndSetWebhookFailSetWithoutWebhook()
     {
-        $_GET = ['a' => 'set'];
+        $_GET       = ['a' => 'set'];
         $botManager = new BotManager(array_merge(
             ParamsTest::$demo_vital_params,
             ['webhook' => null]
@@ -185,7 +184,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateAndSetWebhookFailResetWithoutWebhook()
     {
-        $_GET = ['a' => 'reset'];
+        $_GET       = ['a' => 'reset'];
         $botManager = new BotManager(array_merge(
             ParamsTest::$demo_vital_params,
             ['webhook' => null]

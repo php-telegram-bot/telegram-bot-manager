@@ -10,9 +10,9 @@
 
 namespace NPM\TelegramBotManager;
 
+use Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
-use Longman\TelegramBot\Entities;
 
 /**
  * Class BotManager.php
@@ -67,50 +67,6 @@ class BotManager
     }
 
     /**
-     * Set any extra bot features that have been assigned on construction.
-     *
-     * @return $this
-     */
-    public function setBotExtras()
-    {
-        ($v = $this->params->getBotParam('admins'))         && $this->telegram->enableAdmins($v);
-        ($v = $this->params->getBotParam('mysql'))          && $this->telegram->enableMySql($v);
-        ($v = $this->params->getBotParam('botan_token'))    && $this->telegram->enableBotan($v);
-        ($v = $this->params->getBotParam('commands_paths')) && $this->telegram->addCommandsPaths($v);
-        ($v = $this->params->getBotParam('custom_input'))   && $this->telegram->setCustomInput($v);
-        ($v = $this->params->getBotParam('download_path'))  && $this->telegram->setDownloadPath($v);
-        ($v = $this->params->getBotParam('upload_path'))    && $this->telegram->setUploadPath($v);
-
-        $command_configs = $this->params->getBotParam('command_configs');
-        if (is_array($command_configs)) {
-            /** @var array $command_configs */
-            foreach ($command_configs as $command => $config) {
-                $this->telegram->setCommandConfig($command, $config);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Initialise all loggers.
-     */
-    public function initLogging()
-    {
-        $logging = $this->params->getBotParam('logging');
-        if (is_array($logging)) {
-            /** @var array $logging */
-            foreach ($logging as $logger => $logfile) {
-                ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
-                ('error' === $logger) && TelegramLog::initErrorLog($logfile);
-                ('update' === $logger) && TelegramLog::initUpdateLog($logfile);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Run this thing in all its glory!
      *
      * @throws \InvalidArgumentException
@@ -141,6 +97,24 @@ class BotManager
     }
 
     /**
+     * Initialise all loggers.
+     */
+    public function initLogging()
+    {
+        $logging = $this->params->getBotParam('logging');
+        if (is_array($logging)) {
+            /** @var array $logging */
+            foreach ($logging as $logger => $logfile) {
+                ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
+                ('error' === $logger) && TelegramLog::initErrorLog($logfile);
+                ('update' === $logger) && TelegramLog::initUpdateLog($logfile);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * Make sure the passed secret is valid.
      *
      * @param bool $force Force validation, even on CLI.
@@ -152,7 +126,7 @@ class BotManager
     {
         // If we're running from CLI, secret isn't necessary.
         if ($force || 'cli' !== PHP_SAPI) {
-            $secret = $this->params->getBotParam('secret');
+            $secret    = $this->params->getBotParam('secret');
             $secretGet = $this->params->getScriptParam('s');
             if ($secretGet !== $secret) {
                 throw new \InvalidArgumentException('Invalid access');
@@ -191,23 +165,29 @@ class BotManager
     }
 
     /**
-     * Get the number of seconds the script should loop.
+     * Set any extra bot features that have been assigned on construction.
      *
-     * @return int
+     * @return $this
      */
-    public function getLoopTime()
+    public function setBotExtras()
     {
-        $loop_time = $this->params->getScriptParam('l');
+        ($v = $this->params->getBotParam('admins')) && $this->telegram->enableAdmins($v);
+        ($v = $this->params->getBotParam('mysql')) && $this->telegram->enableMySql($v);
+        ($v = $this->params->getBotParam('botan_token')) && $this->telegram->enableBotan($v);
+        ($v = $this->params->getBotParam('commands_paths')) && $this->telegram->addCommandsPaths($v);
+        ($v = $this->params->getBotParam('custom_input')) && $this->telegram->setCustomInput($v);
+        ($v = $this->params->getBotParam('download_path')) && $this->telegram->setDownloadPath($v);
+        ($v = $this->params->getBotParam('upload_path')) && $this->telegram->setUploadPath($v);
 
-        if (null === $loop_time) {
-            return 0;
+        $command_configs = $this->params->getBotParam('command_configs');
+        if (is_array($command_configs)) {
+            /** @var array $command_configs */
+            foreach ($command_configs as $command => $config) {
+                $this->telegram->setCommandConfig($command, $config);
+            }
         }
 
-        if ('' === trim($loop_time)) {
-            return 604800; // Default to 7 days.
-        }
-
-        return max(0, (int)$loop_time);
+        return $this;
     }
 
     /**
@@ -228,6 +208,26 @@ class BotManager
         }
 
         return $this;
+    }
+
+    /**
+     * Get the number of seconds the script should loop.
+     *
+     * @return int
+     */
+    public function getLoopTime()
+    {
+        $loop_time = $this->params->getScriptParam('l');
+
+        if (null === $loop_time) {
+            return 0;
+        }
+
+        if ('' === trim($loop_time)) {
+            return 604800; // Default to 7 days.
+        }
+
+        return max(0, (int)$loop_time);
     }
 
     /**

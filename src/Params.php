@@ -22,11 +22,6 @@ class Params
     ];
 
     /**
-     * @var array List of all params passed to the script.
-     */
-    private $script_params = [];
-
-    /**
      * @var array List of vital parameters that must be passed.
      */
     private static $valid_vital_bot_params = [
@@ -51,6 +46,11 @@ class Params
         'botan_token',
         'custom_input',
     ];
+
+    /**
+     * @var array List of all params passed to the script.
+     */
+    private $script_params = [];
 
     /**
      * @var array List of all params passed at construction.
@@ -86,6 +86,62 @@ class Params
     }
 
     /**
+     * Validate and set up the vital and extra params.
+     *
+     * @param $params
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function validateAndSetBotParams($params)
+    {
+        // Set all vital params.
+        foreach (self::$valid_vital_bot_params as $vital_key) {
+            if (empty($params[$vital_key])) {
+                throw new \InvalidArgumentException('Some vital info is missing: ' . $vital_key);
+            }
+
+            $this->bot_params[$vital_key] = $params[$vital_key];
+        }
+
+        // Set all extra params.
+        foreach (self::$valid_extra_bot_params as $extra_key) {
+            if (empty($params[$extra_key])) {
+                continue;
+            }
+
+            $this->bot_params[$extra_key] = $params[$extra_key];
+        }
+    }
+
+    /**
+     * Handle all script params, via web server handler or CLI.
+     *
+     * https://url/entry.php?s=<secret>&a=<action>&l=<loop>
+     * $ php entry.php s=<secret> a=<action> l=<loop>
+     */
+    private function validateAndSetScriptParams()
+    {
+        $this->script_params = $_GET;
+
+        // If we're running from CLI, properly set script parameters.
+        if ('cli' === PHP_SAPI) {
+            // We don't need the first arg (the file name).
+            $args = array_slice($_SERVER['argv'], 1);
+
+            foreach ($args as $arg) {
+                @list($key, $val) = explode('=', $arg);
+                isset($key, $val) && $this->script_params[$key] = $val;
+            }
+        }
+
+        // Keep only valid ones.
+        $this->script_params = array_intersect_key($this->script_params,
+            array_fill_keys(self::$valid_script_params, null));
+
+        return $this;
+    }
+
+    /**
      * Get a specific bot param.
      *
      * @param string $param
@@ -117,60 +173,5 @@ class Params
     public function getScriptParams()
     {
         return $this->script_params;
-    }
-
-    /**
-     * Handle all script params, via web server handler or CLI.
-     *
-     * https://url/entry.php?s=<secret>&a=<action>&l=<loop>
-     * $ php entry.php s=<secret> a=<action> l=<loop>
-     */
-    private function validateAndSetScriptParams()
-    {
-        $this->script_params = $_GET;
-
-        // If we're running from CLI, properly set script parameters.
-        if ('cli' === PHP_SAPI) {
-            // We don't need the first arg (the file name).
-            $args = array_slice($_SERVER['argv'], 1);
-
-            foreach ($args as $arg) {
-                @list($key, $val) = explode('=', $arg);
-                isset($key, $val) && $this->script_params[$key] = $val;
-            }
-        }
-
-        // Keep only valid ones.
-        $this->script_params = array_intersect_key($this->script_params, array_fill_keys(self::$valid_script_params, null));
-
-        return $this;
-    }
-
-    /**
-     * Validate and set up the vital and extra params.
-     *
-     * @param $params
-     *
-     * @throws \InvalidArgumentException
-     */
-    private function validateAndSetBotParams($params)
-    {
-        // Set all vital params.
-        foreach (self::$valid_vital_bot_params as $vital_key) {
-            if (empty($params[$vital_key])) {
-                throw new \InvalidArgumentException('Some vital info is missing: ' . $vital_key);
-            }
-
-            $this->bot_params[$vital_key] = $params[$vital_key];
-        }
-
-        // Set all extra params.
-        foreach (self::$valid_extra_bot_params as $extra_key) {
-            if (empty($params[$extra_key])) {
-                continue;
-            }
-
-            $this->bot_params[$extra_key] = $params[$extra_key];
-        }
     }
 }
