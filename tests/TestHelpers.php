@@ -13,11 +13,11 @@ namespace NPM\TelegramBotManager;
 class TestHelpers
 {
     /**
-     * Set the value of a private/protected property of an object
+     * Set the value of a private/protected property of an object.
      *
-     * @param object $object   Object that contains the property
-     * @param string $property Name of the property who's value we want to set
-     * @param mixed  $value    The value to set to the property
+     * @param object $object   Object that contains the property.
+     * @param string $property Name of the property who's value we want to set.
+     * @param mixed  $value    The value to set to the property.
      */
     public static function setObjectProperty($object, $property, $value)
     {
@@ -28,16 +28,31 @@ class TestHelpers
     }
 
     /**
-     * Set the value of a private/protected static property of a class
+     * Set the value of a private/protected static property of a class.
      *
-     * @param string $class    Class that contains the static property
-     * @param string $property Name of the property who's value we want to set
-     * @param mixed  $value    The value to set to the property
+     * @param string $class    Class that contains the static property.
+     * @param string $property Name of the property who's value we want to set.
+     * @param mixed  $value    The value to set to the property.
      */
     public static function setStaticProperty($class, $property, $value)
     {
         $ref_property = new \ReflectionProperty($class, $property);
         $ref_property->setAccessible(true);
         $ref_property->setValue(null, $value);
+    }
+
+    /**
+     * Call a private/protected method with certain arguments.
+     *
+     * @param object $object Object to call method on.
+     * @param string $method Name of the method to call.
+     * @param array  $args   Parameters to pass to method.
+     */
+    public static function callObjectMethod($object, $method, array $args = [])
+    {
+        $ref_object = new \ReflectionObject($object);
+        $ref_method = $ref_object->getMethod($method);
+        $ref_method->setAccessible(true);
+        $ref_method->invokeArgs($object, $args);
     }
 }
