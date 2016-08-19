@@ -13,6 +13,11 @@ namespace NPM\TelegramBotManager;
 class ParamsTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @var array Live params for testing with live bot (get set in BotManagerTest->setUp()).
+     */
+    public static $live_params = [];
+
+    /**
      * @var array Demo vital parameters.
      */
     public static $demo_vital_params = [

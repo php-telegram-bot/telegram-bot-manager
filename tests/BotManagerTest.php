@@ -22,6 +22,21 @@ use Longman\TelegramBot\TelegramLog;
  */
 class BotManagerTest extends \PHPUnit_Framework_TestCase
 {
+    public function setUp()
+    {
+        ParamsTest::$live_params = [
+            'api_key' => getenv('API_KEY'),
+            'botname' => getenv('BOTNAME'),
+            'secret'  => 'super-secret',
+            'mysql'   => [
+                'host'     => PHPUNIT_DB_HOST,
+                'database' => PHPUNIT_DB_NAME,
+                'user'     => PHPUNIT_DB_USER,
+                'password' => PHPUNIT_DB_PASS,
+            ],
+        ];
+    }
+
     public function testSetParameters()
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
@@ -136,33 +151,71 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
                  ->method('getDescription')
                  ->will(static::onConsecutiveCalls(
                  // set
-                     'Webhook set',
-                     'Webhook already set',
-                     // unset
-                     'Webhook deleted',
-                     'Webhook does not exist',
+                     'Webhook was set',
+                     'Webhook is already set',
                      // reset
-                     'Webhook deleted',
-                     'Webhook set'
+                     'Webhook was deleted',
+                     'Webhook was set',
+                     // unset
+                     'Webhook was deleted',
+                     'Webhook is already deleted'
                  ));
 
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'set');
-        $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook set' . PHP_EOL, $botManager->getOutput());
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook was set' . PHP_EOL, $output);
 
-        $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook already set' . PHP_EOL, $botManager->getOutput());
-
-        TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'unset');
-        $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook deleted' . PHP_EOL, $botManager->getOutput());
-
-        $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook does not exist' . PHP_EOL, $botManager->getOutput());
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook is already set' . PHP_EOL, $output);
 
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'reset');
-        $botManager->validateAndSetWebhook();
-        self::assertSame('Webhook deleted' . PHP_EOL . 'Webhook set' . PHP_EOL, $botManager->getOutput());
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook was deleted' . PHP_EOL . 'Webhook was set' . PHP_EOL, $output);
+
+        TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'unset');
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook was deleted' . PHP_EOL, $output);
+
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook is already deleted' . PHP_EOL, $output);
+    }
+
+    public function testValidateAndSetWebhookSuccessLiveBot()
+    {
+        $botManager = new BotManager(array_merge(ParamsTest::$live_params, [
+            'webhook' => 'https://example.com/hook.php',
+        ]));
+
+        TestHelpers::setObjectProperty(
+            $botManager,
+            'telegram',
+            new Telegram(
+                ParamsTest::$live_params['api_key'],
+                ParamsTest::$live_params['botname']
+            )
+        );
+
+        // Make sure the webhook isn't set to start with.
+        TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'unset');
+        $botManager->validateAndSetWebhook()->getOutput();
+
+        TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'set');
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook was set' . PHP_EOL, $output);
+
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook is already set' . PHP_EOL, $output);
+
+        TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'reset');
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook was deleted' . PHP_EOL . 'Webhook was set' . PHP_EOL, $output);
+
+        TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'unset');
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook was deleted' . PHP_EOL, $output);
+
+        $output = $botManager->validateAndSetWebhook()->getOutput();
+        self::assertSame('Webhook is already deleted' . PHP_EOL, $output);
     }
 
     /**
@@ -265,38 +318,18 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertEmpty($botManager->getOutput());
     }
 
-    public function testGetUpdates()
+    public function testGetUpdatesLiveBot()
     {
-        $botManager = new BotManager([
-            'api_key' => getenv('API_KEY'),
-            'botname' => getenv('BOTNAME'),
-            'secret'  => 'super-secret',
-            'mysql'   => [
-                'host'     => PHPUNIT_DB_HOST,
-                'database' => PHPUNIT_DB_NAME,
-                'user'     => PHPUNIT_DB_USER,
-                'password' => PHPUNIT_DB_PASS,
-            ],
-        ]);
-        $botManager->run();
-        self::assertContains('Updates processed: 0', $botManager->getOutput());
+        $botManager = new BotManager(ParamsTest::$live_params);
+        $output = $botManager->run()->getOutput();
+        self::assertContains('Updates processed: 0', $output);
     }
 
-    public function testGetUpdatesLoop()
+    public function testGetUpdatesLoopLiveBot()
     {
         // Looping for 5 seconds should be enough to get a result.
         $_GET = ['l' => 5];
-        $botManager = new BotManager([
-            'api_key' => getenv('API_KEY'),
-            'botname' => getenv('BOTNAME'),
-            'secret'  => 'super-secret',
-            'mysql'   => [
-                'host'     => PHPUNIT_DB_HOST,
-                'database' => PHPUNIT_DB_NAME,
-                'user'     => PHPUNIT_DB_USER,
-                'password' => PHPUNIT_DB_PASS,
-            ],
-        ]);
+        $botManager = new BotManager(ParamsTest::$live_params);
         $output = $botManager->run()->getOutput();
         self::assertContains('Looping getUpdates until', $output);
         self::assertContains('Updates processed: 0', $output);
