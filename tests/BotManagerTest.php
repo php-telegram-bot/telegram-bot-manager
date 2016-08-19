@@ -264,4 +264,21 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('some more demo output......and even more!!', $botManager->getOutput());
         self::assertEmpty($botManager->getOutput());
     }
+
+    public function testGetUpdates()
+    {
+        $botManager = new BotManager([
+            'api_key' => getenv('API_KEY'),
+            'botname' => getenv('BOTNAME'),
+            'secret'  => 'super-secret',
+            'mysql'   => [
+                'host'     => PHPUNIT_DB_HOST,
+                'database' => PHPUNIT_DB_NAME,
+                'user'     => PHPUNIT_DB_USER,
+                'password' => PHPUNIT_DB_PASS,
+            ],
+        ]);
+        $botManager->run();
+        self::assertContains('Updates processed: 0', $botManager->getOutput());
+    }
 }
