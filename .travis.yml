@@ -35,4 +35,4 @@ script:
         fi
 
 after_success:
-    - bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+    - if [[ "$TRAVIS_PHP_VERSION" == "7.0" ]]; then bash <(curl -s https://codecov.io/bash); fi
