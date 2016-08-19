@@ -1,4 +1,13 @@
+dist: trusty
+sudo: required
 language: php
+
+addons:
+    apt:
+        packages:
+            - mysql-server-5.6
+            - mysql-client-core-5.6
+            - mysql-client-5.6
 
 cache:
     directories:
@@ -26,6 +35,9 @@ git:
 install:
     - travis_retry composer install --prefer-dist --no-interaction
 
+before_script:
+    - mysql -u root -e 'create database telegrambot; use telegrambot; source ./vendor/longman/telegram-bot/structure.sql;'
+
 script:
     - |
         if [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] ; then
@@ -36,3 +48,8 @@ script:
 
 after_success:
     - if [[ "$TRAVIS_PHP_VERSION" == "7.0" ]]; then bash <(curl -s https://codecov.io/bash); fi
+
+env:
+    global:
+        - secure: GBCpDTilQLXC7eLvAWLWu/NofSvC9jRDVXqNsNQMVyeoCLj0BIneHe0Tbuz6AHGbI6iRcr+ft9ZraUUAmQ2NSuIG3XpPwSUz/Qt0DQVDqYrTYTHiiThAC/UkvdWnGtHteds46MGAnh0B1IPpQF7XCaFxb8qT2+z+icOoZcAOJ4Exr/tL0opidN/8AJGRt3bXUOm7UgGQ+5HCLKvx/oGAqeafpYLlayzTFw/CBYR2Gp5vbo43yYO6MstMsgpHg+CR8iPLB0P5PXoKme5z7jDtJVmC8gG+QN/Hi3oEj4lXn1/9IdlqnjIaQefGi7+vQf7uniMr0SoqJHC7JA1Sqg6V/R5lGKYuDBW/TXF1dgXe6CP40a1M1oTeTorsNwH5mUf8m8AmW7y5gJ+6noa+BfR62jwutMZ8AE8nUMtjiHlVKV5CspPxuoV1p+nAayG00lh3ZXYoU3ohRkoLwane2J05nkc9oLj0VCHKW6i3lfGwSOKv0BKmIrK2zAeiEwRvqPnr75v/Nyap3kszA2SKxITBnmLkRZdU/KO9lWCQ7HffcQWib+JoiMVu/wor+VAuBDehxMavl+dQ0gJK24q3LbUapUzqtQ4R4ia9t5w6znSIvu3KZ6wpTytlIvvrM1e+jP2MP6sFY1PqOQ+WXdG+MSYuT6MBDC50zeaMmJGKQVbFHCc=
+        - secure: c0WY7yyVSKx/bbY/OHJaauObwH7cCyyrcp07odMLmhyJLjaAvIvs+BdeQqw3eiKBjeIGk4WRH9jIBlQF0WyxqpcArFrgpkMBJqos3QHOlQDxhxFz6tIHYGznTKQbYtpFmCOakFXqePKporKRM+n0MZYMSERIuDNGW+oDLjPNo5pYylYjPKqeec/T4TJMiL/B24QzCBq0c6k2KpVPqGq+3/8LuPEErcACAgsztc4R/zFcCeztgXEFUmew+Gs+pqvW1Lth3hbJyCx4rfldNbV20ZCrbBBPbFpokJ4URSLr4JQVAAgaoXZ4fUHgzUMz0c7yXMNdoTssnpXZ8HAw1cyCBU0IT9X9HI0r0I8o7dUanONoGw4pfdL71hWl03+YLbHpI7c4y/HlJKKkIQt+6bdX4T/LwY++wPkCRDQCq3JUNsxFeWQTtgNX7Zd5oADaOZrEMX+SxTvxl6eyLPguo2ssWhAb8BTXNrrvAiNEphk9tDiJ94kRNum7hL5fpEQ+WF548HZ+6XSKazSdxYvVwfVH6l4eake7dGr4bRTknru3QsngP8BVkN3qYJdhMEp7TZK+BhvSboXGXoZX+zdNhKZqbC254LJt4qyGOiW+FTeJdZA2BUotHEkKG+tM/4Tce0+hlYFKYNgN+r0pnAdIa417hvAmEWoIYCSrpVR/2zFzFWw=
