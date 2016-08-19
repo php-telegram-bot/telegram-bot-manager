@@ -24,22 +24,22 @@ use Longman\TelegramBot\TelegramLog;
 class BotManager
 {
     /**
-     * @var Telegram
-     */
-    public $telegram;
-
-    /**
      * @var string The output for testing, instead of echoing
      */
     public $test_output;
 
     /**
-     * @var Params Object that manages the parameters.
+     * @var \Longman\TelegramBot\Telegram
+     */
+    private $telegram;
+
+    /**
+     * @var \NPM\TelegramBotManager\Params Object that manages the parameters.
      */
     private $params;
 
     /**
-     * @var Action Object that contains the current action.
+     * @var \NPM\TelegramBotManager\Action Object that contains the current action.
      */
     private $action;
 
@@ -56,11 +56,31 @@ class BotManager
         $this->action = new Action($this->params->getScriptParam('a'));
     }
 
+    /**
+     * Return the Telegram object.
+     *
+     * @return \Longman\TelegramBot\Telegram
+     */
+    public function getTelegram()
+    {
+        return $this->telegram;
+    }
+
+    /**
+     * Get the Params object.
+     *
+     * @return \NPM\TelegramBotManager\Params
+     */
     public function getParams()
     {
         return $this->params;
     }
 
+    /**
+     * Get the Action object.
+     *
+     * @return \NPM\TelegramBotManager\Action
+     */
     public function getAction()
     {
         return $this->action;

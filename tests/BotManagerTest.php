@@ -87,10 +87,9 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     public function testValidateSecretFail()
     {
         $_GET       = ['s' => 'NOT_my_secret_12345'];
-        $botManager = new BotManager(array_merge(
-            ParamsTest::$demo_vital_params,
-            ['secret' => 'my_secret_12345']
-        ));
+        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'secret' => 'my_secret_12345',
+        ]));
 
         $botManager->validateSecret(true);
     }
@@ -99,51 +98,53 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     {
         // Force validation to test non-CLI scenario.
         $_GET = ['s' => 'my_secret_12345'];
-        (new BotManager(array_merge(
-            ParamsTest::$demo_vital_params,
-            ['secret' => 'my_secret_12345']
-        )))->validateSecret(true);
+        (new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'secret' => 'my_secret_12345',
+        ])))->validateSecret(true);
 
         // Calling from CLI doesn't require a secret.
         $_GET = ['s' => 'whatever_on_cli'];
-        (new BotManager(array_merge(
-            ParamsTest::$demo_vital_params,
-            ['secret' => 'my_secret_12345']
-        )))->validateSecret();
+        (new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'secret' => 'my_secret_12345',
+        ])))->validateSecret();
     }
-
 
     public function testValidateAndSetWebhookSuccess()
     {
-        $botManager = new BotManager(array_merge(
-            ParamsTest::$demo_vital_params,
-            ['webhook' => 'https://web/hook.php']
-        ));
+        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'webhook' => 'https://web/hook.php',
+        ]));
 
-        $botManager->telegram = $this->getMockBuilder(Telegram::class)
-                                     ->disableOriginalConstructor()
-                                     ->setMethods(['setWebHook', 'unsetWebHook', 'getDescription'])
-                                     ->getMock();
-        $botManager->telegram->expects(static::any())
-                             ->method('setWebHook')
-                             ->with('https://web/hook.php?a=handle&s=secret_12345')
-                             ->will(static::returnSelf());
-        $botManager->telegram->expects(static::any())
-                             ->method('unsetWebHook')
-                             ->will(static::returnSelf());
-        $botManager->telegram->expects(static::any())
-                             ->method('getDescription')
-                             ->will(static::onConsecutiveCalls(
-                             // set
-                                 'Webhook set',
-                                 'Webhook already set',
-                                 // unset
-                                 'Webhook deleted',
-                                 'Webhook does not exist',
-                                 // reset
-                                 'Webhook deleted',
-                                 'Webhook set'
-                             ));
+        TestHelpers::setObjectProperty(
+            $botManager,
+            'telegram',
+            $this->getMockBuilder(Telegram::class)
+                 ->disableOriginalConstructor()
+                 ->setMethods(['setWebHook', 'unsetWebHook', 'getDescription'])
+                 ->getMock()
+        );
+
+        $telegram = $botManager->getTelegram();
+        $telegram->expects(static::any())
+                 ->method('setWebHook')
+                 ->with('https://web/hook.php?a=handle&s=secret_12345')
+                 ->will(static::returnSelf());
+        $telegram->expects(static::any())
+                 ->method('unsetWebHook')
+                 ->will(static::returnSelf());
+        $telegram->expects(static::any())
+                 ->method('getDescription')
+                 ->will(static::onConsecutiveCalls(
+                 // set
+                     'Webhook set',
+                     'Webhook already set',
+                     // unset
+                     'Webhook deleted',
+                     'Webhook does not exist',
+                     // reset
+                     'Webhook deleted',
+                     'Webhook set'
+                 ));
 
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'set');
         $botManager->validateAndSetWebhook();
@@ -170,12 +171,10 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateAndSetWebhookFailSetWithoutWebhook()
     {
-        $_GET       = ['a' => 'set'];
-        $botManager = new BotManager(array_merge(
-            ParamsTest::$demo_vital_params,
-            ['webhook' => null]
-        ));
-        $botManager->validateAndSetWebhook();
+        $_GET = ['a' => 'set'];
+        (new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'webhook' => null,
+        ])))->validateAndSetWebhook();
     }
 
     /**
@@ -184,12 +183,10 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateAndSetWebhookFailResetWithoutWebhook()
     {
-        $_GET       = ['a' => 'reset'];
-        $botManager = new BotManager(array_merge(
-            ParamsTest::$demo_vital_params,
-            ['webhook' => null]
-        ));
-        $botManager->validateAndSetWebhook();
+        $_GET = ['a' => 'reset'];
+        (new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'webhook' => null,
+        ])))->validateAndSetWebhook();
     }
 
     public function testGetLoopTime()
@@ -220,5 +217,28 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
         $_GET = ['l' => '12345'];
         self::assertSame(12345, (new BotManager(ParamsTest::$demo_vital_params))->getLoopTime());
+    }
+
+    public function testSetBotExtras()
+    {
+        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'admins'        => [1, 2, 3],
+            'download_path' => __DIR__ . '/Download',
+            'upload_path'   => __DIR__ . '/Upload',
+        ]));
+        TestHelpers::setObjectProperty(
+            $botManager,
+            'telegram',
+            new Telegram(
+                ParamsTest::$demo_vital_params['api_key'],
+                ParamsTest::$demo_vital_params['botname']
+            )
+        );
+        $botManager->setBotExtras();
+        $telegram = $botManager->getTelegram();
+
+        self::assertEquals([1, 2, 3], $telegram->getAdminList());
+        self::assertEquals(__DIR__ . '/Download', $telegram->getDownloadPath());
+        self::assertEquals(__DIR__ . '/Upload', $telegram->getUploadPath());
     }
 }
