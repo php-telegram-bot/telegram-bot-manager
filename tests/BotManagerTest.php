@@ -140,6 +140,8 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         );
 
         $telegram = $botManager->getTelegram();
+
+        /** @var \PHPUnit_Framework_MockObject_MockObject $telegram */
         $telegram->expects(static::any())
                  ->method('setWebHook')
                  ->with('https://web/hook.php?a=handle&s=secret_12345')
@@ -150,14 +152,11 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         $telegram->expects(static::any())
                  ->method('getDescription')
                  ->will(static::onConsecutiveCalls(
-                 // set
-                     'Webhook was set',
+                     'Webhook was set', // set
                      'Webhook is already set',
-                     // reset
-                     'Webhook was deleted',
+                     'Webhook was deleted', // reset
                      'Webhook was set',
-                     // unset
-                     'Webhook was deleted',
+                     'Webhook was deleted', //unset
                      'Webhook is already deleted'
                  ));
 
@@ -321,16 +320,16 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetUpdatesLiveBot()
     {
         $botManager = new BotManager(ParamsTest::$live_params);
-        $output = $botManager->run()->getOutput();
+        $output     = $botManager->run()->getOutput();
         self::assertContains('Updates processed: 0', $output);
     }
 
     public function testGetUpdatesLoopLiveBot()
     {
         // Looping for 5 seconds should be enough to get a result.
-        $_GET = ['l' => 5];
+        $_GET       = ['l' => 5];
         $botManager = new BotManager(ParamsTest::$live_params);
-        $output = $botManager->run()->getOutput();
+        $output     = $botManager->run()->getOutput();
         self::assertContains('Looping getUpdates until', $output);
         self::assertContains('Updates processed: 0', $output);
     }

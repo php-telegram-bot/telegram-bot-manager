@@ -205,13 +205,22 @@ class BotManager
      */
     public function setBotExtras()
     {
-        ($v = $this->params->getBotParam('admins')) && $this->telegram->enableAdmins($v);
-        ($v = $this->params->getBotParam('mysql')) && $this->telegram->enableMySql($v);
-        ($v = $this->params->getBotParam('botan_token')) && $this->telegram->enableBotan($v);
-        ($v = $this->params->getBotParam('commands_paths')) && $this->telegram->addCommandsPaths($v);
-        ($v = $this->params->getBotParam('custom_input')) && $this->telegram->setCustomInput($v);
-        ($v = $this->params->getBotParam('download_path')) && $this->telegram->setDownloadPath($v);
-        ($v = $this->params->getBotParam('upload_path')) && $this->telegram->setUploadPath($v);
+        $simple_extras = [
+            'admins'         => 'enableAdmins',
+            'mysql'          => 'enableMySql',
+            'botan_token'    => 'enableBotan',
+            'commands_paths' => 'addCommandsPaths',
+            'custom_input'   => 'setCustomInput',
+            'download_path'  => 'setDownloadPath',
+            'upload_path'    => 'setUploadPath',
+        ];
+        // For simple extras, just pass the single param value to the Telegram method.
+        foreach ($simple_extras as $param_key => $method) {
+            $param = $this->params->getBotParam($param_key);
+            if (null !== $param) {
+                $this->telegram->$method($param);
+            }
+        }
 
         $command_configs = $this->params->getBotParam('command_configs');
         if (is_array($command_configs)) {
@@ -349,8 +358,9 @@ class BotManager
      */
     public function getOutput()
     {
-        $output = $this->output;
+        $output       = $this->output;
         $this->output = '';
+
         return $output;
     }
 }
