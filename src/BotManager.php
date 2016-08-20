@@ -10,9 +10,9 @@
 
 namespace NPM\TelegramBotManager;
 
+use Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
-use Longman\TelegramBot\Entities;
 
 /**
  * Class BotManager.php
@@ -24,199 +24,93 @@ use Longman\TelegramBot\Entities;
 class BotManager
 {
     /**
-     * @var Telegram
-     */
-    public $telegram;
-
-    /**
      * @var string The output for testing, instead of echoing
      */
-    public $test_output;
+    private $output;
 
     /**
-     * @var string Telegram Bot API key
+     * @var \Longman\TelegramBot\Telegram
      */
-    protected $api_key = '';
+    private $telegram;
 
     /**
-     * @var string Telegram Bot name
+     * @var \NPM\TelegramBotManager\Params Object that manages the parameters.
      */
-    public $botname;
+    private $params;
 
     /**
-     * @var string Secret string to validate calls
+     * @var \NPM\TelegramBotManager\Action Object that contains the current action.
      */
-    public $secret;
+    private $action;
 
     /**
-     * @var string Action to be executed
-     */
-    public $action = 'handle';
-
-    /**
-     * @var string URI of the webhook
-     */
-    public $webhook;
-
-    /**
-     * @var string Path to the self-signed certificate
-     */
-    public $selfcrt;
-
-    /**
-     * @var array Array of logger files to set
-     */
-    public $logging;
-
-    /**
-     * @var array List of admins to enable
-     */
-    public $admins;
-
-    /**
-     * @var array MySQL credentials to use
-     */
-    public $mysql;
-
-    /**
-     * @var string Custom download path to set
-     */
-    public $download_path;
-
-    /**
-     * @var string Custom upload path to set
-     */
-    public $upload_path;
-
-    /**
-     * @var array Custom commands paths to set
-     */
-    public $commands_paths;
-
-    /**
-     * @var array List of custom command configs
-     */
-    public $command_configs;
-
-    /**
-     * @var string Botan token to enable botan.io support
-     */
-    public $botan_token;
-
-    /**
-     * @var string Custom raw JSON string to use as input
-     */
-    public $custom_input;
-
-    /**
-     * @var array List of valid actions that can be called
-     */
-    private static $valid_actions = [
-        'set',
-        'unset',
-        'reset',
-        'handle'
-    ];
-
-    /**
-     * @var array List of valid extra parameters that can be passed
-     */
-    private static $valid_params = [
-        'api_key',
-        'botname',
-        'secret',
-        'webhook',
-        'selfcrt',
-        'logging',
-        'admins',
-        'mysql',
-        'download_path',
-        'upload_path',
-        'commands_paths',
-        'command_configs',
-        'botan_token',
-        'custom_input'
-    ];
-
-
-    /**
-     * BotManager constructor that assigns all necessary member variables.
+     * BotManager constructor.
      *
-     * @param array $vars
+     * @param array $params
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
-    public function __construct(array $vars)
+    public function __construct(array $params)
     {
-        if (!isset($vars['api_key'], $vars['botname'], $vars['secret'])) {
-            throw new \Exception('Some vital info is missing (api_key, botname or secret)');
-        }
+        $this->params = new Params($params);
+        $this->action = new Action($this->params->getScriptParam('a'));
+    }
 
-        // Set all vital and extra parameters.
-        foreach ($vars as $var => $value) {
-            in_array($var, self::$valid_params, true) && $this->$var = $value;
-        }
+    /**
+     * Return the Telegram object.
+     *
+     * @return \Longman\TelegramBot\Telegram
+     */
+    public function getTelegram()
+    {
+        return $this->telegram;
+    }
+
+    /**
+     * Get the Params object.
+     *
+     * @return \NPM\TelegramBotManager\Params
+     */
+    public function getParams()
+    {
+        return $this->params;
+    }
+
+    /**
+     * Get the Action object.
+     *
+     * @return \NPM\TelegramBotManager\Action
+     */
+    public function getAction()
+    {
+        return $this->action;
     }
 
     /**
      * Run this thing in all its glory!
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function run()
     {
-        // If this script is called via CLI, make it work just the same.
-        $this->makeCliFriendly();
-
         // Initialise logging.
         $this->initLogging();
 
         // Make sure this is a valid call.
         $this->validateSecret();
 
-        // Check for a valid action and set member variable.
-        $this->validateAndSetAction();
-
         // Set up a new Telegram instance.
-        $this->telegram = new Telegram($this->api_key, $this->botname);
+        $this->telegram = new Telegram(
+            $this->params->getBotParam('api_key'),
+            $this->params->getBotParam('botname')
+        );
 
-        if ($this->isAction(['set', 'unset', 'reset'])) {
+        if ($this->action->isAction(['set', 'unset', 'reset'])) {
             $this->validateAndSetWebhook();
-        } elseif ($this->isAction('handle')) {
+        } elseif ($this->action->isAction('handle')) {
             // Set any extras.
             $this->setBotExtras();
             $this->handleRequest();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Check if this script is being called from CLI.
-     *
-     * @return bool
-     */
-    public function isCli()
-    {
-        return PHP_SAPI === 'cli';
-    }
-
-    /**
-     * Allow this script to be called via CLI.
-     *
-     * $ php entry.php s=<secret> a=<action> l=<loop>
-     */
-    public function makeCliFriendly()
-    {
-        // If we're running from CLI, properly set $_GET.
-        if ($this->isCli()) {
-            // We don't need the first arg (the file name).
-            $args = array_slice($_SERVER['argv'], 1);
-
-            foreach ($args as $arg) {
-                @list($key, $val) = explode('=', $arg);
-                isset($key, $val) && $_GET[$key] = $val;
-            }
         }
 
         return $this;
@@ -227,8 +121,10 @@ class BotManager
      */
     public function initLogging()
     {
-        if (is_array($this->logging)) {
-            foreach ($this->logging as $logger => $logfile) {
+        $logging = $this->params->getBotParam('logging');
+        if (is_array($logging)) {
+            /** @var array $logging */
+            foreach ($logging as $logger => $logfile) {
                 ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
                 ('error' === $logger) && TelegramLog::initErrorLog($logfile);
                 ('update' === $logger) && TelegramLog::initUpdateLog($logfile);
@@ -244,33 +140,17 @@ class BotManager
      * @param bool $force Force validation, even on CLI.
      *
      * @return $this
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function validateSecret($force = false)
     {
         // If we're running from CLI, secret isn't necessary.
-        if ($force || !$this->isCli()) {
-            $secretGet = isset($_GET['s']) ? (string)$_GET['s'] : '';
-            if (empty($this->secret) || $secretGet !== $this->secret) {
-                throw new \Exception('Invalid access');
+        if ($force || 'cli' !== PHP_SAPI) {
+            $secret    = $this->params->getBotParam('secret');
+            $secretGet = $this->params->getScriptParam('s');
+            if ($secretGet !== $secret) {
+                throw new \InvalidArgumentException('Invalid access');
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * Make sure the action is valid and set the member variable.
-     *
-     * @throws \Exception
-     */
-    public function validateAndSetAction()
-    {
-        // Only set the action if it has been passed, else use the default.
-        isset($_GET['a']) && $this->action = (string)$_GET['a'];
-
-        if (!$this->isAction(self::$valid_actions)) {
-            throw new \Exception('Invalid action');
         }
 
         return $this;
@@ -279,71 +159,88 @@ class BotManager
     /**
      * Make sure the webhook is valid and perform the requested webhook operation.
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function validateAndSetWebhook()
     {
-        if (empty($this->webhook) && $this->isAction(['set', 'reset'])) {
-            throw new \Exception('Invalid webhook');
+        $webhook = $this->params->getBotParam('webhook');
+        $selfcrt = $this->params->getBotParam('selfcrt');
+        if (empty($webhook) && $this->action->isAction(['set', 'reset'])) {
+            throw new \InvalidArgumentException('Invalid webhook');
         }
 
-        if ($this->isAction(['unset', 'reset'])) {
-            $this->test_output = $this->telegram->unsetWebHook()->getDescription();
+        if ($this->action->isAction(['unset', 'reset'])) {
+            $this->handleOutput($this->telegram->unsetWebHook()->getDescription() . PHP_EOL);
         }
-        if ($this->isAction(['set', 'reset'])) {
-            $this->test_output = $this->telegram->setWebHook(
-                $this->webhook . '?a=handle&s=' . $this->secret,
-                $this->selfcrt
-            )->getDescription();
+        if ($this->action->isAction(['set', 'reset'])) {
+            $this->handleOutput(
+                $this->telegram->setWebHook(
+                    $webhook . '?a=handle&s=' . $this->params->getBotParam('secret'),
+                    $selfcrt
+                )->getDescription() . PHP_EOL
+            );
         }
-
-        (@constant('PHPUNIT_TEST') !== true) && print($this->test_output . PHP_EOL);
 
         return $this;
     }
 
     /**
-     * Check if the current action is one of the passed ones.
+     * Save the test output and echo it if we're not in a test.
      *
-     * @param string|array $actions
-     *
-     * @return bool
+     * @param string $output
      */
-    public function isAction($actions)
+    private function handleOutput($output)
     {
-        // Make sure we're playing with an array without empty values.
-        $actions = array_filter((array)$actions);
+        $this->output .= $output;
 
-        return in_array($this->action, $actions, true);
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST !== true) {
+            echo $output;
+        }
     }
 
     /**
-     * Get the param of how long (in seconds) the script should loop.
+     * Set any extra bot features that have been assigned on construction.
      *
-     * @return int
+     * @return $this
      */
-    public function getLoopTime()
+    public function setBotExtras()
     {
-        $loop_time = 0;
-
-        if (isset($_GET['l'])) {
-            $loop_time = (int)$_GET['l'];
-            if ($loop_time <= 0) {
-                $loop_time = 604800; // 7 days.
+        $simple_extras = [
+            'admins'         => 'enableAdmins',
+            'mysql'          => 'enableMySql',
+            'botan_token'    => 'enableBotan',
+            'commands_paths' => 'addCommandsPaths',
+            'custom_input'   => 'setCustomInput',
+            'download_path'  => 'setDownloadPath',
+            'upload_path'    => 'setUploadPath',
+        ];
+        // For simple extras, just pass the single param value to the Telegram method.
+        foreach ($simple_extras as $param_key => $method) {
+            $param = $this->params->getBotParam($param_key);
+            if (null !== $param) {
+                $this->telegram->$method($param);
             }
         }
 
-        return $loop_time;
+        $command_configs = $this->params->getBotParam('command_configs');
+        if (is_array($command_configs)) {
+            /** @var array $command_configs */
+            foreach ($command_configs as $command => $config) {
+                $this->telegram->setCommandConfig($command, $config);
+            }
+        }
+
+        return $this;
     }
 
     /**
      * Handle the request, which calls either the Webhook or getUpdates method respectively.
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function handleRequest()
     {
-        if (empty($this->webhook)) {
+        if (empty($this->params->getBotParam('webhook'))) {
             if ($loop_time = $this->getLoopTime()) {
                 $this->handleGetUpdatesLoop($loop_time);
             } else {
@@ -354,6 +251,26 @@ class BotManager
         }
 
         return $this;
+    }
+
+    /**
+     * Get the number of seconds the script should loop.
+     *
+     * @return int
+     */
+    public function getLoopTime()
+    {
+        $loop_time = $this->params->getScriptParam('l');
+
+        if (null === $loop_time) {
+            return 0;
+        }
+
+        if ('' === trim($loop_time)) {
+            return 604800; // Default to 7 days.
+        }
+
+        return max(0, (int)$loop_time);
     }
 
     /**
@@ -368,7 +285,7 @@ class BotManager
         // Remember the time we started this loop.
         $now = time();
 
-        echo 'Looping getUpdates until ' . date('Y-m-d H:i:s', $now + $loop_time_in_seconds) . PHP_EOL;
+        $this->handleOutput('Looping getUpdates until ' . date('Y-m-d H:i:s', $now + $loop_time_in_seconds) . PHP_EOL);
 
         while ($now > time() - $loop_time_in_seconds) {
             $this->handleGetUpdates();
@@ -385,13 +302,13 @@ class BotManager
      */
     public function handleGetUpdates()
     {
-        echo date('Y-m-d H:i:s', time()) . ' - ';
+        $output = date('Y-m-d H:i:s', time()) . ' - ';
 
         $response = $this->telegram->handleGetUpdates();
         if ($response->isOk()) {
             $results = array_filter((array)$response->getResult());
 
-            printf('Updates processed: %d' . PHP_EOL, count($results));
+            $output .= sprintf('Updates processed: %d' . PHP_EOL, count($results));
 
             /** @var Entities\Update $result */
             foreach ($results as $result) {
@@ -407,15 +324,17 @@ class BotManager
                     $text    = $update_content->getQuery();
                 }
 
-                printf(
+                $output .= sprintf(
                     '%d: %s' . PHP_EOL,
                     $chat_id,
                     preg_replace('/\s+/', ' ', trim($text))
                 );
             }
         } else {
-            printf('Failed to fetch updates: %s' . PHP_EOL, $response->printError());
+            $output .= sprintf('Failed to fetch updates: %s' . PHP_EOL, $response->printError());
         }
+
+        $this->handleOutput($output);
 
         return $this;
     }
@@ -423,7 +342,7 @@ class BotManager
     /**
      * Handle the updates using the Webhook method.
      *
-     * @throws \Exception
+     * @throws \InvalidArgumentException
      */
     public function handleWebhook()
     {
@@ -433,24 +352,15 @@ class BotManager
     }
 
     /**
-     * Set any extra bot features that have been assigned on construction.
+     * Return the current test output and clear it.
+     *
+     * @return string
      */
-    public function setBotExtras()
+    public function getOutput()
     {
-        $this->admins         && $this->telegram->enableAdmins($this->admins);
-        $this->mysql          && $this->telegram->enableMySql($this->mysql);
-        $this->botan_token    && $this->telegram->enableBotan($this->botan_token);
-        $this->commands_paths && $this->telegram->addCommandsPaths($this->commands_paths);
-        $this->custom_input   && $this->telegram->setCustomInput($this->custom_input);
-        $this->download_path  && $this->telegram->setDownloadPath($this->download_path);
-        $this->upload_path    && $this->telegram->setUploadPath($this->upload_path);
+        $output       = $this->output;
+        $this->output = '';
 
-        if (is_array($this->command_configs)) {
-            foreach ($this->command_configs as $command => $config) {
-                $this->telegram->setCommandConfig($command, $config);
-            }
-        }
-
-        return $this;
+        return $output;
     }
 }
