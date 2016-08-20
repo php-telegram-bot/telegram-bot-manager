@@ -193,7 +193,7 @@ class BotManager
     {
         $this->output .= $output;
 
-        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST !== true) {
+        if (!(defined('PHPUNIT_TEST') && PHPUNIT_TEST === true)) {
             echo $output;
         }
     }
