@@ -337,6 +337,9 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUpdatesLoopLiveBot()
     {
+        // Webhook must NOT be set for this to work!
+        $this->testUnsetWebhookViaRunLiveBot();
+
         // Looping for 5 seconds should be enough to get a result.
         $_GET       = ['l' => 5];
         $botManager = new BotManager(ParamsTest::$live_params);
