@@ -217,6 +217,17 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Webhook is already deleted' . PHP_EOL, $output);
     }
 
+    public function testUnsetWebhookViaRunLiveBot()
+    {
+        $_GET = ['a' => 'unset'];
+        $botManager = new BotManager(array_merge(ParamsTest::$live_params, [
+            'webhook' => 'https://example.com/hook.php',
+        ]));
+        $output = $botManager->run()->getOutput();
+
+        self::assertRegExp('/Webhook.+deleted/', $output);
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Invalid webhook
