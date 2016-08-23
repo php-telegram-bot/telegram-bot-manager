@@ -8,10 +8,11 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager;
+namespace NPM\TelegramBotManager\Tests;
 
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
+use NPM\TelegramBotManager\BotManager;
 
 /**
  * Class BotManagerTest.php
@@ -22,9 +23,14 @@ use Longman\TelegramBot\TelegramLog;
  */
 class BotManagerTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
+    /**
+     * @var array Live params for testing with live bot (get set in BotManagerTest->setUp()).
+     */
+    public static $live_params = [];
+
+    public static function setUpBeforeClass()
     {
-        ParamsTest::$live_params = [
+        self::$live_params = [
             'api_key' => getenv('API_KEY'),
             'botname' => getenv('BOTNAME'),
             'secret'  => 'super-secret',
@@ -181,7 +187,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testValidateAndSetWebhookSuccessLiveBot()
     {
-        $botManager = new BotManager(array_merge(ParamsTest::$live_params, [
+        $botManager = new BotManager(array_merge(self::$live_params, [
             'webhook' => 'https://example.com/hook.php',
         ]));
 
@@ -189,8 +195,8 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
             $botManager,
             'telegram',
             new Telegram(
-                ParamsTest::$live_params['api_key'],
-                ParamsTest::$live_params['botname']
+                self::$live_params['api_key'],
+                self::$live_params['botname']
             )
         );
 
@@ -220,7 +226,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     public function testUnsetWebhookViaRunLiveBot()
     {
         $_GET = ['a' => 'unset'];
-        $botManager = new BotManager(array_merge(ParamsTest::$live_params, [
+        $botManager = new BotManager(array_merge(self::$live_params, [
             'webhook' => 'https://example.com/hook.php',
         ]));
         $output = $botManager->run()->getOutput();
@@ -330,7 +336,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testGetUpdatesLiveBot()
     {
-        $botManager = new BotManager(ParamsTest::$live_params);
+        $botManager = new BotManager(self::$live_params);
         $output     = $botManager->run()->getOutput();
         self::assertContains('Updates processed: 0', $output);
     }
@@ -342,7 +348,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
         // Looping for 5 seconds should be enough to get a result.
         $_GET       = ['l' => 5];
-        $botManager = new BotManager(ParamsTest::$live_params);
+        $botManager = new BotManager(self::$live_params);
         $output     = $botManager->run()->getOutput();
         self::assertContains('Looping getUpdates until', $output);
         self::assertContains('Updates processed: 0', $output);

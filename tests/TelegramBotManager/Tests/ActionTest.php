@@ -8,7 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager;
+namespace NPM\TelegramBotManager\Tests;
+
+use NPM\TelegramBotManager\Action;
 
 class ActionTest extends \PHPUnit_Framework_TestCase
 {

@@ -8,15 +8,12 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager;
+namespace NPM\TelegramBotManager\Tests;
+
+use NPM\TelegramBotManager\Params;
 
 class ParamsTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var array Live params for testing with live bot (get set in BotManagerTest->setUp()).
-     */
-    public static $live_params = [];
-
     /**
      * @var array Demo vital parameters.
      */

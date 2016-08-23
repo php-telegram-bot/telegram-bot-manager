@@ -28,7 +28,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "NPM\\TelegramBotManager\\": "tests"
+            "NPM\\TelegramBotManager\\Tests\\": "tests/TelegramBotManager/Tests"
         }
     },
     "require-dev": {
