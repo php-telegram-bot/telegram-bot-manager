@@ -13,11 +13,13 @@ cache:
     directories:
         - $HOME/.composer/cache
 
-php:
-    - 7.0
-    - nightly
-
 matrix:
+    include:
+        - php: 7
+          env: cov=1
+        - php: 7
+          env: deps=low
+        - php: nightly
     allow_failures:
         - php: nightly
     fast_finish: true
@@ -30,21 +32,18 @@ git:
     depth: 1
 
 install:
-    - travis_retry composer install --prefer-dist --no-interaction
+    - if [ "$deps" == "low" ]; then travis_retry composer update --prefer-source --prefer-lowest --prefer-stable --no-interaction; fi
+    - if [ "$deps" != "low" ]; then travis_retry composer install --prefer-source --no-interaction; fi
 
 before_script:
     - mysql -u root -e 'create database telegrambot; use telegrambot; source ./vendor/longman/telegram-bot/structure.sql;'
 
 script:
-    - |
-        if [[ "$TRAVIS_PHP_VERSION" == "7.0" ]] ; then
-            ./vendor/bin/phpunit --coverage-clover=coverage.xml
-        else
-            ./vendor/bin/phpunit
-        fi
+    - if [[ "$cov" == "1" ]] ; then composer test-cov; fi
+    - if [[ "$cov" != "1" ]] ; then composer test; fi
 
 after_success:
-    - if [[ "$TRAVIS_PHP_VERSION" == "7.0" ]]; then bash <(curl -s https://codecov.io/bash); fi
+    - if [[ "$cov" == "1" ]]; then bash <(curl -s https://codecov.io/bash); fi
 
 env:
     global:

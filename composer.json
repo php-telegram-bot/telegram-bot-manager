@@ -21,6 +21,10 @@
         "php": "^7.0",
         "longman/telegram-bot": "^0.35"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^5.5",
+        "jakub-onderka/php-parallel-lint": "^0.9"
+    },
     "autoload": {
         "psr-4": {
             "NPM\\TelegramBotManager\\": "src"
@@ -31,8 +35,14 @@
             "NPM\\TelegramBotManager\\Tests\\": "tests/TelegramBotManager/Tests"
         }
     },
-    "require-dev": {
-        "phpunit/phpunit": "^5.5",
-        "squizlabs/php_codesniffer": "^2.7"
+    "scripts": {
+        "test": [
+            "parallel-lint . --exclude vendor",
+            "phpunit"
+        ],
+        "test-cov": [
+            "parallel-lint . --exclude vendor",
+            "phpunit --coverage-clover=coverage.xml"
+        ]
     }
 }
