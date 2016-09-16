@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -225,11 +225,11 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
     public function testUnsetWebhookViaRunLiveBot()
     {
-        $_GET = ['a' => 'unset'];
+        $_GET       = ['a' => 'unset'];
         $botManager = new BotManager(array_merge(self::$live_params, [
             'webhook' => 'https://example.com/hook.php',
         ]));
-        $output = $botManager->run()->getOutput();
+        $output     = $botManager->run()->getOutput();
 
         self::assertRegExp('/Webhook.+deleted/', $output);
     }

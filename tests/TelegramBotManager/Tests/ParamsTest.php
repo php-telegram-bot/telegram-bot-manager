@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -116,10 +116,6 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('secret_12345', $params->getScriptParam('s'));
         self::assertEquals(['a' => 'handle', 's' => 'secret_12345'], $params->getScriptParams());
 
-        // Test some weird values.
-        self::assertNull($params->getScriptParam(null));
-        self::assertNull($params->getScriptParam(true));
-        self::assertNull($params->getScriptParam(1));
         self::assertNull($params->getScriptParam('non-existent'));
     }
 
@@ -141,10 +137,6 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
             self::assertEquals(self::$demo_extra_params[$extra_param_key], $params->getBotParam($extra_param_key));
         }
 
-        // Test some weird values.
-        self::assertNull($params->getBotParam(null));
-        self::assertNull($params->getBotParam(true));
-        self::assertNull($params->getBotParam(1));
         self::assertNull($params->getBotParam('non-existent'));
     }
 }

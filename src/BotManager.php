@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -26,7 +26,7 @@ class BotManager
     /**
      * @var string The output for testing, instead of echoing
      */
-    private $output;
+    private $output = '';
 
     /**
      * @var \Longman\TelegramBot\Telegram
@@ -61,7 +61,7 @@ class BotManager
      *
      * @return \Longman\TelegramBot\Telegram
      */
-    public function getTelegram()
+    public function getTelegram(): Telegram
     {
         return $this->telegram;
     }
@@ -71,7 +71,7 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\Params
      */
-    public function getParams()
+    public function getParams(): Params
     {
         return $this->params;
     }
@@ -81,7 +81,7 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\Action
      */
-    public function getAction()
+    public function getAction(): Action
     {
         return $this->action;
     }
@@ -89,9 +89,10 @@ class BotManager
     /**
      * Run this thing in all its glory!
      *
+     * @return \NPM\TelegramBotManager\BotManager
      * @throws \InvalidArgumentException
      */
-    public function run()
+    public function run(): self
     {
         // Initialise logging.
         $this->initLogging();
@@ -118,8 +119,10 @@ class BotManager
 
     /**
      * Initialise all loggers.
+     *
+     * @return \NPM\TelegramBotManager\BotManager
      */
-    public function initLogging()
+    public function initLogging(): self
     {
         $logging = $this->params->getBotParam('logging');
         if (is_array($logging)) {
@@ -139,10 +142,10 @@ class BotManager
      *
      * @param bool $force Force validation, even on CLI.
      *
-     * @return $this
+     * @return \NPM\TelegramBotManager\BotManager
      * @throws \InvalidArgumentException
      */
-    public function validateSecret($force = false)
+    public function validateSecret(bool $force = false): self
     {
         // If we're running from CLI, secret isn't necessary.
         if ($force || 'cli' !== PHP_SAPI) {
@@ -159,9 +162,10 @@ class BotManager
     /**
      * Make sure the webhook is valid and perform the requested webhook operation.
      *
+     * @return \NPM\TelegramBotManager\BotManager
      * @throws \InvalidArgumentException
      */
-    public function validateAndSetWebhook()
+    public function validateAndSetWebhook(): self
     {
         $webhook = $this->params->getBotParam('webhook');
         $selfcrt = $this->params->getBotParam('selfcrt');
@@ -188,22 +192,26 @@ class BotManager
      * Save the test output and echo it if we're not in a test.
      *
      * @param string $output
+     *
+     * @return \NPM\TelegramBotManager\BotManager
      */
-    private function handleOutput($output)
+    private function handleOutput($output): self
     {
         $this->output .= $output;
 
         if (!(defined('PHPUNIT_TEST') && PHPUNIT_TEST === true)) {
             echo $output;
         }
+
+        return $this;
     }
 
     /**
      * Set any extra bot features that have been assigned on construction.
      *
-     * @return $this
+     * @return \NPM\TelegramBotManager\BotManager
      */
-    public function setBotExtras()
+    public function setBotExtras(): self
     {
         $simple_extras = [
             'admins'         => 'enableAdmins',
@@ -236,9 +244,9 @@ class BotManager
     /**
      * Handle the request, which calls either the Webhook or getUpdates method respectively.
      *
-     * @throws \InvalidArgumentException
+     * @return \NPM\TelegramBotManager\BotManager
      */
-    public function handleRequest()
+    public function handleRequest(): self
     {
         if (empty($this->params->getBotParam('webhook'))) {
             if ($loop_time = $this->getLoopTime()) {
@@ -258,7 +266,7 @@ class BotManager
      *
      * @return int
      */
-    public function getLoopTime()
+    public function getLoopTime(): int
     {
         $loop_time = $this->params->getScriptParam('l');
 
@@ -266,7 +274,7 @@ class BotManager
             return 0;
         }
 
-        if ('' === trim($loop_time)) {
+        if (is_string($loop_time) && '' === trim($loop_time)) {
             return 604800; // Default to 7 days.
         }
 
@@ -278,9 +286,9 @@ class BotManager
      *
      * @param int $loop_time_in_seconds
      *
-     * @return $this
+     * @return \NPM\TelegramBotManager\BotManager
      */
-    public function handleGetUpdatesLoop($loop_time_in_seconds)
+    public function handleGetUpdatesLoop(int $loop_time_in_seconds): self
     {
         // Remember the time we started this loop.
         $now = time();
@@ -299,8 +307,10 @@ class BotManager
 
     /**
      * Handle the updates using the getUpdates method.
+     *
+     * @return \NPM\TelegramBotManager\BotManager
      */
-    public function handleGetUpdates()
+    public function handleGetUpdates(): self
     {
         $output = date('Y-m-d H:i:s', time()) . ' - ';
 
@@ -342,9 +352,9 @@ class BotManager
     /**
      * Handle the updates using the Webhook method.
      *
-     * @throws \InvalidArgumentException
+     * @return \NPM\TelegramBotManager\BotManager
      */
-    public function handleWebhook()
+    public function handleWebhook(): self
     {
         $this->telegram->handle();
 
@@ -356,7 +366,7 @@ class BotManager
      *
      * @return string
      */
-    public function getOutput()
+    public function getOutput(): string
     {
         $output       = $this->output;
         $this->output = '';

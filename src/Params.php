@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -90,9 +90,10 @@ class Params
      *
      * @param $params
      *
+     * @return \NPM\TelegramBotManager\Params
      * @throws \InvalidArgumentException
      */
-    private function validateAndSetBotParams($params)
+    private function validateAndSetBotParams($params): self
     {
         // Set all vital params.
         foreach (self::$valid_vital_bot_params as $vital_key) {
@@ -111,6 +112,8 @@ class Params
 
             $this->bot_params[$extra_key] = $params[$extra_key];
         }
+
+        return $this;
     }
 
     /**
@@ -118,8 +121,10 @@ class Params
      *
      * https://url/entry.php?s=<secret>&a=<action>&l=<loop>
      * $ php entry.php s=<secret> a=<action> l=<loop>
+     *
+     * @return \NPM\TelegramBotManager\Params
      */
-    private function validateAndSetScriptParams()
+    private function validateAndSetScriptParams(): self
     {
         $this->script_params = $_GET;
 
@@ -148,12 +153,17 @@ class Params
      *
      * @return mixed
      */
-    public function getBotParam($param)
+    public function getBotParam(string $param)
     {
-        return isset($this->bot_params[$param]) ? $this->bot_params[$param] : null;
+        return $this->bot_params[$param] ?? null;
     }
 
-    public function getBotParams()
+    /**
+     * Get an array of all bot params.
+     *
+     * @return array
+     */
+    public function getBotParams(): array
     {
         return $this->bot_params;
     }
@@ -165,12 +175,17 @@ class Params
      *
      * @return mixed
      */
-    public function getScriptParam($param)
+    public function getScriptParam(string $param)
     {
-        return isset($this->script_params[$param]) ? $this->script_params[$param] : null;
+        return $this->script_params[$param] ?? null;
     }
 
-    public function getScriptParams()
+    /**
+     * Get an array of all script params.
+     *
+     * @return array
+     */
+    public function getScriptParams(): array
     {
         return $this->script_params;
     }
