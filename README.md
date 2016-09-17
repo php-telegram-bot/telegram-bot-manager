@@ -1,12 +1,12 @@
 # PHP Telegram Bot Manager
 
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/noplanman/php-telegram-bot-manager.svg?maxAge=2592000)](https://scrutinizer-ci.com/g/noplanman/php-telegram-bot-manager/?branch=master)
-[![Codecov](https://img.shields.io/codecov/c/github/noplanman/php-telegram-bot-manager.svg?maxAge=2592000)](https://codecov.io/gh/noplanman/php-telegram-bot-manager)
-[![Build Status](https://img.shields.io/travis/noplanman/php-telegram-bot-manager.svg?maxAge=2592000)](https://travis-ci.org/noplanman/php-telegram-bot-manager)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/noplanman/php-telegram-bot-manager.svg)](https://scrutinizer-ci.com/g/noplanman/php-telegram-bot-manager/?branch=master)
+[![Codecov](https://img.shields.io/codecov/c/github/noplanman/php-telegram-bot-manager.svg)](https://codecov.io/gh/noplanman/php-telegram-bot-manager)
+[![Build Status](https://img.shields.io/travis/noplanman/php-telegram-bot-manager.svg)](https://travis-ci.org/noplanman/php-telegram-bot-manager)
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/noplanman/telegram-bot-manager.svg?maxAge=2592000)](https://packagist.org/packages/noplanman/telegram-bot-manager)
-[![Total Downloads](https://img.shields.io/packagist/dt/noplanman/telegram-bot-manager.svg?maxAge=2592000)](https://packagist.org/packages/noplanman/telegram-bot-manager)
-[![License](https://img.shields.io/packagist/l/noplanman/telegram-bot-manager.svg?maxAge=2592000)](https://github.com/noplanman/php-telegram-bot-manager/LICENSE.md)
+[![Latest Stable Version](https://img.shields.io/packagist/v/noplanman/telegram-bot-manager.svg)](https://packagist.org/packages/noplanman/telegram-bot-manager)
+[![Total Downloads](https://img.shields.io/packagist/dt/noplanman/telegram-bot-manager.svg)](https://packagist.org/packages/noplanman/telegram-bot-manager)
+[![License](https://img.shields.io/packagist/l/noplanman/telegram-bot-manager.svg)](https://github.com/noplanman/php-telegram-bot-manager/LICENSE.md)
 
 This project builds on top of [PHP Telegram Bot](https://github.com/akalongman/php-telegram-bot/) and as such, depends on it!
 
