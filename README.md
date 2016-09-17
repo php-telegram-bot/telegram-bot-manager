@@ -17,10 +17,13 @@ Installation and usage is pretty straight forward:
 
 ### Require this package with [Composer](https://getcomposer.org/)
 
+- For PHP <7 we need version 0.1.*
+- For PHP 7+ we need version 0.2.*
+
 Either run this command in your command line:
 
 ```
-composer require noplanman/telegram-bot-manager
+composer require noplanman/telegram-bot-manager:^0.2
 ```
 
 **or**
@@ -29,7 +32,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```js
 "require": {
-    "noplanman/telegram-bot-manager": "*"
+    "noplanman/telegram-bot-manager": "^0.2"
 }
 ```
 and then run `composer update`
