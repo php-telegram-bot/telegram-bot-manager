@@ -59,42 +59,46 @@ i         | **i**nterval: Number of seconds to wait between getUpdates requests 
 #### via browser
 
 Simply point your browser to the `manager.php` file with the necessary **GET** parameters:
-`http://example.com/manager.php?s=<secret>&a=<action>&l=<loop>&i=<interval>`
+- `http://example.com/manager.php?s=<secret>&a=<action>&l=<loop>&i=<interval>`
 
 **Webhook**
+
 Set, unset and reset the webhook:
-`http://example.com/manager.php?s=super_secret&a=set`
-`http://example.com/manager.php?s=super_secret&a=unset`
-`http://example.com/manager.php?s=super_secret&a=reset` (unset & set combined)
+- `http://example.com/manager.php?s=super_secret&a=set`
+- `http://example.com/manager.php?s=super_secret&a=unset`
+- `http://example.com/manager.php?s=super_secret&a=reset` (unset & set combined)
 
 **getUpdates**
+
 Handle updates once:
-`http://example.com/manager.php?s=super_secret&a=handle` or simply
-`http://example.com/manager.php?s=super_secret` (`handle` action is the default)
+- `http://example.com/manager.php?s=super_secret&a=handle` or simply
+- `http://example.com/manager.php?s=super_secret` (`handle` action is the default)
 
 Handle updates for 30 seconds, fetching every 5 seconds:
-`http://example.com/manager.php?s=super_secret&l=30&i=5`
+- `http://example.com/manager.php?s=super_secret&l=30&i=5`
 
 #### via CLI
 
 When using CLI, the secret is not necessary (since it could just be read from the file itself).
 
 Call the `manager.php` file directly using `php` and pass the parameters:
-`$ php manager.php a=<action> l=<loop> i=<interval>`
+- `$ php manager.php a=<action> l=<loop> i=<interval>`
 
 **Webhook**
+
 Set, unset and reset the webhook:
-`$ php manager.php a=set`
-`$ php manager.php a=unset`
-`$ php manager.php a=reset` (unset & set combined)
+- `$ php manager.php a=set`
+- `$ php manager.php a=unset`
+- `$ php manager.php a=reset` (unset & set combined)
 
 **getUpdates**
+
 Handle updates once:
-`$ php manager.php a=handle` or simply
-`$ php manager.php` (`handle` action is the default)
+- `$ php manager.php a=handle` or simply
+- `$ php manager.php` (`handle` action is the default)
 
 Handle updates for 30 seconds, fetching every 5 seconds:
-`$ php manager.php l=30 i=5`
+- `$ php manager.php l=30 i=5`
 
 ### Create the manager PHP file
 
