@@ -19,6 +19,7 @@ class Params
         's',
         'a',
         'l',
+        'i',
     ];
 
     /**
