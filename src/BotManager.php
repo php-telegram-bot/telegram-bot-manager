@@ -175,6 +175,8 @@ class BotManager
 
         if ($this->action->isAction(['unset', 'reset'])) {
             $this->handleOutput($this->telegram->unsetWebHook()->getDescription() . PHP_EOL);
+            // When resetting the webhook, sleep for a bit to prevent too many requests.
+            $this->action->isAction('reset') && sleep(1);
         }
         if ($this->action->isAction(['set', 'reset'])) {
             $this->handleOutput(

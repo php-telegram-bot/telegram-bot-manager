@@ -185,6 +185,9 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertSame('Webhook is already deleted' . PHP_EOL, $output);
     }
 
+    /**
+     * @group live
+     */
     public function testValidateAndSetWebhookSuccessLiveBot()
     {
         $botManager = new BotManager(array_merge(self::$live_params, [
@@ -203,26 +206,29 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         // Make sure the webhook isn't set to start with.
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'unset');
         $botManager->validateAndSetWebhook()->getOutput();
-
+        sleep(1);
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'set');
         $output = $botManager->validateAndSetWebhook()->getOutput();
         self::assertSame('Webhook was set' . PHP_EOL, $output);
-
+        sleep(1);
         $output = $botManager->validateAndSetWebhook()->getOutput();
         self::assertSame('Webhook is already set' . PHP_EOL, $output);
-
+        sleep(1);
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'reset');
         $output = $botManager->validateAndSetWebhook()->getOutput();
         self::assertSame('Webhook was deleted' . PHP_EOL . 'Webhook was set' . PHP_EOL, $output);
-
+        sleep(1);
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'unset');
         $output = $botManager->validateAndSetWebhook()->getOutput();
         self::assertSame('Webhook was deleted' . PHP_EOL, $output);
-
+        sleep(1);
         $output = $botManager->validateAndSetWebhook()->getOutput();
         self::assertSame('Webhook is already deleted' . PHP_EOL, $output);
     }
 
+    /**
+     * @group live
+     */
     public function testUnsetWebhookViaRunLiveBot()
     {
         $_GET       = ['a' => 'unset'];
@@ -364,6 +370,9 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertEmpty($botManager->getOutput());
     }
 
+    /**
+     * @group live
+     */
     public function testGetUpdatesLiveBot()
     {
         $botManager = new BotManager(self::$live_params);
@@ -371,6 +380,9 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertContains('Updates processed: 0', $output);
     }
 
+    /**
+     * @group live
+     */
     public function testGetUpdatesLoopLiveBot()
     {
         // Webhook must NOT be set for this to work!
