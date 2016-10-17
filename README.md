@@ -59,7 +59,7 @@ i         | **i**nterval: Number of seconds to wait between getUpdates requests 
 #### via browser
 
 Simply point your browser to the `manager.php` file with the necessary **GET** parameters:
-`http://example.com/manager.php?s=<secret>&a=<action>&l=<loop>`
+`http://example.com/manager.php?s=<secret>&a=<action>&l=<loop>&i=<interval>`
 
 **Webhook**
 Set, unset and reset the webhook:
