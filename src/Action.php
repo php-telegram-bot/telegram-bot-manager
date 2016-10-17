@@ -39,7 +39,7 @@ class Action
         $this->action = $action ?: 'handle';
 
         if (!$this->isAction(self::$valid_actions)) {
-            throw new \InvalidArgumentException('Invalid action');
+            throw new \InvalidArgumentException('Invalid action: ' . $this->action);
         }
     }
 
@@ -63,5 +63,15 @@ class Action
     public function getAction(): string
     {
         return $this->action;
+    }
+
+    /**
+     * Return a list of valid actions.
+     *
+     * @return array
+     */
+    public static function getValidActions(): array
+    {
+        return self::$valid_actions;
     }
 }

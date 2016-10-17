@@ -14,16 +14,20 @@ use NPM\TelegramBotManager\Action;
 
 class ActionTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid action
-     */
     public function testConstruct()
     {
         self::assertEquals('set', (new Action('set'))->getAction());
         self::assertEquals('unset', (new Action('unset'))->getAction());
         self::assertEquals('reset', (new Action('reset'))->getAction());
         self::assertEquals('handle', (new Action('handle'))->getAction());
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /^Invalid action: non-existent$/
+     */
+    public function testConstructFail()
+    {
         new Action('non-existent');
     }
 
@@ -34,6 +38,12 @@ class ActionTest extends \PHPUnit_Framework_TestCase
         self::assertTrue($action->isAction(['set', 'unset']));
         self::assertFalse($action->isAction('unset'));
         self::assertFalse($action->isAction(['unset', 'reset']));
+
+        // Random action.
+        $valid_actions = Action::getValidActions();
+        $random_action = $valid_actions[array_rand($valid_actions)];
+        $action        = new Action($random_action);
+        self::assertTrue($action->isAction(Action::getValidActions()));
 
         // Test some weird values.
         self::assertFalse($action->isAction(null));
