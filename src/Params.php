@@ -134,6 +134,7 @@ class Params
             // We don't need the first arg (the file name).
             $args = array_slice($_SERVER['argv'], 1);
 
+            /** @var array $args */
             foreach ($args as $arg) {
                 @list($key, $val) = explode('=', $arg);
                 isset($key, $val) && $this->script_params[$key] = $val;
