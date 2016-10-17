@@ -288,6 +288,36 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertSame(12345, (new BotManager(ParamsTest::$demo_vital_params))->getLoopTime());
     }
 
+    public function testGetLoopInterval()
+    {
+        // Parameter not set.
+        self::assertSame(2, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+
+        $_GET = ['i' => ''];
+        self::assertSame(2, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+
+        $_GET = ['i' => '     '];
+        self::assertSame(2, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+
+        $_GET = ['i' => 'text-string'];
+        self::assertSame(1, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+
+        $_GET = ['i' => 0];
+        self::assertSame(1, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+
+        $_GET = ['i' => -12345];
+        self::assertSame(1, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+
+        $_GET = ['i' => 12345];
+        self::assertSame(12345, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+
+        $_GET = ['i' => '-12345'];
+        self::assertSame(1, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+
+        $_GET = ['i' => '12345'];
+        self::assertSame(12345, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
+    }
+
     public function testSetBotExtras()
     {
         $extras     = [

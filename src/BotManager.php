@@ -250,7 +250,7 @@ class BotManager
     {
         if (empty($this->params->getBotParam('webhook'))) {
             if ($loop_time = $this->getLoopTime()) {
-                $this->handleGetUpdatesLoop($loop_time);
+                $this->handleGetUpdatesLoop($loop_time, $this->getLoopInterval());
             } else {
                 $this->handleGetUpdates();
             }
@@ -282,13 +282,31 @@ class BotManager
     }
 
     /**
+     * Get the number of seconds the script should wait after each getUpdates request.
+     *
+     * @return int
+     */
+    public function getLoopInterval(): int
+    {
+        $interval_time = $this->params->getScriptParam('i');
+
+        if (null === $interval_time || (is_string($interval_time) && '' === trim($interval_time))) {
+            return 2;
+        }
+
+        // Minimum interval is 1 second.
+        return max(1, (int)$interval_time);
+    }
+
+    /**
      * Loop the getUpdates method for the passed amount of seconds.
      *
      * @param int $loop_time_in_seconds
+     * @param int $loop_interval_in_seconds
      *
      * @return \NPM\TelegramBotManager\BotManager
      */
-    public function handleGetUpdatesLoop(int $loop_time_in_seconds): self
+    public function handleGetUpdatesLoop(int $loop_time_in_seconds, int $loop_interval_in_seconds = 2): self
     {
         // Remember the time we started this loop.
         $now = time();
@@ -299,7 +317,7 @@ class BotManager
             $this->handleGetUpdates();
 
             // Chill a bit.
-            sleep(2);
+            sleep($loop_interval_in_seconds);
         }
 
         return $this;
