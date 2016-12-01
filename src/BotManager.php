@@ -90,7 +90,9 @@ class BotManager
      * Run this thing in all its glory!
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      * @throws \InvalidArgumentException
+     * @throws \Exception
      */
     public function run(): self
     {
@@ -121,6 +123,7 @@ class BotManager
      * Initialise all loggers.
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Exception
      */
     public function initLogging(): self
     {
@@ -163,6 +166,7 @@ class BotManager
      * Make sure the webhook is valid and perform the requested webhook operation.
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      * @throws \InvalidArgumentException
      */
     public function validateAndSetWebhook(): self
@@ -247,6 +251,7 @@ class BotManager
      * Handle the request, which calls either the Webhook or getUpdates method respectively.
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleRequest(): self
     {
@@ -307,6 +312,7 @@ class BotManager
      * @param int $loop_interval_in_seconds
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleGetUpdatesLoop(int $loop_time_in_seconds, int $loop_interval_in_seconds = 2): self
     {
@@ -329,6 +335,7 @@ class BotManager
      * Handle the updates using the getUpdates method.
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleGetUpdates(): self
     {
@@ -373,6 +380,7 @@ class BotManager
      * Handle the updates using the Webhook method.
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleWebhook(): self
     {
