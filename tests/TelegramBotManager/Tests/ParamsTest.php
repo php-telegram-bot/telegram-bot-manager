@@ -28,7 +28,9 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
      */
     public static $demo_extra_params = [
         'webhook'         => 'https://php.telegram.bot/manager.php',
-        'selfcrt'         => __DIR__ . '/server.crt',
+        'certificate'     => __DIR__ . '/server.crt',
+        'max_connections' => 20,
+        'allowed_updates' => ['message', 'edited_channel_post', 'callback_query'],
         'admins'          => [1],
         'mysql'           => [
             'host'     => '127.0.0.1',

@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": "^7.0",
-        "longman/telegram-bot": "^0.36"
+        "longman/telegram-bot": "^0.38"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.5",

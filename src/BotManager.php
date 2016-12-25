@@ -172,21 +172,27 @@ class BotManager
     public function validateAndSetWebhook(): self
     {
         $webhook = $this->params->getBotParam('webhook');
-        $selfcrt = $this->params->getBotParam('selfcrt');
         if (empty($webhook) && $this->action->isAction(['set', 'reset'])) {
             throw new \InvalidArgumentException('Invalid webhook');
         }
 
         if ($this->action->isAction(['unset', 'reset'])) {
-            $this->handleOutput($this->telegram->unsetWebHook()->getDescription() . PHP_EOL);
+            $this->handleOutput($this->telegram->deleteWebhook()->getDescription() . PHP_EOL);
             // When resetting the webhook, sleep for a bit to prevent too many requests.
             $this->action->isAction('reset') && sleep(1);
         }
+
         if ($this->action->isAction(['set', 'reset'])) {
+            $webhook_params = array_filter([
+                'certificate'     => $this->params->getBotParam('certificate'),
+                'max_connections' => $this->params->getBotParam('max_connections'),
+                'allowed_updates' => $this->params->getBotParam('allowed_updates'),
+            ]);
+
             $this->handleOutput(
-                $this->telegram->setWebHook(
+                $this->telegram->setWebhook(
                     $webhook . '?a=handle&s=' . $this->params->getBotParam('secret'),
-                    $selfcrt
+                    $webhook_params
                 )->getDescription() . PHP_EOL
             );
         }

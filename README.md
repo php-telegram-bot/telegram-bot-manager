@@ -159,8 +159,12 @@ Parameter       | Description
 ---------       |------------
 webhook         | URL to the manager PHP file used for setting up the Webhook.
                 | *e.g.* `'https://example.com/manager.php'`
-selfcrt         | Path to a self-signed certificate (if necessary).
+certificate     | Path to a self-signed certificate (if necessary).
                 | *e.g.* `__DIR__ . '/server.crt'`
+max_connections | Maximum allowed simultaneous HTTPS connections to the webhook
+                | *e.g.* `20`
+allowed_updates | List the types of updates you want your bot to receive
+                | *e.g.* `['message', 'edited_channel_post', 'callback_query']`
 logging         | Path(s) where to the log files should be put. This is an array that can contain all 3 log file paths (`error`, `debug` and `update`).
                 | *e.g.* `['error' => __DIR__ . '/php-telegram-bot-error.log']`
 admins          | An array of user ids that have admin access to your bot.

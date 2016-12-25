@@ -36,7 +36,9 @@ class Params
      */
     private static $valid_extra_bot_params = [
         'webhook',
-        'selfcrt',
+        'certificate',
+        'max_connections',
+        'allowed_updates',
         'logging',
         'admins',
         'mysql',
@@ -65,7 +67,9 @@ class Params
      * botname (string) Telegram Bot name
      * secret (string) Secret string to validate calls
      * webhook (string) URI of the webhook
-     * selfcrt (string) Path to the self-signed certificate
+     * certificate (string) Path to the self-signed certificate
+     * max_connections (int) Maximum allowed simultaneous HTTPS connections to the webhook
+     * allowed_updates (array) List the types of updates you want your bot to receive
      * logging (array) Array of logger files to set.
      * admins (array) List of admins to enable.
      * mysql (array) MySQL credentials to use.

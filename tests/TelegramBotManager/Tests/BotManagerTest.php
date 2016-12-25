@@ -141,7 +141,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
             'telegram',
             $this->getMockBuilder(Telegram::class)
                  ->disableOriginalConstructor()
-                 ->setMethods(['setWebHook', 'unsetWebHook', 'getDescription'])
+                 ->setMethods(['setWebhook', 'deleteWebhook', 'getDescription'])
                  ->getMock()
         );
 
@@ -149,11 +149,11 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $telegram */
         $telegram->expects(static::any())
-                 ->method('setWebHook')
+                 ->method('setWebhook')
                  ->with('https://web/hook.php?a=handle&s=secret_12345')
                  ->will(static::returnSelf());
         $telegram->expects(static::any())
-                 ->method('unsetWebHook')
+                 ->method('deleteWebhook')
                  ->will(static::returnSelf());
         $telegram->expects(static::any())
                  ->method('getDescription')
@@ -229,7 +229,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     /**
      * @group live
      */
-    public function testUnsetWebhookViaRunLiveBot()
+    public function testDeleteWebhookViaRunLiveBot()
     {
         $_GET       = ['a' => 'unset'];
         $botManager = new BotManager(array_merge(self::$live_params, [
@@ -386,7 +386,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     public function testGetUpdatesLoopLiveBot()
     {
         // Webhook must NOT be set for this to work!
-        $this->testUnsetWebhookViaRunLiveBot();
+        $this->testDeleteWebhookViaRunLiveBot();
 
         // Looping for 5 seconds should be enough to get a result.
         $_GET       = ['l' => 5];
