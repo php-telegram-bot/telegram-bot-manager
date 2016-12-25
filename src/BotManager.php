@@ -67,6 +67,16 @@ class BotManager
     }
 
     /**
+     * Check if we're busy running the PHPUnit tests.
+     *
+     * @return bool
+     */
+    public static function inTest(): bool
+    {
+        return defined('PHPUNIT_TEST') && PHPUNIT_TEST === true;
+    }
+
+    /**
      * Return the Telegram object.
      *
      * @return \Longman\TelegramBot\Telegram
@@ -221,7 +231,7 @@ class BotManager
     {
         $this->output .= $output;
 
-        if (!(defined('PHPUNIT_TEST') && PHPUNIT_TEST === true)) {
+        if (!self::inTest()) {
             echo $output;
         }
 
@@ -433,13 +443,13 @@ class BotManager
      */
     public function isValidRequest(): bool
     {
-        if (false === $this->params->getBotParam('validate_request')) {
+        if ((!self::inTest() && 'cli' === PHP_SAPI) || false === $this->params->getBotParam('validate_request')) {
             return true;
         }
 
-        $ip = @$_SERVER['REMOTE_ADDR'];
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
         foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR'] as $key) {
-            $addr = @$_SERVER[$key];
+            $addr = $_SERVER[$key] ?? null;
             if (filter_var($addr, FILTER_VALIDATE_IP)) {
                 $ip = $addr;
                 break;
