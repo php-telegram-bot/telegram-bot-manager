@@ -35,6 +35,7 @@ class Params
      * @var array List of valid extra parameters that can be passed.
      */
     private static $valid_extra_bot_params = [
+        'validate_request',
         'webhook',
         'certificate',
         'max_connections',
@@ -56,9 +57,11 @@ class Params
     private $script_params = [];
 
     /**
-     * @var array List of all params passed at construction.
+     * @var array List of all params passed at construction, predefined with defaults.
      */
-    private $bot_params = [];
+    private $bot_params = [
+        'validate_request' => true,
+    ];
 
     /**
      * Params constructor.
@@ -66,6 +69,7 @@ class Params
      * api_key (string) Telegram Bot API key
      * botname (string) Telegram Bot name
      * secret (string) Secret string to validate calls
+     * validate_request (bool) Only allow webhook access from valid Telegram API IPs
      * webhook (string) URI of the webhook
      * certificate (string) Path to the self-signed certificate
      * max_connections (int) Maximum allowed simultaneous HTTPS connections to the webhook
@@ -102,7 +106,7 @@ class Params
     {
         // Set all vital params.
         foreach (self::$valid_vital_bot_params as $vital_key) {
-            if (empty($params[$vital_key])) {
+            if (!array_key_exists($vital_key, $params)) {
                 throw new \InvalidArgumentException('Some vital info is missing: ' . $vital_key);
             }
 
@@ -111,7 +115,7 @@ class Params
 
         // Set all extra params.
         foreach (self::$valid_extra_bot_params as $extra_key) {
-            if (empty($params[$extra_key])) {
+            if (!array_key_exists($extra_key, $params)) {
                 continue;
             }
 
@@ -147,7 +151,8 @@ class Params
 
         // Keep only valid ones.
         $this->script_params = array_intersect_key($this->script_params,
-            array_fill_keys(self::$valid_script_params, null));
+            array_fill_keys(self::$valid_script_params, null)
+        );
 
         return $this;
     }
