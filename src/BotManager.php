@@ -24,6 +24,16 @@ use Longman\TelegramBot\TelegramLog;
 class BotManager
 {
     /**
+     * @var string Telegram post servers lower IP limit
+     */
+    const TELEGRAM_IP_LOWER = '149.154.167.197';
+
+    /**
+     * @var string Telegram post servers upper IP limit
+     */
+    const TELEGRAM_IP_UPPER = '149.154.167.233';
+
+    /**
      * @var string The output for testing, instead of echoing
      */
     private $output = '';
@@ -258,6 +268,7 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws \Exception
      */
     public function handleRequest(): self
     {
@@ -387,9 +398,14 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @throws \Exception
      */
     public function handleWebhook(): self
     {
+        if (!$this->isValidRequest()) {
+            throw new \Exception('Invalid access');
+        }
+
         $this->telegram->handle();
 
         return $this;
@@ -406,5 +422,34 @@ class BotManager
         $this->output = '';
 
         return $output;
+    }
+
+    /**
+     * Check if this is a valid request coming from a Telegram API IP address.
+     *
+     * @link https://core.telegram.org/bots/webhooks#the-short-version
+     *
+     * @return bool
+     */
+    public function isValidRequest(): bool
+    {
+        if (false === $this->params->getBotParam('validate_request')) {
+            return true;
+        }
+
+        $ip = @$_SERVER['REMOTE_ADDR'];
+        foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR'] as $key) {
+            $addr = @$_SERVER[$key];
+            if (filter_var($addr, FILTER_VALIDATE_IP)) {
+                $ip = $addr;
+                break;
+            }
+        }
+
+        $lower_dec = (float)sprintf('%u', ip2long(self::TELEGRAM_IP_LOWER));
+        $upper_dec = (float)sprintf('%u', ip2long(self::TELEGRAM_IP_UPPER));
+        $ip_dec    = (float)sprintf('%u', ip2long($ip));
+
+        return $ip_dec >= $lower_dec && $ip_dec <= $upper_dec;
     }
 }

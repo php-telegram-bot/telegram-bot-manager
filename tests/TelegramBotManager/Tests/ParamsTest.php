@@ -27,26 +27,27 @@ class ParamsTest extends \PHPUnit_Framework_TestCase
      * @var array Demo extra parameters.
      */
     public static $demo_extra_params = [
-        'webhook'         => 'https://php.telegram.bot/manager.php',
-        'certificate'     => __DIR__ . '/server.crt',
-        'max_connections' => 20,
-        'allowed_updates' => ['message', 'edited_channel_post', 'callback_query'],
-        'admins'          => [1],
-        'mysql'           => [
+        'validate_request' => true,
+        'webhook'          => 'https://php.telegram.bot/manager.php',
+        'certificate'      => __DIR__ . '/server.crt',
+        'max_connections'  => 20,
+        'allowed_updates'  => ['message', 'edited_channel_post', 'callback_query'],
+        'admins'           => [1],
+        'mysql'            => [
             'host'     => '127.0.0.1',
             'user'     => 'root',
             'password' => 'root',
             'database' => 'telegram_bot',
         ],
-        'download_path'   => __DIR__ . '/Download',
-        'upload_path'     => __DIR__ . '/Upload',
-        'commands_paths'  => __DIR__ . '/CustomCommands',
-        'command_configs' => [
+        'download_path'    => __DIR__ . '/Download',
+        'upload_path'      => __DIR__ . '/Upload',
+        'commands_paths'   => __DIR__ . '/CustomCommands',
+        'command_configs'  => [
             'weather'       => ['owm_api_key' => 'owm_api_key_12345'],
             'sendtochannel' => ['your_channel' => '@my_channel'],
         ],
-        'botan_token'     => 'botan_12345',
-        'custom_input'    => '{"some":"raw", "json":"update"}',
+        'botan_token'      => 'botan_12345',
+        'custom_input'     => '{"some":"raw", "json":"update"}',
     ];
 
     public function testConstruct()
