@@ -56,6 +56,11 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         self::assertNull($params->getBotParam('paramX'));
     }
 
+    public function testInTest()
+    {
+        self::assertTrue(BotManager::inTest());
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Some vital info is missing: api_key
@@ -383,7 +388,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
 
         unset($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_CLIENT_IP'], $_SERVER['REMOTE_ADDR']);
 
-        foreach(['HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'] as $key) {
+        foreach (['HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'] as $key) {
             $_SERVER[$key] = '1.1.1.1';
             self::assertFalse($botManager->isValidRequest());
             unset($_SERVER[$key]);
