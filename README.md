@@ -20,7 +20,7 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```
-composer require noplanman/telegram-bot-manager:^0.2
+composer require noplanman/telegram-bot-manager:^0.3
 ```
 
 **or**
@@ -29,7 +29,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```js
 "require": {
-    "noplanman/telegram-bot-manager": "^0.2"
+    "noplanman/telegram-bot-manager": "^0.3"
 }
 ```
 and then run `composer update`
