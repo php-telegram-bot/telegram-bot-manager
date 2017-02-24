@@ -84,6 +84,15 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         new BotManager(ParamsTest::$demo_vital_params);
     }
 
+    public function testValidTelegramObject()
+    {
+        $bot      = new BotManager(ParamsTest::$demo_vital_params);
+        $telegram = $bot->getTelegram();
+
+        self::assertInstanceOf(Telegram::class, $telegram);
+        self::assertSame(ParamsTest::$demo_vital_params['botname'], $telegram->getBotName());
+        self::assertSame(ParamsTest::$demo_vital_params['api_key'], $telegram->getApiKey());
+    }
 
     public function testInitLogging()
     {
@@ -198,15 +207,6 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         $botManager = new BotManager(array_merge(self::$live_params, [
             'webhook' => 'https://example.com/hook.php',
         ]));
-
-        TestHelpers::setObjectProperty(
-            $botManager,
-            'telegram',
-            new Telegram(
-                self::$live_params['api_key'],
-                self::$live_params['botname']
-            )
-        );
 
         // Make sure the webhook isn't set to start with.
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'unset');
@@ -340,15 +340,6 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
             ],
         ];
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, $extras));
-
-        TestHelpers::setObjectProperty(
-            $botManager,
-            'telegram',
-            new Telegram(
-                ParamsTest::$demo_vital_params['api_key'],
-                ParamsTest::$demo_vital_params['botname']
-            )
-        );
 
         $botManager->setBotExtras();
         $telegram = $botManager->getTelegram();

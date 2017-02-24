@@ -64,6 +64,12 @@ class BotManager
     {
         $this->params = new Params($params);
         $this->action = new Action($this->params->getScriptParam('a'));
+
+        // Set up a new Telegram instance.
+        $this->telegram = new Telegram(
+            $this->params->getBotParam('api_key'),
+            $this->params->getBotParam('botname')
+        );
     }
 
     /**
@@ -121,12 +127,6 @@ class BotManager
 
         // Make sure this is a valid call.
         $this->validateSecret();
-
-        // Set up a new Telegram instance.
-        $this->telegram = new Telegram(
-            $this->params->getBotParam('api_key'),
-            $this->params->getBotParam('botname')
-        );
 
         if ($this->action->isAction(['set', 'unset', 'reset'])) {
             $this->validateAndSetWebhook();
