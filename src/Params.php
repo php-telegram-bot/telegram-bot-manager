@@ -41,6 +41,7 @@ class Params
         'max_connections',
         'allowed_updates',
         'logging',
+        'limiter',
         'admins',
         'mysql',
         'download_path',

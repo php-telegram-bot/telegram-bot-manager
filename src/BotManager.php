@@ -11,6 +11,7 @@
 namespace NPM\TelegramBotManager;
 
 use Longman\TelegramBot\Entities;
+use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 
@@ -245,7 +246,7 @@ class BotManager
      */
     public function setBotExtras(): self
     {
-        $simple_extras = [
+        $telegram_extras = [
             'admins'         => 'enableAdmins',
             'mysql'          => 'enableMySql',
             'botan_token'    => 'enableBotan',
@@ -254,11 +255,22 @@ class BotManager
             'download_path'  => 'setDownloadPath',
             'upload_path'    => 'setUploadPath',
         ];
-        // For simple extras, just pass the single param value to the Telegram method.
-        foreach ($simple_extras as $param_key => $method) {
+        // For telegram extras, just pass the single param value to the Telegram method.
+        foreach ($telegram_extras as $param_key => $method) {
             $param = $this->params->getBotParam($param_key);
             if (null !== $param) {
                 $this->telegram->$method($param);
+            }
+        }
+
+        $request_extras = [
+            'limiter' => 'setLimiter',
+        ];
+        // For request extras, just pass the single param value to the Request method.
+        foreach ($request_extras as $param_key => $method) {
+            $param = $this->params->getBotParam($param_key);
+            if (null !== $param) {
+                Request::$method($param);
             }
         }
 

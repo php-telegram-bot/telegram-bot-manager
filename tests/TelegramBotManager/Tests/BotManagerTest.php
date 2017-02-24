@@ -10,6 +10,7 @@
 
 namespace NPM\TelegramBotManager\Tests;
 
+use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 use NPM\TelegramBotManager\BotManager;
@@ -332,6 +333,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
     public function testSetBotExtras()
     {
         $extras     = [
+            'limiter'         => false,
             'admins'          => [1, 2, 3],
             'download_path'   => __DIR__ . '/Download',
             'upload_path'     => __DIR__ . '/Upload',
@@ -344,6 +346,7 @@ class BotManagerTest extends \PHPUnit_Framework_TestCase
         $botManager->setBotExtras();
         $telegram = $botManager->getTelegram();
 
+        self::assertAttributeEquals($extras['limiter'], 'limiter_enabled', Request::class);
         self::assertEquals($extras['admins'], $telegram->getAdminList());
         self::assertEquals($extras['download_path'], $telegram->getDownloadPath());
         self::assertEquals($extras['upload_path'], $telegram->getUploadPath());
