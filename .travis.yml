@@ -1,19 +1,25 @@
 sudo: required
 language: php
 
+addons:
+  mariadb: 10.1
+
 cache:
     directories:
         - $HOME/.composer/cache
 
 matrix:
     include:
-        - php: 7
-          env: cov=1
-        - php: 7
-          env: deps=low
+        - php: 7.1
+          env: COVERAGE=1
+        - php: 7.1
+          env: DEPS=low
+        - php: 7.0
         - php: nightly
+        - php: hhvm
     allow_failures:
         - php: nightly
+        - php: hhvm
     fast_finish: true
 
 notifications:
@@ -24,24 +30,18 @@ git:
     depth: 1
 
 install:
-    - echo mysql-apt-config mysql-apt-config/select-server select mysql-5.7 | sudo debconf-set-selections
-    - wget http://dev.mysql.com/get/mysql-apt-config_0.7.3-1_all.deb
-    - sudo dpkg --install mysql-apt-config_0.7.3-1_all.deb
-    - sudo apt-get update -q
-    - sudo apt-get install -q -y -o Dpkg::Options::=--force-confnew mysql-server
-    - sudo mysql_upgrade
-    - if [ "$deps" == "low" ]; then travis_retry composer update --prefer-source --prefer-lowest --prefer-stable --no-interaction; fi
-    - if [ "$deps" != "low" ]; then travis_retry composer install --prefer-source --no-interaction; fi
+    - if [ "$DEPS" == "low" ]; then travis_retry composer update --prefer-source --prefer-lowest --prefer-stable --no-interaction; fi
+    - if [ "$DEPS" != "low" ]; then travis_retry composer install --prefer-source --no-interaction; fi
 
 before_script:
     - mysql -u root -e 'create database telegrambot; use telegrambot; source ./vendor/longman/telegram-bot/structure.sql;'
 
 script:
-    - if [[ "$cov" == "1" ]] ; then composer test-cov; fi
-    - if [[ "$cov" != "1" ]] ; then composer test; fi
+    - if [[ "$COVERAGE" == "1" ]] ; then composer test-cov; fi
+    - if [[ "$COVERAGE" != "1" ]] ; then composer test; fi
 
 after_success:
-    - if [[ "$cov" == "1" ]]; then bash <(curl -s https://codecov.io/bash); fi
+    - if [[ "$COVERAGE" == "1" ]]; then bash <(curl -s https://codecov.io/bash); fi
 
 env:
     global:
