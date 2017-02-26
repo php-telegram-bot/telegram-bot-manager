@@ -19,17 +19,17 @@ Installation and usage is pretty straight forward:
 
 Either run this command in your command line:
 
-```
-composer require noplanman/telegram-bot-manager:^0.3
+```bash
+composer require noplanman/telegram-bot-manager:^0.4
 ```
 
 **or**
 
 For existing Composer projects, edit your project's `composer.json` file to require `noplanman/telegram-bot-manager`:
 
-```js
+```yaml
 "require": {
-    "noplanman/telegram-bot-manager": "^0.3"
+    "noplanman/telegram-bot-manager": "^0.4"
 }
 ```
 and then run `composer update`
@@ -166,6 +166,8 @@ allowed_updates      | List the types of updates you want your bot to receive
 *array*              | *e.g.* `['message', 'edited_channel_post', 'callback_query']`
 logging              | Path(s) where to the log files should be put. This is an array that can contain all 3 log file paths (`error`, `debug` and `update`).
 *array*              | *e.g.* `['error' => __DIR__ . '/php-telegram-bot-error.log']`
+limiter              | Enable or disable the limiter functionality
+*bool*               | *e.g.* `true` or `false`
 admins               | An array of user ids that have admin access to your bot.
 *array*              | *e.g.* `[12345]`
 mysql                | Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!).
