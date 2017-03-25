@@ -42,16 +42,16 @@ What use would this library be if you couldn't perform any actions?!
 
 There are 3 parameters available to get things rolling:
 
-Parameter | Description
-----------|------------
-s         | **s**ecret: This is a special secret value defined in the main `manager.php` file.
-          | This parameter is required to call the script via browser!
-a         | **a**ction: The actual action to perform. (handle (default), set, unset, reset)
-          | **handle** executes the `getUpdates` method; **set** / **unset** / **reset** the Webhook.
-l         | **l**oop: Number of seconds to loop the script for (used for getUpdates method).
-          | This would be used mainly via CLI, to continually get updates for a certain period.
-i         | **i**nterval: Number of seconds to wait between getUpdates requests (used for getUpdates method, default: 2).
-          | This would be used mainly via CLI, to continually get updates for a certain period, every **i** seconds.
+| Parameter | Description |
+| --------- | ----------- |
+| s         | **s**ecret: This is a special secret value defined in the main `manager.php` file. |
+|           | This parameter is required to call the script via browser! |
+| a         | **a**ction: The actual action to perform. (handle (default), set, unset, reset) |
+|           | **handle** executes the `getUpdates` method; **set** / **unset** / **reset** the Webhook. |
+| l         | **l**oop: Number of seconds to loop the script for (used for getUpdates method). |
+|           | This would be used mainly via CLI, to continually get updates for a certain period. |
+| i         | **i**nterval: Number of seconds to wait between getUpdates requests (used for getUpdates method, default: 2). |
+|           | This would be used mainly via CLI, to continually get updates for a certain period, every **i** seconds. |
 
 #### via browser
 
@@ -148,42 +148,43 @@ For 84 random characters:
 Apart from the necessary vital parameters, the bot can be easily configured using extra parameters.
 
 Enable admins? Add custom command paths? Set up logging?
---> All no problem!
+
+**All no problem!**
 
 Here is a list of available extra parameters:
 
-Parameter            | Description
----------            |------------
-validate_request     | Only allow webhook access from valid Telegram API IPs.
-*bool*               | *default is `true`*
-webhook              | URL to the manager PHP file used for setting up the Webhook.
-*string*             | *e.g.* `'https://example.com/manager.php'`
-certificate          | Path to a self-signed certificate (if necessary).
-*string*             | *e.g.* `__DIR__ . '/server.crt'`
-max_connections      | Maximum allowed simultaneous HTTPS connections to the webhook
-*int*                | *e.g.* `20`
-allowed_updates      | List the types of updates you want your bot to receive
-*array*              | *e.g.* `['message', 'edited_channel_post', 'callback_query']`
-logging              | Path(s) where to the log files should be put. This is an array that can contain all 3 log file paths (`error`, `debug` and `update`).
-*array*              | *e.g.* `['error' => __DIR__ . '/php-telegram-bot-error.log']`
-limiter              | Enable or disable the limiter functionality
-*bool*               | *e.g.* `true` or `false`
-admins               | An array of user ids that have admin access to your bot.
-*array*              | *e.g.* `[12345]`
-mysql                | Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!).
-*array*              | *e.g.* `['host' => '127.0.0.1', 'user' => 'root', 'password' => 'root', 'database' => 'telegram_bot']`
-download_path        | Custom download path.
-*string*             | *e.g.* `__DIR__ . '/Download'`
-upload_path          | Custom upload path.
-*string*             | *e.g.* `__DIR__ . '/Upload'`
-commands_paths       | A list of custom commands paths.
-*array*              | *e.g.* `[__DIR__ . '/CustomCommands']`
-command_configs      | A list of all custom command configs.
-*array*              | *e.g.* `['sendtochannel' => ['your_channel' => '@my_channel']`
-botan_token          | The Botan.io token to be used for analytics.
-*string*             | *e.g.* `'botan_12345'`
-custom_input         | Override the custom input of your bot (mostly for testing purposes!).
-*string*             | *e.g.* `'{"some":"raw", "json":"update"}'`
+| Parameter            | Description |
+| ---------            | ----------- |
+| validate_request     | Only allow webhook access from valid Telegram API IPs. |
+| *bool*               | *default is `true`* |
+| webhook              | URL to the manager PHP file used for setting up the Webhook. |
+| *string*             | *e.g.* `'https://example.com/manager.php'` |
+| certificate          | Path to a self-signed certificate (if necessary). |
+| *string*             | *e.g.* `__DIR__ . '/server.crt'` |
+| max_connections      | Maximum allowed simultaneous HTTPS connections to the webhook |
+| *int*                | *e.g.* `20` |
+| allowed_updates      | List the types of updates you want your bot to receive |
+| *array*              | *e.g.* `['message', 'edited_channel_post', 'callback_query']` |
+| logging              | Path(s) where to the log files should be put. This is an array that can contain all 3 log file paths (`error`, `debug` and `update`). |
+| *array*              | *e.g.* `['error' => __DIR__ . '/php-telegram-bot-error.log']` |
+| limiter              | Enable or disable the limiter functionality |
+| *bool*               | *e.g.* `true` or `false` |
+| admins               | An array of user ids that have admin access to your bot. |
+| *array*              | *e.g.* `[12345]` |
+| mysql                | Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!). |
+| *array*              | *e.g.* `['host' => '127.0.0.1', 'user' => 'root', 'password' => 'root', 'database' => 'telegram_bot']` |
+| download_path        | Custom download path. |
+| *string*             | *e.g.* `__DIR__ . '/Download'` |
+| upload_path          | Custom upload path. |
+| *string*             | *e.g.* `__DIR__ . '/Upload'` |
+| commands_paths       | A list of custom commands paths. |
+| *array*              | *e.g.* `[__DIR__ . '/CustomCommands']` |
+| command_configs      | A list of all custom command configs. |
+| *array*              | *e.g.* `['sendtochannel' => ['your_channel' => '@my_channel']` |
+| botan_token          | The Botan.io token to be used for analytics. |
+| *string*             | *e.g.* `'botan_12345'` |
+| custom_input         | Override the custom input of your bot (mostly for testing purposes!). |
+| *string*             | *e.g.* `'{"some":"raw", "json":"update"}'` |
 
 ### Using getUpdates method
 
