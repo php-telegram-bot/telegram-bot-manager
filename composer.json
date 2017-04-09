@@ -36,12 +36,19 @@
         }
     },
     "scripts": {
+        "check-code": [
+            "parallel-lint . --exclude vendor"
+        ],
         "test": [
-            "parallel-lint . --exclude vendor",
+            "phpunit --exclude-group live"
+        ],
+        "test-live": [
             "phpunit"
         ],
         "test-cov": [
-            "parallel-lint . --exclude vendor",
+            "phpunit --coverage-clover=coverage.xml --exclude-group live"
+        ],
+        "test-cov-live": [
             "phpunit --coverage-clover=coverage.xml"
         ]
     }

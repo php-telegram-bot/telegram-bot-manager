@@ -37,8 +37,9 @@ before_script:
     - mysql -u root -e 'create database telegrambot; use telegrambot; source ./vendor/longman/telegram-bot/structure.sql;'
 
 script:
-    - if [[ "$COVERAGE" == "1" ]] ; then composer test-cov; fi
-    - if [[ "$COVERAGE" != "1" ]] ; then composer test; fi
+    - composer check-code
+    - if [[ "$COVERAGE" == "1" ]] ; then composer test-cov-live; fi
+    - if [[ "$COVERAGE" != "1" ]] ; then composer test-live; fi
 
 after_success:
     - if [[ "$COVERAGE" == "1" ]]; then bash <(curl -s https://codecov.io/bash); fi
