@@ -12,7 +12,7 @@ namespace NPM\TelegramBotManager\Tests;
 
 use NPM\TelegramBotManager\Action;
 
-class ActionTest extends \PHPUnit_Framework_TestCase
+class ActionTest extends \PHPUnit\Framework\TestCase
 {
     public function testConstruct()
     {

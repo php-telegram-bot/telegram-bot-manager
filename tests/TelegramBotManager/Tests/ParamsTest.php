@@ -12,7 +12,7 @@ namespace NPM\TelegramBotManager\Tests;
 
 use NPM\TelegramBotManager\Params;
 
-class ParamsTest extends \PHPUnit_Framework_TestCase
+class ParamsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var array Demo vital parameters.

@@ -22,7 +22,7 @@ use NPM\TelegramBotManager\BotManager;
  *
  * @package NPM\TelegramBotManager
  */
-class BotManagerTest extends \PHPUnit_Framework_TestCase
+class BotManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var array Live params for testing with live bot (get set in BotManagerTest->setUp()).
