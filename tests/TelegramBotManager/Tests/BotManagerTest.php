@@ -83,6 +83,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testVitalsSuccess()
     {
         new BotManager(ParamsTest::$demo_vital_params);
+        self::assertTrue(true);
     }
 
     public function testValidTelegramObject()
@@ -143,6 +144,8 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         (new BotManager(array_merge(ParamsTest::$demo_vital_params, [
             'secret' => 'my_secret_12345',
         ])))->validateSecret();
+
+        self::assertTrue(true);
     }
 
     public function testValidateAndSetWebhookSuccess()

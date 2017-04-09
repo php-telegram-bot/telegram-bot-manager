@@ -51,9 +51,16 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         'custom_input'     => '{"some":"raw", "json":"update"}',
     ];
 
+    public function setUp()
+    {
+        // Make sure we start with a clean slate.
+        $_GET = [];
+    }
+
     public function testConstruct()
     {
         new Params(self::$demo_vital_params);
+        self::assertTrue(true);
     }
 
     /**
