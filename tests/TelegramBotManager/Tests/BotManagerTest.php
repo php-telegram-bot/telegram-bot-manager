@@ -77,7 +77,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSomeVitalsFail()
     {
-        new BotManager(['api_key' => 'abc123', 'botname' => 'testbot']);
+        new BotManager(['api_key' => '12345:api_key', 'botname' => 'testbot']);
     }
 
     public function testVitalsSuccess()

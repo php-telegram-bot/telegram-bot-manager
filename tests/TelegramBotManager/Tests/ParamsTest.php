@@ -18,7 +18,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
      * @var array Demo vital parameters.
      */
     public static $demo_vital_params = [
-        'api_key' => 'api_key_12345',
+        'api_key' => '12345:api_key',
         'botname' => 'test_bot',
         'secret'  => 'secret_12345',
     ];
@@ -75,7 +75,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     public function testConstructWithoutBotname()
     {
         new Params([
-            'api_key' => 'api_key_12345',
+            'api_key' => '12345:api_key',
             'secret'  => 'secret_12345',
         ]);
     }
@@ -87,7 +87,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     public function testConstructWithoutSecret()
     {
         new Params([
-            'api_key' => 'api_key_12345',
+            'api_key' => '12345:api_key',
             'botname' => 'test_bot',
         ]);
     }
