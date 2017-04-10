@@ -1,17 +1,17 @@
 # PHP Telegram Bot Manager
 
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/noplanman/php-telegram-bot-manager.svg)](https://scrutinizer-ci.com/g/noplanman/php-telegram-bot-manager/?branch=master)
-[![Codecov](https://img.shields.io/codecov/c/github/noplanman/php-telegram-bot-manager.svg)](https://codecov.io/gh/noplanman/php-telegram-bot-manager)
-[![Build Status](https://img.shields.io/travis/noplanman/php-telegram-bot-manager.svg)](https://travis-ci.org/noplanman/php-telegram-bot-manager)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/telegram-bot-manager.svg)](https://scrutinizer-ci.com/g/php-telegram-bot/telegram-bot-manager/?branch=master)
+[![Codecov](https://img.shields.io/codecov/c/github/php-telegram-bot/telegram-bot-manager.svg)](https://codecov.io/gh/php-telegram-bot/telegram-bot-manager)
+[![Build Status](https://img.shields.io/travis/php-telegram-bot/telegram-bot-manager.svg)](https://travis-ci.org/php-telegram-bot/telegram-bot-manager)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/noplanman/telegram-bot-manager.svg)](https://packagist.org/packages/noplanman/telegram-bot-manager)
 [![Total Downloads](https://img.shields.io/packagist/dt/noplanman/telegram-bot-manager.svg)](https://packagist.org/packages/noplanman/telegram-bot-manager)
-[![License](https://img.shields.io/packagist/l/noplanman/telegram-bot-manager.svg)](https://github.com/noplanman/php-telegram-bot-manager/LICENSE.md)
+[![License](https://img.shields.io/packagist/l/noplanman/telegram-bot-manager.svg)](https://github.com/php-telegram-bot/telegram-bot-manager/LICENSE.md)
 
-This project builds on top of [PHP Telegram Bot](https://github.com/akalongman/php-telegram-bot/) and as such, depends on it!
+This project builds on top of [PHP Telegram Bot](https://github.com/php-telegram-bot/core) and as such, depends on it!
 
 The main purpose of this mini-library is to make the interaction between your webserver and Telegram easier.
-I strongly suggest your read the PHP Telegram Bot [instructions](https://github.com/noplanman/php-telegram-bot#instructions) first, to understand what this library does exactly.
+I strongly suggest your read the PHP Telegram Bot [instructions](https://github.com/php-telegram-bot/core#instructions) first, to understand what this library does exactly.
 
 Installation and usage is pretty straight forward:
 
@@ -20,7 +20,7 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```bash
-composer require noplanman/telegram-bot-manager:^0.4
+composer require noplanman/telegram-bot-manager:^0.42
 ```
 
 **or**
@@ -29,7 +29,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```yaml
 "require": {
-    "noplanman/telegram-bot-manager": "^0.4"
+    "noplanman/telegram-bot-manager": "^0.42"
 }
 ```
 and then run `composer update`
@@ -114,7 +114,7 @@ require __DIR__ . '/vendor/autoload.php';
 try {
     $bot = new BotManager([
         // Vitals!
-        'api_key' => 'my_api_key',
+        'api_key' => '12345:my_api_key',
         'botname' => 'my_own_bot',
         'secret'  => 'super_secret',
 
