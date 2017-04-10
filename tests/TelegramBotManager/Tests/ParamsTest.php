@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -18,9 +18,9 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
      * @var array Demo vital parameters.
      */
     public static $demo_vital_params = [
-        'api_key' => '12345:api_key',
-        'botname' => 'test_bot',
-        'secret'  => 'secret_12345',
+        'api_key'      => '12345:api_key',
+        'bot_username' => 'test_bot',
+        'secret'       => 'secret_12345',
     ];
 
     /**
@@ -70,16 +70,16 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     public function testConstructWithoutApiKey()
     {
         new Params([
-            'botname' => 'test_bot',
-            'secret'  => 'secret_12345',
+            'bot_username' => 'test_bot',
+            'secret'       => 'secret_12345',
         ]);
     }
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Some vital info is missing: botname
+     * @expectedExceptionMessage Some vital info is missing: bot_username
      */
-    public function testConstructWithoutBotname()
+    public function testConstructWithoutBotUsername()
     {
         new Params([
             'api_key' => '12345:api_key',
@@ -94,8 +94,8 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     public function testConstructWithoutSecret()
     {
         new Params([
-            'api_key' => '12345:api_key',
-            'botname' => 'test_bot',
+            'api_key'      => '12345:api_key',
+            'bot_username' => 'test_bot',
         ]);
     }
 

@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -52,7 +52,7 @@ class Action
      */
     public function isAction($actions): bool
     {
-        return in_array($this->action, (array)$actions, true);
+        return in_array($this->action, (array) $actions, true);
     }
 
     /**

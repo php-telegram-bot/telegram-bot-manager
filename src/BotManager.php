@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -60,6 +60,7 @@ class BotManager
      * @param array $params
      *
      * @throws \InvalidArgumentException
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $params)
     {
@@ -69,7 +70,7 @@ class BotManager
         // Set up a new Telegram instance.
         $this->telegram = new Telegram(
             $this->params->getBotParam('api_key'),
-            $this->params->getBotParam('botname')
+            $this->params->getBotParam('bot_username')
         );
     }
 
@@ -324,7 +325,7 @@ class BotManager
             return 604800; // Default to 7 days.
         }
 
-        return max(0, (int)$loop_time);
+        return max(0, (int) $loop_time);
     }
 
     /**
@@ -341,7 +342,7 @@ class BotManager
         }
 
         // Minimum interval is 1 second.
-        return max(1, (int)$interval_time);
+        return max(1, (int) $interval_time);
     }
 
     /**
@@ -382,7 +383,7 @@ class BotManager
 
         $response = $this->telegram->handleGetUpdates();
         if ($response->isOk()) {
-            $results = array_filter((array)$response->getResult());
+            $results = array_filter((array) $response->getResult());
 
             $output .= sprintf('Updates processed: %d' . PHP_EOL, count($results));
 
@@ -468,9 +469,9 @@ class BotManager
             }
         }
 
-        $lower_dec = (float)sprintf('%u', ip2long(self::TELEGRAM_IP_LOWER));
-        $upper_dec = (float)sprintf('%u', ip2long(self::TELEGRAM_IP_UPPER));
-        $ip_dec    = (float)sprintf('%u', ip2long($ip));
+        $lower_dec = (float) sprintf('%u', ip2long(self::TELEGRAM_IP_LOWER));
+        $upper_dec = (float) sprintf('%u', ip2long(self::TELEGRAM_IP_UPPER));
+        $ip_dec    = (float) sprintf('%u', ip2long($ip));
 
         return $ip_dec >= $lower_dec && $ip_dec <= $upper_dec;
     }

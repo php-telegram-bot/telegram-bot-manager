@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -32,10 +32,10 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public static function setUpBeforeClass()
     {
         self::$live_params = [
-            'api_key' => getenv('API_KEY'),
-            'botname' => getenv('BOTNAME'),
-            'secret'  => 'super-secret',
-            'mysql'   => [
+            'api_key'      => getenv('API_KEY'),
+            'bot_username' => getenv('BOT_USERNAME'),
+            'secret'       => 'super-secret',
+            'mysql'        => [
                 'host'     => PHPUNIT_DB_HOST,
                 'database' => PHPUNIT_DB_NAME,
                 'user'     => PHPUNIT_DB_USER,
@@ -77,7 +77,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSomeVitalsFail()
     {
-        new BotManager(['api_key' => '12345:api_key', 'botname' => 'testbot']);
+        new BotManager(['api_key' => '12345:api_key', 'bot_username' => 'testbot']);
     }
 
     public function testVitalsSuccess()
@@ -92,7 +92,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         $telegram = $bot->getTelegram();
 
         self::assertInstanceOf(Telegram::class, $telegram);
-        self::assertSame(ParamsTest::$demo_vital_params['botname'], $telegram->getBotName());
+        self::assertSame(ParamsTest::$demo_vital_params['bot_username'], $telegram->getBotUsername());
         self::assertSame(ParamsTest::$demo_vital_params['api_key'], $telegram->getApiKey());
     }
 
@@ -158,31 +158,31 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
             $botManager,
             'telegram',
             $this->getMockBuilder(Telegram::class)
-                 ->disableOriginalConstructor()
-                 ->setMethods(['setWebhook', 'deleteWebhook', 'getDescription'])
-                 ->getMock()
+                ->disableOriginalConstructor()
+                ->setMethods(['setWebhook', 'deleteWebhook', 'getDescription'])
+                ->getMock()
         );
 
         $telegram = $botManager->getTelegram();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $telegram */
         $telegram->expects(static::any())
-                 ->method('setWebhook')
-                 ->with('https://web/hook.php?a=handle&s=secret_12345')
-                 ->will(static::returnSelf());
+            ->method('setWebhook')
+            ->with('https://web/hook.php?a=handle&s=secret_12345')
+            ->will(static::returnSelf());
         $telegram->expects(static::any())
-                 ->method('deleteWebhook')
-                 ->will(static::returnSelf());
+            ->method('deleteWebhook')
+            ->will(static::returnSelf());
         $telegram->expects(static::any())
-                 ->method('getDescription')
-                 ->will(static::onConsecutiveCalls(
-                     'Webhook was set', // set
-                     'Webhook is already set',
-                     'Webhook was deleted', // reset
-                     'Webhook was set',
-                     'Webhook was deleted', //unset
-                     'Webhook is already deleted'
-                 ));
+            ->method('getDescription')
+            ->will(static::onConsecutiveCalls(
+                'Webhook was set', // set
+                'Webhook is already set',
+                'Webhook was deleted', // reset
+                'Webhook was set',
+                'Webhook was deleted', //unset
+                'Webhook is already deleted'
+            ));
 
         TestHelpers::setObjectProperty($botManager->getAction(), 'action', 'set');
         $output = $botManager->validateAndSetWebhook()->getOutput();

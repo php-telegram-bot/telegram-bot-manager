@@ -1,4 +1,4 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 /**
  * This file is part of the TelegramBotManager package.
  *
@@ -27,7 +27,7 @@ class Params
      */
     private static $valid_vital_bot_params = [
         'api_key',
-        'botname',
+        'bot_username',
         'secret',
     ];
 
@@ -68,7 +68,7 @@ class Params
      * Params constructor.
      *
      * api_key (string) Telegram Bot API key
-     * botname (string) Telegram Bot name
+     * bot_username (string) Telegram Bot username
      * secret (string) Secret string to validate calls
      * validate_request (bool) Only allow webhook access from valid Telegram API IPs
      * webhook (string) URI of the webhook

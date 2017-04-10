@@ -114,12 +114,12 @@ require __DIR__ . '/vendor/autoload.php';
 try {
     $bot = new BotManager([
         // Vitals!
-        'api_key' => '12345:my_api_key',
-        'botname' => 'my_own_bot',
-        'secret'  => 'super_secret',
+        'api_key'      => '12345:my_api_key',
+        'bot_username' => 'my_own_bot',
+        'secret'       => 'super_secret',
 
         // Extras.
-        'webhook' => 'https://example.com/manager.php',
+        'webhook'      => 'https://example.com/manager.php',
     ]);
     $bot->run();
 } catch (\Exception $e) {
@@ -131,7 +131,7 @@ try {
 
 The vital parameters are:
 - Bot API key
-- Bot name
+- Bot username
 - A secret
 
 What secret you ask? Well, this is a user-defined key that is required to execute any of the library features.
