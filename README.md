@@ -203,3 +203,12 @@ $bot = new BotManager([
 ```
 
 Now, the updates can be done either through the [browser](#via-browser) or [via CLI](#via-cli).
+
+## Development
+
+When running live bot tests on a fork, you must enter the following environment variables to your [repository settings](https://docs.travis-ci.com/user/environment-variables#Defining-Variables-in-Repository-Settings) on travis-ci.org:
+```
+API_KEY="12345:your_api_key"
+BOT_USERNAME="username_of_your_bot"
+```
+It probably makes sense for you to create a new dummy bot for this.
