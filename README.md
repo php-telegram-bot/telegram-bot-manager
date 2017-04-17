@@ -167,8 +167,8 @@ Here is a list of available extra parameters:
 | *array*              | *e.g.* `['message', 'edited_channel_post', 'callback_query']` |
 | logging              | Path(s) where to the log files should be put. This is an array that can contain all 3 log file paths (`error`, `debug` and `update`). |
 | *array*              | *e.g.* `['error' => __DIR__ . '/php-telegram-bot-error.log']` |
-| limiter              | Enable or disable the limiter functionality |
-| *bool*               | *e.g.* `true` or `false` |
+| limiter              | Enable or disable the limiter functionality, also accepts options array. |
+| *bool|array*         | *e.g.* `true` or `false` or `['interval' => 2]` |
 | admins               | An array of user ids that have admin access to your bot. |
 | *array*              | *e.g.* `[12345]` |
 | mysql                | Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!). |

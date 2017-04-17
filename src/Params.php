@@ -78,6 +78,7 @@ class Params
      * max_connections (int) Maximum allowed simultaneous HTTPS connections to the webhook
      * allowed_updates (array) List the types of updates you want your bot to receive
      * logging (array) Array of logger files to set.
+     * limiter (bool|array) Set limiter, as bool or options array.
      * admins (array) List of admins to enable.
      * mysql (array) MySQL credentials to use.
      * download_path (string) Custom download path to set.

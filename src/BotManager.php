@@ -270,7 +270,7 @@ class BotManager
         }
 
         $request_extras = [
-            'limiter' => 'setLimiter',
+            // None at the moment...
         ];
         // For request extras, just pass the single param value to the Request method.
         foreach ($request_extras as $param_key => $method) {
@@ -278,6 +278,14 @@ class BotManager
             if (null !== $param) {
                 Request::$method($param);
             }
+        }
+
+        // Special cases.
+        $limiter = $this->params->getBotParam('limiter', []);
+        if (is_array($limiter)) {
+            Request::setLimiter(true, $limiter);
+        } else {
+            Request::setLimiter($limiter);
         }
 
         $command_configs = $this->params->getBotParam('command_configs');

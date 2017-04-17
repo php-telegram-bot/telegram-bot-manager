@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 - PHP CodeSniffer introduced and cleaned code to pass tests.
 - Custom exceptions for better error handling.
+- Request limiter options.
 
 ## [0.42.0.1] - 2017-04-11
 ### Added
