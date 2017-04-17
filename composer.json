@@ -54,7 +54,7 @@
             "vendor/bin/phpunit --coverage-clover=coverage.xml"
         ],
         "test-cov-upload": [
-            "bash <(curl -s https://codecov.io/bash)"
+            "curl -s https://codecov.io/bash | bash"
         ]
     }
 }

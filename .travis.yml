@@ -39,7 +39,7 @@ before_script:
 script:
     - composer check-code
     - if [[ "$COVERAGE" == "1" ]] ; then composer test-cov-live; fi
-    - if [[ "$COVERAGE" != "1" ]] ; then composer test-live; fi
+    - if [[ "$COVERAGE" != "1" ]] ; then composer test; fi
 
 after_success:
     - if [[ "$COVERAGE" == "1" ]]; then composer test-cov-upload; fi
