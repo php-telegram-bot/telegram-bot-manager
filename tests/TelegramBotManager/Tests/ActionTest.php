@@ -23,7 +23,7 @@ class ActionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidActionException
      * @expectedExceptionMessageRegExp /^Invalid action: non-existent$/
      */
     public function testConstructFail()

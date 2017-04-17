@@ -63,7 +63,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: api_key
      */
     public function testNoVitalsFail()
@@ -72,7 +72,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
     public function testSomeVitalsFail()
@@ -118,7 +118,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidAccessException
      * @expectedExceptionMessage Invalid access
      */
     public function testValidateSecretFail()
@@ -250,7 +250,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidWebhookException
      * @expectedExceptionMessage Invalid webhook
      */
     public function testValidateAndSetWebhookFailSetWithoutWebhook()
@@ -262,7 +262,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidWebhookException
      * @expectedExceptionMessage Invalid webhook
      */
     public function testValidateAndSetWebhookFailResetWithoutWebhook()

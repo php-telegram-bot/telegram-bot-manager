@@ -64,7 +64,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: api_key
      */
     public function testConstructWithoutApiKey()
@@ -76,7 +76,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: bot_username
      */
     public function testConstructWithoutBotUsername()
@@ -88,7 +88,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
     public function testConstructWithoutSecret()

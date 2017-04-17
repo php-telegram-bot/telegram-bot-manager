@@ -10,6 +10,8 @@
 
 namespace NPM\TelegramBotManager;
 
+use NPM\TelegramBotManager\Exception\InvalidParamsException;
+
 class Params
 {
     /**
@@ -87,7 +89,7 @@ class Params
      *
      * @param array $params All params to set the bot up with.
      *
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidParamsException
      */
     public function __construct(array $params)
     {
@@ -101,14 +103,14 @@ class Params
      * @param $params
      *
      * @return \NPM\TelegramBotManager\Params
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidParamsException
      */
     private function validateAndSetBotParams($params): self
     {
         // Set all vital params.
         foreach (self::$valid_vital_bot_params as $vital_key) {
             if (!array_key_exists($vital_key, $params)) {
-                throw new \InvalidArgumentException('Some vital info is missing: ' . $vital_key);
+                throw new InvalidParamsException('Some vital info is missing: ' . $vital_key);
             }
 
             $this->bot_params[$vital_key] = $params[$vital_key];

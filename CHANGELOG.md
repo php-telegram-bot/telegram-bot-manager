@@ -4,6 +4,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 - PHP CodeSniffer introduced and cleaned code to pass tests.
+- Custom exceptions for better error handling.
 
 ## [0.42.0.1] - 2017-04-11
 ### Added
