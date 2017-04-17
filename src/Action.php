@@ -10,6 +10,8 @@
 
 namespace NPM\TelegramBotManager;
 
+use NPM\TelegramBotManager\Exception\InvalidActionException;
+
 class Action
 {
     /**
@@ -32,14 +34,14 @@ class Action
      *
      * @param string $action
      *
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidActionException
      */
     public function __construct($action = 'handle')
     {
         $this->action = $action ?: 'handle';
 
         if (!$this->isAction(self::$valid_actions)) {
-            throw new \InvalidArgumentException('Invalid action: ' . $this->action);
+            throw new InvalidActionException('Invalid action: ' . $this->action);
         }
     }
 

@@ -19,11 +19,12 @@
     ],
     "require": {
         "php": "^7.0",
-        "longman/telegram-bot": "^0.42"
+        "longman/telegram-bot": "^0.43"
     },
     "require-dev": {
         "jakub-onderka/php-parallel-lint": "^0.9.2",
-        "phpunit/phpunit": "^6.1"
+        "phpunit/phpunit": "^6.1",
+        "squizlabs/php_codesniffer": "^2.8"
     },
     "autoload": {
         "psr-4": {
@@ -37,19 +38,23 @@
     },
     "scripts": {
         "check-code": [
-            "parallel-lint . --exclude vendor"
+            "vendor/bin/parallel-lint . --exclude vendor",
+            "vendor/bin/phpcs --standard=psr2 src/ tests/ -snp --encoding=utf-8 --report-width=150"
         ],
         "test": [
-            "phpunit --exclude-group live"
+            "vendor/bin/phpunit --exclude-group live"
         ],
         "test-live": [
-            "phpunit"
+            "vendor/bin/phpunit"
         ],
         "test-cov": [
-            "phpunit --coverage-clover=coverage.xml --exclude-group live"
+            "vendor/bin/phpunit --coverage-clover=coverage.xml --exclude-group live"
         ],
         "test-cov-live": [
-            "phpunit --coverage-clover=coverage.xml"
+            "vendor/bin/phpunit --coverage-clover=coverage.xml"
+        ],
+        "test-cov-upload": [
+            "curl -s https://codecov.io/bash | bash"
         ]
     }
 }

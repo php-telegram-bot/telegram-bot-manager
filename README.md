@@ -20,7 +20,7 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```bash
-composer require noplanman/telegram-bot-manager:^0.42
+composer require noplanman/telegram-bot-manager:^0.43
 ```
 
 **or**
@@ -29,7 +29,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```yaml
 "require": {
-    "noplanman/telegram-bot-manager": "^0.42"
+    "noplanman/telegram-bot-manager": "^0.43"
 }
 ```
 and then run `composer update`
@@ -161,14 +161,14 @@ Here is a list of available extra parameters:
 | *string*             | *e.g.* `'https://example.com/manager.php'` |
 | certificate          | Path to a self-signed certificate (if necessary). |
 | *string*             | *e.g.* `__DIR__ . '/server.crt'` |
-| max_connections      | Maximum allowed simultaneous HTTPS connections to the webhook |
+| max_connections      | Maximum allowed simultaneous HTTPS connections to the webhook. |
 | *int*                | *e.g.* `20` |
-| allowed_updates      | List the types of updates you want your bot to receive |
+| allowed_updates      | List the types of updates you want your bot to receive. |
 | *array*              | *e.g.* `['message', 'edited_channel_post', 'callback_query']` |
 | logging              | Path(s) where to the log files should be put. This is an array that can contain all 3 log file paths (`error`, `debug` and `update`). |
 | *array*              | *e.g.* `['error' => __DIR__ . '/php-telegram-bot-error.log']` |
-| limiter              | Enable or disable the limiter functionality |
-| *bool*               | *e.g.* `true` or `false` |
+| limiter              | Enable or disable the limiter functionality, also accepts options array. |
+| *bool|array*         | *e.g.* `true` or `false` or `['interval' => 2]` |
 | admins               | An array of user ids that have admin access to your bot. |
 | *array*              | *e.g.* `[12345]` |
 | mysql                | Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!). |

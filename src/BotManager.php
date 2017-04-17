@@ -14,14 +14,9 @@ use Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
+use NPM\TelegramBotManager\Exception\InvalidAccessException;
+use NPM\TelegramBotManager\Exception\InvalidWebhookException;
 
-/**
- * Class BotManager.php
- *
- * Leave all member variables public to allow easy modification.
- *
- * @package NPM\TelegramBotManager
- */
 class BotManager
 {
     /**
@@ -59,7 +54,8 @@ class BotManager
      *
      * @param array $params
      *
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidParamsException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidActionException
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $params)
@@ -119,7 +115,8 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidAccessException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidWebhookException
      * @throws \Exception
      */
     public function run(): self
@@ -168,16 +165,16 @@ class BotManager
      * @param bool $force Force validation, even on CLI.
      *
      * @return \NPM\TelegramBotManager\BotManager
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidAccessException
      */
     public function validateSecret(bool $force = false): self
     {
         // If we're running from CLI, secret isn't necessary.
         if ($force || 'cli' !== PHP_SAPI) {
-            $secret    = $this->params->getBotParam('secret');
-            $secretGet = $this->params->getScriptParam('s');
-            if ($secretGet !== $secret) {
-                throw new \InvalidArgumentException('Invalid access');
+            $secret     = $this->params->getBotParam('secret');
+            $secret_get = $this->params->getScriptParam('s');
+            if ($secret_get !== $secret) {
+                throw new InvalidAccessException('Invalid access');
             }
         }
 
@@ -189,13 +186,13 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidWebhookException
      */
     public function validateAndSetWebhook(): self
     {
         $webhook = $this->params->getBotParam('webhook');
         if (empty($webhook) && $this->action->isAction(['set', 'reset'])) {
-            throw new \InvalidArgumentException('Invalid webhook');
+            throw new InvalidWebhookException('Invalid webhook');
         }
 
         if ($this->action->isAction(['unset', 'reset'])) {
@@ -229,7 +226,7 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\BotManager
      */
-    private function handleOutput($output): self
+    private function handleOutput(string $output): self
     {
         $this->output .= $output;
 
@@ -244,6 +241,7 @@ class BotManager
      * Set any extra bot features that have been assigned on construction.
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function setBotExtras(): self
     {
@@ -265,7 +263,7 @@ class BotManager
         }
 
         $request_extras = [
-            'limiter' => 'setLimiter',
+            // None at the moment...
         ];
         // For request extras, just pass the single param value to the Request method.
         foreach ($request_extras as $param_key => $method) {
@@ -273,6 +271,14 @@ class BotManager
             if (null !== $param) {
                 Request::$method($param);
             }
+        }
+
+        // Special cases.
+        $limiter = $this->params->getBotParam('limiter', []);
+        if (is_array($limiter)) {
+            Request::setLimiter(true, $limiter);
+        } else {
+            Request::setLimiter($limiter);
         }
 
         $command_configs = $this->params->getBotParam('command_configs');
@@ -290,8 +296,8 @@ class BotManager
      * Handle the request, which calls either the Webhook or getUpdates method respectively.
      *
      * @return \NPM\TelegramBotManager\BotManager
+     * @throws \NPM\TelegramBotManager\Exception\InvalidAccessException
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \Exception
      */
     public function handleRequest(): self
     {
@@ -396,7 +402,9 @@ class BotManager
                 if ($update_content instanceof Entities\Message) {
                     $chat_id = $update_content->getFrom()->getId();
                     $text    = $update_content->getText();
-                } elseif ($update_content instanceof Entities\InlineQuery || $update_content instanceof Entities\ChosenInlineResult) {
+                } elseif ($update_content instanceof Entities\InlineQuery ||
+                          $update_content instanceof Entities\ChosenInlineResult
+                ) {
                     $chat_id = $update_content->getFrom()->getId();
                     $text    = $update_content->getQuery();
                 }
@@ -421,12 +429,12 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \Exception
+     * @throws \NPM\TelegramBotManager\Exception\InvalidAccessException
      */
     public function handleWebhook(): self
     {
         if (!$this->isValidRequest()) {
-            throw new \Exception('Invalid access');
+            throw new InvalidAccessException('Invalid access');
         }
 
         $this->telegram->handle();

@@ -10,6 +10,8 @@
 
 namespace NPM\TelegramBotManager;
 
+use NPM\TelegramBotManager\Exception\InvalidParamsException;
+
 class Params
 {
     /**
@@ -76,6 +78,7 @@ class Params
      * max_connections (int) Maximum allowed simultaneous HTTPS connections to the webhook
      * allowed_updates (array) List the types of updates you want your bot to receive
      * logging (array) Array of logger files to set.
+     * limiter (bool|array) Set limiter, as bool or options array.
      * admins (array) List of admins to enable.
      * mysql (array) MySQL credentials to use.
      * download_path (string) Custom download path to set.
@@ -87,7 +90,7 @@ class Params
      *
      * @param array $params All params to set the bot up with.
      *
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidParamsException
      */
     public function __construct(array $params)
     {
@@ -101,14 +104,14 @@ class Params
      * @param $params
      *
      * @return \NPM\TelegramBotManager\Params
-     * @throws \InvalidArgumentException
+     * @throws \NPM\TelegramBotManager\Exception\InvalidParamsException
      */
     private function validateAndSetBotParams($params): self
     {
         // Set all vital params.
         foreach (self::$valid_vital_bot_params as $vital_key) {
             if (!array_key_exists($vital_key, $params)) {
-                throw new \InvalidArgumentException('Some vital info is missing: ' . $vital_key);
+                throw new InvalidParamsException('Some vital info is missing: ' . $vital_key);
             }
 
             $this->bot_params[$vital_key] = $params[$vital_key];
@@ -151,7 +154,8 @@ class Params
         }
 
         // Keep only valid ones.
-        $this->script_params = array_intersect_key($this->script_params,
+        $this->script_params = array_intersect_key(
+            $this->script_params,
             array_fill_keys(self::$valid_script_params, null)
         );
 
@@ -162,12 +166,13 @@ class Params
      * Get a specific bot param.
      *
      * @param string $param
+     * @param mixed  $default
      *
      * @return mixed
      */
-    public function getBotParam(string $param)
+    public function getBotParam(string $param, $default = null)
     {
-        return $this->bot_params[$param] ?? null;
+        return $this->bot_params[$param] ?? $default;
     }
 
     /**
@@ -184,12 +189,13 @@ class Params
      * Get a specific script param.
      *
      * @param string $param
+     * @param mixed  $default
      *
      * @return mixed
      */
-    public function getScriptParam(string $param)
+    public function getScriptParam(string $param, $default = null)
     {
-        return $this->script_params[$param] ?? null;
+        return $this->script_params[$param] ?? $default;
     }
 
     /**
