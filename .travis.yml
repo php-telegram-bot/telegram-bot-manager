@@ -2,11 +2,11 @@ sudo: required
 language: php
 
 addons:
-  mariadb: 10.1
+    mariadb: 10.1
 
 cache:
     directories:
-        - $HOME/.composer/cache
+        - "$HOME/.composer/cache"
 
 matrix:
     include:
@@ -42,7 +42,7 @@ script:
     - if [[ "$COVERAGE" != "1" ]] ; then composer test-live; fi
 
 after_success:
-    - if [[ "$COVERAGE" == "1" ]]; then bash <(curl -s https://codecov.io/bash); fi
+    - if [[ "$COVERAGE" == "1" ]]; then composer test-cov-upload; fi
 
 env:
     global:

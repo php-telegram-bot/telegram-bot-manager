@@ -151,7 +151,8 @@ class Params
         }
 
         // Keep only valid ones.
-        $this->script_params = array_intersect_key($this->script_params,
+        $this->script_params = array_intersect_key(
+            $this->script_params,
             array_fill_keys(self::$valid_script_params, null)
         );
 

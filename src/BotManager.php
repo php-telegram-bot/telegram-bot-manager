@@ -396,7 +396,9 @@ class BotManager
                 if ($update_content instanceof Entities\Message) {
                     $chat_id = $update_content->getFrom()->getId();
                     $text    = $update_content->getText();
-                } elseif ($update_content instanceof Entities\InlineQuery || $update_content instanceof Entities\ChosenInlineResult) {
+                } elseif ($update_content instanceof Entities\InlineQuery ||
+                          $update_content instanceof Entities\ChosenInlineResult
+                ) {
                     $chat_id = $update_content->getFrom()->getId();
                     $text    = $update_content->getQuery();
                 }
