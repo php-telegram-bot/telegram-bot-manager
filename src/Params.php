@@ -165,12 +165,13 @@ class Params
      * Get a specific bot param.
      *
      * @param string $param
+     * @param mixed  $default
      *
      * @return mixed
      */
-    public function getBotParam(string $param)
+    public function getBotParam(string $param, $default = null)
     {
-        return $this->bot_params[$param] ?? null;
+        return $this->bot_params[$param] ?? $default;
     }
 
     /**
@@ -187,12 +188,13 @@ class Params
      * Get a specific script param.
      *
      * @param string $param
+     * @param mixed  $default
      *
      * @return mixed
      */
-    public function getScriptParam(string $param)
+    public function getScriptParam(string $param, $default = null)
     {
-        return $this->script_params[$param] ?? null;
+        return $this->script_params[$param] ?? $default;
     }
 
     /**
