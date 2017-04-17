@@ -17,13 +17,6 @@ use Longman\TelegramBot\TelegramLog;
 use NPM\TelegramBotManager\Exception\InvalidAccessException;
 use NPM\TelegramBotManager\Exception\InvalidWebhookException;
 
-/**
- * Class BotManager.php
- *
- * Leave all member variables public to allow easy modification.
- *
- * @package NPM\TelegramBotManager
- */
 class BotManager
 {
     /**
@@ -233,7 +226,7 @@ class BotManager
      *
      * @return \NPM\TelegramBotManager\BotManager
      */
-    private function handleOutput($output): self
+    private function handleOutput(string $output): self
     {
         $this->output .= $output;
 

@@ -161,9 +161,9 @@ Here is a list of available extra parameters:
 | *string*             | *e.g.* `'https://example.com/manager.php'` |
 | certificate          | Path to a self-signed certificate (if necessary). |
 | *string*             | *e.g.* `__DIR__ . '/server.crt'` |
-| max_connections      | Maximum allowed simultaneous HTTPS connections to the webhook |
+| max_connections      | Maximum allowed simultaneous HTTPS connections to the webhook. |
 | *int*                | *e.g.* `20` |
-| allowed_updates      | List the types of updates you want your bot to receive |
+| allowed_updates      | List the types of updates you want your bot to receive. |
 | *array*              | *e.g.* `['message', 'edited_channel_post', 'callback_query']` |
 | logging              | Path(s) where to the log files should be put. This is an array that can contain all 3 log file paths (`error`, `debug` and `update`). |
 | *array*              | *e.g.* `['error' => __DIR__ . '/php-telegram-bot-error.log']` |
