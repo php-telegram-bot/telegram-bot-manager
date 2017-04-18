@@ -42,8 +42,16 @@ before_script:
 
 script:
     - composer check-code
-    - if [[ "$COVERAGE" == "1" ]] ; then composer test-cov-live; fi
-    - if [[ "$COVERAGE" != "1" ]] ; then composer test; fi
+    - |
+        if [[ "$COVERAGE" == "1" ]]; then
+            if [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then
+                composer test-cov-live
+            else
+                composer test-cov
+            fi
+        else
+            composer test
+        fi
 
 after_success:
     - if [[ "$COVERAGE" == "1" ]]; then composer test-cov-upload; fi
