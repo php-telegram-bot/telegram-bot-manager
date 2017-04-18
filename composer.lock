@@ -4,8 +4,64 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "c313bb87bcb235a1ee3b83beabbbf0fd",
+    "content-hash": "43bf32e5767ef8f4ce71f84ae233a3c3",
     "packages": [
+        {
+            "name": "allty/utils-ip",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/noplanman/Utils-IP-Tools.git",
+                "reference": "e0be3e1836be704b45439a7dc7afceb4f0c91708"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/noplanman/Utils-IP-Tools/zipball/e0be3e1836be704b45439a7dc7afceb4f0c91708",
+                "reference": "e0be3e1836be704b45439a7dc7afceb4f0c91708",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Allty\\Utils\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Allty\\Utils\\Test\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias ETIENNE",
+                    "email": "matt@allty.com"
+                },
+                {
+                    "name": "Armando Lüscher",
+                    "email": "armando@noplanman.ch"
+                }
+            ],
+            "description": "Allty IP Utils",
+            "homepage": "https://github.com/mattallty/Utils-IP-Tools",
+            "keywords": [
+                "ip",
+                "range",
+                "utils"
+            ],
+            "support": {
+                "source": "https://github.com/noplanman/Utils-IP-Tools/tree/master"
+            },
+            "time": "2017-04-18 11:20:58"
+        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "6.2.3",
@@ -1950,7 +2006,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "allty/utils-ip": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
