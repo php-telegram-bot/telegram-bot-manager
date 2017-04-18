@@ -157,6 +157,8 @@ Here is a list of available extra parameters:
 | ---------            | ----------- |
 | validate_request     | Only allow webhook access from valid Telegram API IPs. |
 | *bool*               | *default is `true`* |
+| valid_ips            | When using `validate_request`, also allow these IPs (single, CIDR, wildcard, range). |
+| *array*              | *e.g.* `['1.2.3.4', '192.168.1.0/24', '10/8', '5.6.*', '1.1.1.1-2.2.2.2']` |
 | webhook              | URL to the manager PHP file used for setting up the Webhook. |
 | *string*             | *e.g.* `'https://example.com/manager.php'` |
 | certificate          | Path to a self-signed certificate (if necessary). |

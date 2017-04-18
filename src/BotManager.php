@@ -10,6 +10,7 @@
 
 namespace NPM\TelegramBotManager;
 
+use Allty\Utils\IpTools;
 use Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
@@ -20,14 +21,9 @@ use NPM\TelegramBotManager\Exception\InvalidWebhookException;
 class BotManager
 {
     /**
-     * @var string Telegram post servers lower IP limit
+     * @var string Telegram post servers IP range
      */
-    const TELEGRAM_IP_LOWER = '149.154.167.197';
-
-    /**
-     * @var string Telegram post servers upper IP limit
-     */
-    const TELEGRAM_IP_UPPER = '149.154.167.233';
+    const TELEGRAM_IP_RANGE = '149.154.167.197-149.154.167.233';
 
     /**
      * @var string The output for testing, instead of echoing
@@ -470,17 +466,22 @@ class BotManager
 
         $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
         foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR'] as $key) {
-            $addr = $_SERVER[$key] ?? null;
-            if (filter_var($addr, FILTER_VALIDATE_IP)) {
-                $ip = $addr;
+            if (filter_var($_SERVER[$key] ?? null, FILTER_VALIDATE_IP)) {
+                $ip = $_SERVER[$key];
                 break;
             }
         }
 
-        $lower_dec = (float) sprintf('%u', ip2long(self::TELEGRAM_IP_LOWER));
-        $upper_dec = (float) sprintf('%u', ip2long(self::TELEGRAM_IP_UPPER));
-        $ip_dec    = (float) sprintf('%u', ip2long($ip));
+        $valid_ips = array_merge(
+            [self::TELEGRAM_IP_RANGE],
+            (array) $this->params->getBotParam('valid_ips', [])
+        );
+        foreach ($valid_ips as $valid_ip) {
+            if (IpTools::ipInRange($ip, $valid_ip)) {
+                return true;
+            }
+        }
 
-        return $ip_dec >= $lower_dec && $ip_dec <= $upper_dec;
+        return false;
     }
 }

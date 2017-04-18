@@ -38,6 +38,7 @@ class Params
      */
     private static $valid_extra_bot_params = [
         'validate_request',
+        'valid_ips',
         'webhook',
         'certificate',
         'max_connections',
@@ -72,7 +73,8 @@ class Params
      * api_key (string) Telegram Bot API key
      * bot_username (string) Telegram Bot username
      * secret (string) Secret string to validate calls
-     * validate_request (bool) Only allow webhook access from valid Telegram API IPs
+     * validate_request (bool) Only allow webhook access from valid Telegram API IPs and defined valid_ips
+     * valid_ips (array) Any IPs, besides Telegram API IPs, that are allowed to access the webhook
      * webhook (string) URI of the webhook
      * certificate (string) Path to the self-signed certificate
      * max_connections (int) Maximum allowed simultaneous HTTPS connections to the webhook
