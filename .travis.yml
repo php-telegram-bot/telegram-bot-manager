@@ -39,14 +39,14 @@ install:
 
 before_script:
     - mysql -u root -e 'create database telegrambot; use telegrambot; source ./vendor/longman/telegram-bot/structure.sql;'
+    - if [[ "$COVERAGE" == "1" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then CODECOV="1"; fi
 
 script:
     - composer check-code
-    - if [[ "$COVERAGE" == "1" ]] ; then composer test-cov-live; fi
-    - if [[ "$COVERAGE" != "1" ]] ; then composer test; fi
+    - if [[ "$CODECOV" == "1" ]]; then composer test-cov-live; else composer test; fi
 
 after_success:
-    - if [[ "$COVERAGE" == "1" ]]; then composer test-cov-upload; fi
+    - if [[ "$CODECOV" == "1" ]]; then composer test-cov-upload; fi
 
 env:
     global:
