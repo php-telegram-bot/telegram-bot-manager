@@ -153,7 +153,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testValidateAndSetWebhookSuccess()
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
-            'webhook' => 'https://web/hook.php',
+            'webhook' => ['url' => 'https://web/hook.php'],
         ]));
 
         TestHelpers::setObjectProperty(
@@ -211,7 +211,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testValidateAndSetWebhookSuccessLiveBot()
     {
         $botManager = new BotManager(array_merge(self::$live_params, [
-            'webhook' => 'https://example.com/hook.php',
+            'webhook' => ['url' => 'https://example.com/hook.php'],
         ]));
 
         // Make sure the webhook isn't set to start with.
@@ -244,7 +244,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     {
         $_GET       = ['a' => 'unset'];
         $botManager = new BotManager(array_merge(self::$live_params, [
-            'webhook' => 'https://example.com/hook.php',
+            'webhook' => ['url' => 'https://example.com/hook.php'],
         ]));
         $output     = $botManager->run()->getOutput();
 

@@ -187,7 +187,7 @@ class BotManager
     public function validateAndSetWebhook(): self
     {
         $webhook = $this->params->getBotParam('webhook');
-        if (empty($webhook) && $this->action->isAction(['set', 'reset'])) {
+        if (empty($webhook['url'] ?? null) && $this->action->isAction(['set', 'reset'])) {
             throw new InvalidWebhookException('Invalid webhook');
         }
 
@@ -199,14 +199,14 @@ class BotManager
 
         if ($this->action->isAction(['set', 'reset'])) {
             $webhook_params = array_filter([
-                'certificate'     => $this->params->getBotParam('certificate'),
-                'max_connections' => $this->params->getBotParam('max_connections'),
-                'allowed_updates' => $this->params->getBotParam('allowed_updates'),
+                'certificate'     => $webhook['certificate'] ?? null,
+                'max_connections' => $webhook['max_connections'] ?? null,
+                'allowed_updates' => $webhook['allowed_updates'] ?? null,
             ]);
 
             $this->handleOutput(
                 $this->telegram->setWebhook(
-                    $webhook . '?a=handle&s=' . $this->params->getBotParam('secret'),
+                    $webhook['url'] . '?a=handle&s=' . $this->params->getBotParam('secret'),
                     $webhook_params
                 )->getDescription() . PHP_EOL
             );
@@ -324,7 +324,7 @@ class BotManager
      */
     public function handleRequest(): self
     {
-        if (empty($this->params->getBotParam('webhook'))) {
+        if (empty($this->params->getBotParam('webhook.url'))) {
             if ($loop_time = $this->getLoopTime()) {
                 $this->handleGetUpdatesLoop($loop_time, $this->getLoopInterval());
             } else {
