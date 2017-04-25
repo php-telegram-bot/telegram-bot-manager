@@ -40,7 +40,7 @@ and then run `composer update`
 
 What use would this library be if you couldn't perform any actions?!
 
-There are 3 parameters available to get things rolling:
+There are 4 parameters available to get things rolling:
 
 | Parameter | Description |
 | --------- | ----------- |
@@ -109,7 +109,7 @@ Let's start off with a simple example that uses the Webhook method:
 use NPM\TelegramBotManager\BotManager;
 
 // Load composer.
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 try {
     $bot = new BotManager([
@@ -119,7 +119,9 @@ try {
         'secret'       => 'super_secret',
 
         // Extras.
-        'webhook'      => 'https://example.com/manager.php',
+        'webhook'      => [
+            'url' => 'https://example.com/manager.php',
+        ]
     ]);
     $bot->run();
 } catch (\Exception $e) {
@@ -159,32 +161,52 @@ Here is a list of available extra parameters:
 | *bool*               | *default is `true`* |
 | valid_ips            | When using `validate_request`, also allow these IPs (single, CIDR, wildcard, range). |
 | *array*              | *e.g.* `['1.2.3.4', '192.168.1.0/24', '10/8', '5.6.*', '1.1.1.1-2.2.2.2']` |
-| webhook              | URL to the manager PHP file used for setting up the Webhook. |
+| webhook              | All options that have to do with the webhook. |
+| *array*              | *Array keys listed below* |
+| - url                | URL to the manager PHP file used for setting up the Webhook. |
 | *string*             | *e.g.* `'https://example.com/manager.php'` |
-| certificate          | Path to a self-signed certificate (if necessary). |
+| - certificate        | Path to a self-signed certificate (if necessary). |
 | *string*             | *e.g.* `__DIR__ . '/server.crt'` |
-| max_connections      | Maximum allowed simultaneous HTTPS connections to the webhook. |
+| - max_connections    | Maximum allowed simultaneous HTTPS connections to the webhook. |
 | *int*                | *e.g.* `20` |
-| allowed_updates      | List the types of updates you want your bot to receive. |
+| - allowed_updates    | List the types of updates you want your bot to receive. |
 | *array*              | *e.g.* `['message', 'edited_channel_post', 'callback_query']` |
-| logging              | Path(s) where to the log files should be put. This is an array that can contain all 3 log file paths (`error`, `debug` and `update`). |
-| *array*              | *e.g.* `['error' => __DIR__ . '/php-telegram-bot-error.log']` |
-| limiter              | Enable or disable the limiter functionality, also accepts options array. |
-| *bool|array*         | *e.g.* `true` or `false` or `['interval' => 2]` |
+| logging              | Paths where the log files should be put. |
+| *array*              | *Array keys listed below* |
+| - update             | Log file for all incoming update requests. |
+| *string*             | *e.g.* `__DIR__ . '/php-telegram-bot-update.log'` |
+| - debug              | Log file for debug purposes. |
+| *string*             | *e.g.* `__DIR__ . '/php-telegram-bot-debug.log'` |
+| - error              | Log file for all errors. |
+| *string*             | *e.g.* `__DIR__ . '/php-telegram-bot-error.log'` |
+| limiter              | All options that have to do with the limiter. |
+| *array*              | *Array keys listed below* |
+| - enabled            | Enable or disable the limiter functionality. |
+| *bool*               | *e.g.* `true` or `false` |
+| - options            | Any extra options to pass to the limiter. |
+| *array*              | *e.g.* `['interval' => 0.5]` |
 | admins               | An array of user ids that have admin access to your bot. |
 | *array*              | *e.g.* `[12345]` |
 | mysql                | Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!). |
 | *array*              | *e.g.* `['host' => '127.0.0.1', 'user' => 'root', 'password' => 'root', 'database' => 'telegram_bot']` |
-| download_path        | Custom download path. |
+| paths                | List of configurable paths. |
+| *array*              | *Array keys listed below* |
+| - download           | Custom download path. |
 | *string*             | *e.g.* `__DIR__ . '/Download'` |
-| upload_path          | Custom upload path. |
+| - upload             | Custom upload path. |
 | *string*             | *e.g.* `__DIR__ . '/Upload'` |
-| commands_paths       | A list of custom commands paths. |
+| commands             | All options that have to do with commands. |
+| *array*              | *Array keys listed below* |
+| - paths              | A list of custom commands paths. |
 | *array*              | *e.g.* `[__DIR__ . '/CustomCommands']` |
-| command_configs      | A list of all custom command configs. |
-| *array*              | *e.g.* `['sendtochannel' => ['your_channel' => '@my_channel']` |
-| botan_token          | The Botan.io token to be used for analytics. |
+| - configs            | A list of all custom command configs. |
+| *array*              | *e.g.* `['sendtochannel' => ['your_channel' => '@my_channel'], 'weather' => ['owm_api_key' => 'owm_api_key_12345']]` |
+| botan                | All options that have to do with botan. |
+| *array*              | *Array keys listed below* |
+| - token              | The Botan.io token to be used for analytics. |
 | *string*             | *e.g.* `'botan_12345'` |
+| - options            | Any extra options to pass to botan. |
+| *array*              | *e.g.* `['timeout' => 3]` |
 | custom_input         | Override the custom input of your bot (mostly for testing purposes!). |
 | *string*             | *e.g.* `'{"some":"raw", "json":"update"}'` |
 
