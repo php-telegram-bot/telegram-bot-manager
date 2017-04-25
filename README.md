@@ -132,11 +132,21 @@ try {
 ### Set vital bot parameters
 
 The vital parameters are:
-- Bot API key
-- Bot username
-- A secret
 
-What secret you ask? Well, this is a user-defined key that is required to execute any of the library features.
+```php
+$bot = new BotManager([
+    // (string) Bot API key provided by @BotFather.
+    'api_key'      => '12345:my_api_key',
+    // (string) Bot username that was defined when creating the bot.
+    'bot_username' => 'my_own_bot',
+    // (string) A secret password required to authorise access to the webhook.
+    'secret'       => 'super_secret',
+
+    ...
+]);
+```
+
+The `secret` is a user-defined key that is required to execute any of the library's features.
 Best make it long, random and very unique!
 
 For 84 random characters:
@@ -153,62 +163,103 @@ Enable admins? Add custom command paths? Set up logging?
 
 **All no problem!**
 
-Here is a list of available extra parameters:
+Here is a complete list of all available extra parameters:
 
-| Parameter            | Description |
-| ---------            | ----------- |
-| validate_request     | Only allow webhook access from valid Telegram API IPs. |
-| *bool*               | *default is `true`* |
-| valid_ips            | When using `validate_request`, also allow these IPs (single, CIDR, wildcard, range). |
-| *array*              | *e.g.* `['1.2.3.4', '192.168.1.0/24', '10/8', '5.6.*', '1.1.1.1-2.2.2.2']` |
-| webhook              | All options that have to do with the webhook. |
-| *array*              | *Array keys listed below* |
-| - url                | URL to the manager PHP file used for setting up the Webhook. |
-| *string*             | *e.g.* `'https://example.com/manager.php'` |
-| - certificate        | Path to a self-signed certificate (if necessary). |
-| *string*             | *e.g.* `__DIR__ . '/server.crt'` |
-| - max_connections    | Maximum allowed simultaneous HTTPS connections to the webhook. |
-| *int*                | *e.g.* `20` |
-| - allowed_updates    | List the types of updates you want your bot to receive. |
-| *array*              | *e.g.* `['message', 'edited_channel_post', 'callback_query']` |
-| logging              | Paths where the log files should be put. |
-| *array*              | *Array keys listed below* |
-| - update             | Log file for all incoming update requests. |
-| *string*             | *e.g.* `__DIR__ . '/php-telegram-bot-update.log'` |
-| - debug              | Log file for debug purposes. |
-| *string*             | *e.g.* `__DIR__ . '/php-telegram-bot-debug.log'` |
-| - error              | Log file for all errors. |
-| *string*             | *e.g.* `__DIR__ . '/php-telegram-bot-error.log'` |
-| limiter              | All options that have to do with the limiter. |
-| *array*              | *Array keys listed below* |
-| - enabled            | Enable or disable the limiter functionality. |
-| *bool*               | *e.g.* `true` or `false` |
-| - options            | Any extra options to pass to the limiter. |
-| *array*              | *e.g.* `['interval' => 0.5]` |
-| admins               | An array of user ids that have admin access to your bot. |
-| *array*              | *e.g.* `[12345]` |
-| mysql                | Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!). |
-| *array*              | *e.g.* `['host' => '127.0.0.1', 'user' => 'root', 'password' => 'root', 'database' => 'telegram_bot']` |
-| paths                | List of configurable paths. |
-| *array*              | *Array keys listed below* |
-| - download           | Custom download path. |
-| *string*             | *e.g.* `__DIR__ . '/Download'` |
-| - upload             | Custom upload path. |
-| *string*             | *e.g.* `__DIR__ . '/Upload'` |
-| commands             | All options that have to do with commands. |
-| *array*              | *Array keys listed below* |
-| - paths              | A list of custom commands paths. |
-| *array*              | *e.g.* `[__DIR__ . '/CustomCommands']` |
-| - configs            | A list of all custom command configs. |
-| *array*              | *e.g.* `['sendtochannel' => ['your_channel' => '@my_channel'], 'weather' => ['owm_api_key' => 'owm_api_key_12345']]` |
-| botan                | All options that have to do with botan. |
-| *array*              | *Array keys listed below* |
-| - token              | The Botan.io token to be used for analytics. |
-| *string*             | *e.g.* `'botan_12345'` |
-| - options            | Any extra options to pass to botan. |
-| *array*              | *e.g.* `['timeout' => 3]` |
-| custom_input         | Override the custom input of your bot (mostly for testing purposes!). |
-| *string*             | *e.g.* `'{"some":"raw", "json":"update"}'` |
+```php
+$bot = new BotManager([
+    ...
+
+    // (array) All options that have to do with the webhook.
+    'webhook'          => [
+        // (string) URL to the manager PHP file used for setting up the webhook.
+        'url'             => 'https://example.com/manager.php',
+        // (string) Path to a self-signed certificate (if necessary).
+        'certificate'     => __DIR__ . '/server.crt',
+        // (int) Maximum allowed simultaneous HTTPS connections to the webhook.
+        'max_connections' => 20,
+        // (array) List the types of updates you want your bot to receive.
+        'allowed_updates' => ['message', 'edited_channel_post', 'callback_query'],
+    ],
+
+    // (bool) Only allow webhook access from valid Telegram API IPs.
+    'validate_request' => true,
+    // (array) When using `validate_request`, also allow these IPs.
+    'valid_ips'        => [
+        '1.2.3.4',         // single
+        '192.168.1.0/24',  // CIDR
+        '10/8',            // CIDR (short)
+        '5.6.*',           // wildcard
+        '1.1.1.1-2.2.2.2', // range
+    ],
+
+    // (array) Paths where the log files should be put.
+    'logging'          => [
+        // (string) Log file for all incoming update requests.
+        'update' => __DIR__ . '/php-telegram-bot-update.log',
+        // (string) Log file for debug purposes.
+        'debug'  => __DIR__ . '/php-telegram-bot-debug.log',
+        // (string) Log file for all errors.
+        'error'  => __DIR__ . '/php-telegram-bot-error.log',
+    ],
+
+    // (array) All options that have to do with the limiter.
+    'limiter'          => [
+        // (bool) Enable or disable the limiter functionality.
+        'enabled' => true,
+        // (array) Any extra options to pass to the limiter.
+        'options' => [
+            // (float) Interval between request handles.
+            'interval' => 0.5,
+        ],
+    ],
+
+    // (array) An array of user ids that have admin access to your bot (must be integers).
+    'admins'           => [12345],
+
+    // (array) Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!).
+    'mysql'            => [
+        'host'     => '127.0.0.1',
+        'user'     => 'root',
+        'password' => 'root',
+        'database' => 'telegram_bot',
+    ],
+
+    // (array) List of configurable paths.
+    'paths'            => [
+        // (string) Custom download path.
+        'download' => __DIR__ . '/Download',
+        // (string) Custom upload path.
+        'upload'   => __DIR__ . '/Upload',
+    ],
+
+    // (array) All options that have to do with commands.
+    'commands'         => [
+        // (array) A list of custom commands paths.
+        'paths'   => [
+            __DIR__ . '/CustomCommands',
+        ],
+        // (array) A list of all custom command configs.
+        'configs' => [
+            'sendtochannel' => ['your_channel' => '@my_channel'],
+            'weather'       => ['owm_api_key' => 'owm_api_key_12345'],
+        ],
+    ],
+
+    // (array) All options that have to do with botan.
+    'botan'            => [
+        // (string) The Botan.io token to be used for analytics.
+        'token'   => 'botan_12345',
+        // (array) Any extra options to pass to botan.
+        'options' => [
+            // (float) Custom timeout for requests.
+            'timeout' => 3,
+        ],
+    ],
+
+    // (string) Override the custom input of your bot (mostly for testing purposes!).
+    'custom_input'     => '{"some":"raw", "json":"update"}',
+]);
+```
 
 ### Using getUpdates method
 
