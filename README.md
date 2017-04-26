@@ -53,7 +53,7 @@ There are a few parameters available to get things rolling:
 | i         | **i**nterval: Number of seconds to wait between getUpdates requests (used for getUpdates method, default is 2). |
 |           | This would be used mainly via CLI, to continually get updates for a certain period, every **i** seconds. |
 | g         | **g**roup: Commands group for cron (only used together with `cron` action, default group is `default`). |
-|           | Define which group of commands to execute via cron. |
+|           | Define which group of commands to execute via cron. Can be a comma separated list of groups. |
 
 #### via browser
 
@@ -75,6 +75,12 @@ Handle updates once:
 
 Handle updates for 30 seconds, fetching every 5 seconds:
 - `http://example.com/manager.php?s=super_secret&l=30&i=5`
+
+**cron**
+
+Execute commands via cron:
+- `http://example.com/manager.php?s=super_secret&a=cron&g=maintenance` or multiple groups
+- `http://example.com/manager.php?s=super_secret&a=cron&g=maintenance,cleanup`
 
 #### via CLI
 
@@ -98,6 +104,12 @@ Handle updates once:
 
 Handle updates for 30 seconds, fetching every 5 seconds:
 - `$ php manager.php l=30 i=5`
+
+**cron**
+
+Execute commands via cron:
+- `$ php manager.php a=cron g=maintenance` or multiple groups
+- `$ php manager.php a=cron g=maintenance,cleanup`
 
 ### Create the manager PHP file
 

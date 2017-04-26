@@ -351,8 +351,12 @@ class BotManager
      */
     public function handleCron(): self
     {
-        $group = $this->params->getScriptParam('g', 'default');
-        $commands = $this->params->getBotParam('cron.groups.' . $group, []);
+        $groups = explode(',', $this->params->getScriptParam('g', 'default'));
+
+        $commands = [];
+        foreach ($groups as $group) {
+            $commands = array_merge($commands, $this->params->getBotParam('cron.groups.' . $group, []));
+        }
         $this->telegram->runCommands($commands);
 
         return $this;
