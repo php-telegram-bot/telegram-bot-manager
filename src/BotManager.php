@@ -508,6 +508,7 @@ class BotManager
      */
     public function isValidRequest(): bool
     {
+        // If we're running from CLI, requests are always valid, unless we're running the tests.
         if ((!self::inTest() && 'cli' === PHP_SAPI) || false === $this->params->getBotParam('validate_request')) {
             return true;
         }
