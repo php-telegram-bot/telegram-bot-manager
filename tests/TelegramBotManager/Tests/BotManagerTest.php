@@ -47,13 +47,15 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testSetParameters()
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
-            'admins'      => [1],            // valid
-            'upload_path' => '/upload/path', // valid
-            'paramX'      => 'something'     // invalid
+            'admins' => [1],            // valid
+            'paths'  => [               // valid
+                'upload' => '/upload/path',
+            ],
+            'paramX' => 'something'     // invalid
         ]));
         $params     = $botManager->getParams();
         self::assertEquals([1], $params->getBotParam('admins'));
-        self::assertEquals('/upload/path', $params->getBotParam('upload_path'));
+        self::assertEquals('/upload/path', $params->getBotParam('paths.upload'));
         self::assertNull($params->getBotParam('paramX'));
     }
 
@@ -151,7 +153,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testValidateAndSetWebhookSuccess()
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
-            'webhook' => 'https://web/hook.php',
+            'webhook' => ['url' => 'https://web/hook.php'],
         ]));
 
         TestHelpers::setObjectProperty(
@@ -209,7 +211,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testValidateAndSetWebhookSuccessLiveBot()
     {
         $botManager = new BotManager(array_merge(self::$live_params, [
-            'webhook' => 'https://example.com/hook.php',
+            'webhook' => ['url' => 'https://example.com/hook.php'],
         ]));
 
         // Make sure the webhook isn't set to start with.
@@ -242,7 +244,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     {
         $_GET       = ['a' => 'unset'];
         $botManager = new BotManager(array_merge(self::$live_params, [
-            'webhook' => 'https://example.com/hook.php',
+            'webhook' => ['url' => 'https://example.com/hook.php'],
         ]));
         $output     = $botManager->run()->getOutput();
 
@@ -336,12 +338,20 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testSetBotExtras()
     {
         $extras     = [
-            'limiter'         => false,
-            'admins'          => [1, 2, 3],
-            'download_path'   => __DIR__ . '/Download',
-            'upload_path'     => __DIR__ . '/Upload',
-            'command_configs' => [
-                'weather' => ['owm_api_key' => 'owm_api_key_12345'],
+            'limiter'  => [
+                'enabled' => false,
+            ],
+            'admins'   => [1, 2, 3],
+            'paths'    => [
+                'download' => __DIR__ . '/Download',
+                'upload'   => __DIR__ . '/Upload',
+            ],
+            'commands' => [
+                'configs' => [
+                    'weather' => [
+                        'owm_api_key' => 'owm_api_key_12345',
+                    ],
+                ],
             ],
         ];
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, $extras));
@@ -349,11 +359,11 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         $botManager->setBotExtras();
         $telegram = $botManager->getTelegram();
 
-        self::assertAttributeEquals($extras['limiter'], 'limiter_enabled', Request::class);
+        self::assertAttributeEquals($extras['limiter']['enabled'], 'limiter_enabled', Request::class);
         self::assertEquals($extras['admins'], $telegram->getAdminList());
-        self::assertEquals($extras['download_path'], $telegram->getDownloadPath());
-        self::assertEquals($extras['upload_path'], $telegram->getUploadPath());
-        self::assertEquals($extras['command_configs']['weather'], $telegram->getCommandConfig('weather'));
+        self::assertEquals($extras['paths']['download'], $telegram->getDownloadPath());
+        self::assertEquals($extras['paths']['upload'], $telegram->getUploadPath());
+        self::assertEquals($extras['commands']['configs']['weather'], $telegram->getCommandConfig('weather'));
     }
 
     public function testGetOutput()

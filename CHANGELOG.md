@@ -4,6 +4,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 - Ability to define custom valid IPs to access webhook.
+### Changed
+- Remodelled the config array to a more flexible structure.
+### Deprecated
+### Removed
+### Fixed
+### Security
 
 ## [0.43.0] - 2017-04-17
 ### Added

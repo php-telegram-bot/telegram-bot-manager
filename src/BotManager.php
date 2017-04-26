@@ -187,7 +187,7 @@ class BotManager
     public function validateAndSetWebhook(): self
     {
         $webhook = $this->params->getBotParam('webhook');
-        if (empty($webhook) && $this->action->isAction(['set', 'reset'])) {
+        if (empty($webhook['url'] ?? null) && $this->action->isAction(['set', 'reset'])) {
             throw new InvalidWebhookException('Invalid webhook');
         }
 
@@ -199,14 +199,14 @@ class BotManager
 
         if ($this->action->isAction(['set', 'reset'])) {
             $webhook_params = array_filter([
-                'certificate'     => $this->params->getBotParam('certificate'),
-                'max_connections' => $this->params->getBotParam('max_connections'),
-                'allowed_updates' => $this->params->getBotParam('allowed_updates'),
+                'certificate'     => $webhook['certificate'] ?? null,
+                'max_connections' => $webhook['max_connections'] ?? null,
+                'allowed_updates' => $webhook['allowed_updates'] ?? null,
             ]);
 
             $this->handleOutput(
                 $this->telegram->setWebhook(
-                    $webhook . '?a=handle&s=' . $this->params->getBotParam('secret'),
+                    $webhook['url'] . '?a=handle&s=' . $this->params->getBotParam('secret'),
                     $webhook_params
                 )->getDescription() . PHP_EOL
             );
@@ -241,23 +241,59 @@ class BotManager
      */
     public function setBotExtras(): self
     {
-        $telegram_extras = [
+        $this->setBotExtrasTelegram();
+        $this->setBotExtrasRequest();
+
+        return $this;
+    }
+
+    /**
+     * Set extra bot parameters for Telegram object.
+     *
+     * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function setBotExtrasTelegram(): self
+    {
+        $simple_extras = [
             'admins'         => 'enableAdmins',
             'mysql'          => 'enableMySql',
-            'botan_token'    => 'enableBotan',
-            'commands_paths' => 'addCommandsPaths',
+            'commands.paths' => 'addCommandsPaths',
             'custom_input'   => 'setCustomInput',
-            'download_path'  => 'setDownloadPath',
-            'upload_path'    => 'setUploadPath',
+            'paths.download' => 'setDownloadPath',
+            'paths.upload'   => 'setUploadPath',
         ];
-        // For telegram extras, just pass the single param value to the Telegram method.
-        foreach ($telegram_extras as $param_key => $method) {
+        // For simple telegram extras, just pass the single param value to the Telegram method.
+        foreach ($simple_extras as $param_key => $method) {
             $param = $this->params->getBotParam($param_key);
             if (null !== $param) {
                 $this->telegram->$method($param);
             }
         }
 
+        // Custom command configs.
+        $command_configs = $this->params->getBotParam('commands.configs', []);
+        foreach ($command_configs as $command => $config) {
+            $this->telegram->setCommandConfig($command, $config);
+        }
+
+        // Botan with options.
+        if ($botan_token = $this->params->getBotParam('botan.token')) {
+            $botan_options = $this->params->getBotParam('botan.options', []);
+            $this->telegram->enableBotan($botan_token, $botan_options);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set extra bot parameters for Request class.
+     *
+     * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function setBotExtrasRequest(): self
+    {
         $request_extras = [
             // None at the moment...
         ];
@@ -270,19 +306,10 @@ class BotManager
         }
 
         // Special cases.
-        $limiter = $this->params->getBotParam('limiter', []);
-        if (is_array($limiter)) {
-            Request::setLimiter(true, $limiter);
-        } else {
-            Request::setLimiter($limiter);
-        }
-
-        $command_configs = $this->params->getBotParam('command_configs');
-        if (is_array($command_configs)) {
-            /** @var array $command_configs */
-            foreach ($command_configs as $command => $config) {
-                $this->telegram->setCommandConfig($command, $config);
-            }
+        $limiter_enabled = $this->params->getBotParam('limiter.enabled');
+        if ($limiter_enabled !== null) {
+            $limiter_options = $this->params->getBotParam('limiter.options', []);
+            Request::setLimiter($limiter_enabled, $limiter_options);
         }
 
         return $this;
@@ -297,7 +324,7 @@ class BotManager
      */
     public function handleRequest(): self
     {
-        if (empty($this->params->getBotParam('webhook'))) {
+        if (empty($this->params->getBotParam('webhook.url'))) {
             if ($loop_time = $this->getLoopTime()) {
                 $this->handleGetUpdatesLoop($loop_time, $this->getLoopInterval());
             } else {
