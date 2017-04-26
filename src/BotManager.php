@@ -56,6 +56,9 @@ class BotManager
      */
     public function __construct(array $params)
     {
+        // Initialise logging before anything else, to allow errors to be logged.
+        $this->initLogging($params['logging'] ?? []);
+
         $this->params = new Params($params);
         $this->action = new Action($this->params->getScriptParam('a'));
 
@@ -117,9 +120,6 @@ class BotManager
      */
     public function run(): self
     {
-        // Initialise logging.
-        $this->initLogging();
-
         // Make sure this is a valid call.
         $this->validateSecret();
 
@@ -143,19 +143,17 @@ class BotManager
     /**
      * Initialise all loggers.
      *
+     * @param array $log_paths
+     *
      * @return \NPM\TelegramBotManager\BotManager
      * @throws \Exception
      */
-    public function initLogging(): self
+    public function initLogging(array $log_paths): self
     {
-        $logging = $this->params->getBotParam('logging');
-        if (is_array($logging)) {
-            /** @var array $logging */
-            foreach ($logging as $logger => $logfile) {
-                ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
-                ('error' === $logger) && TelegramLog::initErrorLog($logfile);
-                ('update' === $logger) && TelegramLog::initUpdateLog($logfile);
-            }
+        foreach ($log_paths as $logger => $logfile) {
+            ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
+            ('error' === $logger) && TelegramLog::initErrorLog($logfile);
+            ('update' === $logger) && TelegramLog::initUpdateLog($logfile);
         }
 
         return $this;
