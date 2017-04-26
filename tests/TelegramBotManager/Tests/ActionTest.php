@@ -20,6 +20,7 @@ class ActionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('unset', (new Action('unset'))->getAction());
         self::assertEquals('reset', (new Action('reset'))->getAction());
         self::assertEquals('handle', (new Action('handle'))->getAction());
+        self::assertEquals('cron', (new Action('cron'))->getAction());
     }
 
     /**

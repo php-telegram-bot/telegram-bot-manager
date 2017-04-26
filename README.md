@@ -40,18 +40,20 @@ and then run `composer update`
 
 What use would this library be if you couldn't perform any actions?!
 
-There are 4 parameters available to get things rolling:
+There are a few parameters available to get things rolling:
 
 | Parameter | Description |
 | --------- | ----------- |
 | s         | **s**ecret: This is a special secret value defined in the main `manager.php` file. |
 |           | This parameter is required to call the script via browser! |
-| a         | **a**ction: The actual action to perform. (handle (default), set, unset, reset) |
-|           | **handle** executes the `getUpdates` method; **set** / **unset** / **reset** the Webhook. |
+| a         | **a**ction: The actual action to perform. (handle (default), cron, set, unset, reset) |
+|           | **handle** executes the `getUpdates` method; **cron** executes cron commands; **set** / **unset** / **reset** the webhook. |
 | l         | **l**oop: Number of seconds to loop the script for (used for getUpdates method). |
 |           | This would be used mainly via CLI, to continually get updates for a certain period. |
-| i         | **i**nterval: Number of seconds to wait between getUpdates requests (used for getUpdates method, default: 2). |
+| i         | **i**nterval: Number of seconds to wait between getUpdates requests (used for getUpdates method, default is 2). |
 |           | This would be used mainly via CLI, to continually get updates for a certain period, every **i** seconds. |
+| g         | **g**roup: Commands group for cron (only used together with `cron` action, default group is `default`). |
+|           | Define which group of commands to execute via cron. |
 
 #### via browser
 
@@ -102,7 +104,7 @@ Handle updates for 30 seconds, fetching every 5 seconds:
 You can name this file whatever you like, it just has to be somewhere inside your PHP project (preferably in the root folder to make things easier).
 (Let's assume our file is called `manager.php`)
 
-Let's start off with a simple example that uses the Webhook method:
+Let's start off with a simple example that uses the webhook method:
 ```php
 <?php
 
@@ -253,6 +255,24 @@ $bot = new BotManager([
         'options' => [
             // (float) Custom timeout for requests.
             'timeout' => 3,
+        ],
+    ],
+
+    // (array) All options that have to do with cron.
+    'cron'             => [
+        // (array) List of groups that contain the commands to execute.
+        'groups' => [
+            // Each group has a name and array of commands.
+            // When no group is defined, the default group gets executed.
+            'default'     => [
+                '/default_cron_command',
+            ],
+            'maintenance' => [
+                '/db_cleanup',
+                '/db_repair',
+                '/log_rotate',
+                '/message_admins Maintenance completed',
+            ],
         ],
     ],
 

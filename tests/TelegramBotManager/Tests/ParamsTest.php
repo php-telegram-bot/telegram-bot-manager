@@ -63,7 +63,19 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         'botan'            => [
             'token' => 'botan_12345',
         ],
-        'custom_input'     => '{"some":"raw", "json":"update"}',
+        'cron'             => [
+            'groups' => [
+                'default'     => [
+                    '/default_cron_command',
+                ],
+                'maintenance' => [
+                    '/db_cleanup',
+                    '/db_repair',
+                    '/log_rotate',
+                ],
+            ],
+        ],
+        'custom_input' => '{"some":"raw", "json":"update"}',
     ];
 
     public function setUp()

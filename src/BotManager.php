@@ -123,12 +123,18 @@ class BotManager
         // Make sure this is a valid call.
         $this->validateSecret();
 
+        if (!$this->isValidRequest()) {
+            throw new InvalidAccessException('Invalid access');
+        }
+
         if ($this->action->isAction(['set', 'unset', 'reset'])) {
             $this->validateAndSetWebhook();
         } elseif ($this->action->isAction('handle')) {
-            // Set any extras.
             $this->setBotExtras();
             $this->handleRequest();
+        } elseif ($this->action->isAction('cron')) {
+            $this->setBotExtras();
+            $this->handleCron();
         }
 
         return $this;
@@ -338,6 +344,21 @@ class BotManager
     }
 
     /**
+     * Handle cron.
+     *
+     * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function handleCron(): self
+    {
+        $group = $this->params->getScriptParam('g', 'default');
+        $commands = $this->params->getBotParam('cron.groups.' . $group, []);
+        $this->telegram->runCommands($commands);
+
+        return $this;
+    }
+
+    /**
      * Get the number of seconds the script should loop.
      *
      * @return int
@@ -456,10 +477,6 @@ class BotManager
      */
     public function handleWebhook(): self
     {
-        if (!$this->isValidRequest()) {
-            throw new InvalidAccessException('Invalid access');
-        }
-
         $this->telegram->handle();
 
         return $this;
