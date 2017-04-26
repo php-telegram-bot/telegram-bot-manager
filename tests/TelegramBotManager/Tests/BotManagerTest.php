@@ -44,6 +44,14 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * To test the live commands, act as if we're being called by Telegram.
+     */
+    protected function makeRequestValid()
+    {
+        $_SERVER['REMOTE_ADDR'] = '149.154.167.197';
+    }
+
     public function testSetParameters()
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
@@ -239,9 +247,11 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group live
+     * @runInSeparateProcess
      */
     public function testDeleteWebhookViaRunLiveBot()
     {
+        $this->makeRequestValid();
         $_GET       = ['a' => 'unset'];
         $botManager = new BotManager(array_merge(self::$live_params, [
             'webhook' => ['url' => 'https://example.com/hook.php'],
@@ -438,9 +448,11 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group live
+     * @runInSeparateProcess
      */
     public function testGetUpdatesLiveBot()
     {
+        $this->makeRequestValid();
         $botManager = new BotManager(self::$live_params);
         $output     = $botManager->run()->getOutput();
         self::assertContains('Updates processed: 0', $output);
@@ -448,10 +460,12 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group live
+     * @runInSeparateProcess
      */
     public function testGetUpdatesLoopLiveBot()
     {
-        // Webhook must NOT be set for this to work!
+        $this->makeRequestValid();
+        // Webhook MUST NOT be set for this to work!
         $this->testDeleteWebhookViaRunLiveBot();
 
         // Looping for 5 seconds should be enough to get a result.

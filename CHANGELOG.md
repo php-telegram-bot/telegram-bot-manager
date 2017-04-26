@@ -4,6 +4,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [Unreleased]
 ### Added
 - Ability to define custom valid IPs to access webhook.
+- Execute commands via cron, using `cron` action and `g` parameter.
 ### Changed
 - Remodelled the config array to a more flexible structure.
 ### Deprecated

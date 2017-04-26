@@ -18,10 +18,11 @@ class Params
      * @var array List of valid script parameters.
      */
     private static $valid_script_params = [
-        's',
-        'a',
-        'l',
-        'i',
+        's', // secret
+        'a', // action
+        'l', // loop
+        'i', // interval
+        'g', // group (for cron)
     ];
 
     /**
@@ -47,8 +48,8 @@ class Params
         'paths',
         'commands',
         'botan',
-        'custom_input',
         'cron',
+        'custom_input',
     ];
 
     /**
