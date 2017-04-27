@@ -108,19 +108,17 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
 
     public function testInitLogging()
     {
-        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+        self::assertFalse(TelegramLog::isDebugLogActive());
+        self::assertFalse(TelegramLog::isErrorLogActive());
+        self::assertFalse(TelegramLog::isUpdateLogActive());
+
+        new BotManager(array_merge(ParamsTest::$demo_vital_params, [
             'logging' => [
                 'debug'  => '/tmp/php-telegram-bot-debuglog.log',
                 'error'  => '/tmp/php-telegram-bot-errorlog.log',
                 'update' => '/tmp/php-telegram-bot-updatelog.log',
             ],
         ]));
-
-        self::assertFalse(TelegramLog::isDebugLogActive());
-        self::assertFalse(TelegramLog::isErrorLogActive());
-        self::assertFalse(TelegramLog::isUpdateLogActive());
-
-        $botManager->initLogging();
 
         self::assertTrue(TelegramLog::isDebugLogActive());
         self::assertTrue(TelegramLog::isErrorLogActive());

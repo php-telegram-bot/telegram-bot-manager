@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Deprecated
 ### Removed
 ### Fixed
+- Initialise loggers before anything else, to allow logging of all errors.
 ### Security
 
 ## [0.43.0] - 2017-04-17
