@@ -173,7 +173,7 @@ class BotManager
         if ($force || 'cli' !== PHP_SAPI) {
             $secret     = $this->params->getBotParam('secret');
             $secret_get = $this->params->getScriptParam('s');
-            if ($secret_get !== $secret) {
+            if (!isset($secret, $secret_get) || $secret !== $secret_get) {
                 throw new InvalidAccessException('Invalid access');
             }
         }

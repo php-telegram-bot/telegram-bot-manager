@@ -17,8 +17,8 @@
         <ini name="error_reporting" value="-1" />
         <const name="PHPUNIT_TEST" value="true" />
         <const name="PHPUNIT_DB_HOST" value="127.0.0.1"/>
-        <const name="PHPUNIT_DB_NAME" value="telegrambot"/>
         <const name="PHPUNIT_DB_USER" value="root"/>
-        <const name="PHPUNIT_DB_PASS" value=""/>
+        <const name="PHPUNIT_DB_PASSWORD" value=""/>
+        <const name="PHPUNIT_DB_DATABASE" value="telegrambot"/>
     </php>
 </phpunit>

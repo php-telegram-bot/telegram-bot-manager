@@ -18,15 +18,15 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
      * @var array Demo vital parameters.
      */
     public static $demo_vital_params = [
-        'api_key'      => '12345:api_key',
-        'bot_username' => 'test_bot',
-        'secret'       => 'secret_12345',
+        'api_key' => '12345:api_key',
     ];
 
     /**
      * @var array Demo extra parameters.
      */
     public static $demo_extra_params = [
+        'bot_username'     => 'test_bot',
+        'secret'           => 'secret_12345',
         'validate_request' => true,
         'webhook'          => [
             'url'             => 'https://php.telegram.bot/manager.php',
@@ -75,7 +75,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
                 ],
             ],
         ],
-        'custom_input' => '{"some":"raw", "json":"update"}',
+        'custom_input'     => '{"some":"raw", "json":"update"}',
     ];
 
     public function setUp()
@@ -96,33 +96,18 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructWithoutApiKey()
     {
-        new Params([
-            'bot_username' => 'test_bot',
-            'secret'       => 'secret_12345',
-        ]);
-    }
-
-    /**
-     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
-     * @expectedExceptionMessage Some vital info is missing: bot_username
-     */
-    public function testConstructWithoutBotUsername()
-    {
-        new Params([
-            'api_key' => '12345:api_key',
-            'secret'  => 'secret_12345',
-        ]);
+        new Params([]);
     }
 
     /**
      * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
-    public function testConstructWithoutSecret()
+    public function testConstructWithWebhookWithoutSecret()
     {
         new Params([
-            'api_key'      => '12345:api_key',
-            'bot_username' => 'test_bot',
+            'api_key' => '12345:api_key',
+            'webhook' => self::$demo_extra_params['webhook'],
         ]);
     }
 
