@@ -1,7 +1,27 @@
 # Changelog
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+Exclamation symbols (:exclamation:) note something of importance e.g. breaking changes. Click them to learn more.
+
 ## [Unreleased]
+### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [0.44.0] - 2017-05-05
+### Added
+- Ability to define custom valid IPs to access webhook.
+- Execute commands via cron, using `cron` action and `g` parameter.
+### Changed
+- [:exclamation:][0.44.0-bc-parameter-structure] Remodelled the parameter array to a more flexible structure.
+- `bot_username` and `secret` are no longer vital parameters.
+### Fixed
+- Initialise loggers before anything else, to allow logging of all errors.
+### Security
+- Enforce non-empty secret when using webhook.
 
 ## [0.43.0] - 2017-04-17
 ### Added
@@ -56,3 +76,5 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [0.1] - 2016-08-20
 ### Added
 - First minor version that contains the basic functionality.
+
+[0.44.0-bc-parameter-structure]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#parameter-structure-changed "Parameter structure changed"

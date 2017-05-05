@@ -10,6 +10,7 @@
 
 namespace NPM\TelegramBotManager;
 
+use Allty\Utils\IpTools;
 use Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
@@ -20,14 +21,9 @@ use NPM\TelegramBotManager\Exception\InvalidWebhookException;
 class BotManager
 {
     /**
-     * @var string Telegram post servers lower IP limit
+     * @var string Telegram post servers IP range
      */
-    const TELEGRAM_IP_LOWER = '149.154.167.197';
-
-    /**
-     * @var string Telegram post servers upper IP limit
-     */
-    const TELEGRAM_IP_UPPER = '149.154.167.233';
+    const TELEGRAM_IP_RANGE = '149.154.167.197-149.154.167.233';
 
     /**
      * @var string The output for testing, instead of echoing
@@ -60,6 +56,9 @@ class BotManager
      */
     public function __construct(array $params)
     {
+        // Initialise logging before anything else, to allow errors to be logged.
+        $this->initLogging($params['logging'] ?? []);
+
         $this->params = new Params($params);
         $this->action = new Action($this->params->getScriptParam('a'));
 
@@ -121,18 +120,21 @@ class BotManager
      */
     public function run(): self
     {
-        // Initialise logging.
-        $this->initLogging();
-
         // Make sure this is a valid call.
         $this->validateSecret();
+
+        if (!$this->isValidRequest()) {
+            throw new InvalidAccessException('Invalid access');
+        }
 
         if ($this->action->isAction(['set', 'unset', 'reset'])) {
             $this->validateAndSetWebhook();
         } elseif ($this->action->isAction('handle')) {
-            // Set any extras.
             $this->setBotExtras();
             $this->handleRequest();
+        } elseif ($this->action->isAction('cron')) {
+            $this->setBotExtras();
+            $this->handleCron();
         }
 
         return $this;
@@ -141,19 +143,17 @@ class BotManager
     /**
      * Initialise all loggers.
      *
+     * @param array $log_paths
+     *
      * @return \NPM\TelegramBotManager\BotManager
      * @throws \Exception
      */
-    public function initLogging(): self
+    public function initLogging(array $log_paths): self
     {
-        $logging = $this->params->getBotParam('logging');
-        if (is_array($logging)) {
-            /** @var array $logging */
-            foreach ($logging as $logger => $logfile) {
-                ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
-                ('error' === $logger) && TelegramLog::initErrorLog($logfile);
-                ('update' === $logger) && TelegramLog::initUpdateLog($logfile);
-            }
+        foreach ($log_paths as $logger => $logfile) {
+            ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
+            ('error' === $logger) && TelegramLog::initErrorLog($logfile);
+            ('update' === $logger) && TelegramLog::initUpdateLog($logfile);
         }
 
         return $this;
@@ -173,7 +173,7 @@ class BotManager
         if ($force || 'cli' !== PHP_SAPI) {
             $secret     = $this->params->getBotParam('secret');
             $secret_get = $this->params->getScriptParam('s');
-            if ($secret_get !== $secret) {
+            if (!isset($secret, $secret_get) || $secret !== $secret_get) {
                 throw new InvalidAccessException('Invalid access');
             }
         }
@@ -191,7 +191,7 @@ class BotManager
     public function validateAndSetWebhook(): self
     {
         $webhook = $this->params->getBotParam('webhook');
-        if (empty($webhook) && $this->action->isAction(['set', 'reset'])) {
+        if (empty($webhook['url'] ?? null) && $this->action->isAction(['set', 'reset'])) {
             throw new InvalidWebhookException('Invalid webhook');
         }
 
@@ -203,14 +203,14 @@ class BotManager
 
         if ($this->action->isAction(['set', 'reset'])) {
             $webhook_params = array_filter([
-                'certificate'     => $this->params->getBotParam('certificate'),
-                'max_connections' => $this->params->getBotParam('max_connections'),
-                'allowed_updates' => $this->params->getBotParam('allowed_updates'),
+                'certificate'     => $webhook['certificate'] ?? null,
+                'max_connections' => $webhook['max_connections'] ?? null,
+                'allowed_updates' => $webhook['allowed_updates'] ?? null,
             ]);
 
             $this->handleOutput(
                 $this->telegram->setWebhook(
-                    $webhook . '?a=handle&s=' . $this->params->getBotParam('secret'),
+                    $webhook['url'] . '?a=handle&s=' . $this->params->getBotParam('secret'),
                     $webhook_params
                 )->getDescription() . PHP_EOL
             );
@@ -245,23 +245,59 @@ class BotManager
      */
     public function setBotExtras(): self
     {
-        $telegram_extras = [
+        $this->setBotExtrasTelegram();
+        $this->setBotExtrasRequest();
+
+        return $this;
+    }
+
+    /**
+     * Set extra bot parameters for Telegram object.
+     *
+     * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function setBotExtrasTelegram(): self
+    {
+        $simple_extras = [
             'admins'         => 'enableAdmins',
             'mysql'          => 'enableMySql',
-            'botan_token'    => 'enableBotan',
-            'commands_paths' => 'addCommandsPaths',
+            'commands.paths' => 'addCommandsPaths',
             'custom_input'   => 'setCustomInput',
-            'download_path'  => 'setDownloadPath',
-            'upload_path'    => 'setUploadPath',
+            'paths.download' => 'setDownloadPath',
+            'paths.upload'   => 'setUploadPath',
         ];
-        // For telegram extras, just pass the single param value to the Telegram method.
-        foreach ($telegram_extras as $param_key => $method) {
+        // For simple telegram extras, just pass the single param value to the Telegram method.
+        foreach ($simple_extras as $param_key => $method) {
             $param = $this->params->getBotParam($param_key);
             if (null !== $param) {
                 $this->telegram->$method($param);
             }
         }
 
+        // Custom command configs.
+        $command_configs = $this->params->getBotParam('commands.configs', []);
+        foreach ($command_configs as $command => $config) {
+            $this->telegram->setCommandConfig($command, $config);
+        }
+
+        // Botan with options.
+        if ($botan_token = $this->params->getBotParam('botan.token')) {
+            $botan_options = $this->params->getBotParam('botan.options', []);
+            $this->telegram->enableBotan($botan_token, $botan_options);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set extra bot parameters for Request class.
+     *
+     * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    protected function setBotExtrasRequest(): self
+    {
         $request_extras = [
             // None at the moment...
         ];
@@ -274,19 +310,10 @@ class BotManager
         }
 
         // Special cases.
-        $limiter = $this->params->getBotParam('limiter', []);
-        if (is_array($limiter)) {
-            Request::setLimiter(true, $limiter);
-        } else {
-            Request::setLimiter($limiter);
-        }
-
-        $command_configs = $this->params->getBotParam('command_configs');
-        if (is_array($command_configs)) {
-            /** @var array $command_configs */
-            foreach ($command_configs as $command => $config) {
-                $this->telegram->setCommandConfig($command, $config);
-            }
+        $limiter_enabled = $this->params->getBotParam('limiter.enabled');
+        if ($limiter_enabled !== null) {
+            $limiter_options = $this->params->getBotParam('limiter.options', []);
+            Request::setLimiter($limiter_enabled, $limiter_options);
         }
 
         return $this;
@@ -301,7 +328,7 @@ class BotManager
      */
     public function handleRequest(): self
     {
-        if (empty($this->params->getBotParam('webhook'))) {
+        if (empty($this->params->getBotParam('webhook.url'))) {
             if ($loop_time = $this->getLoopTime()) {
                 $this->handleGetUpdatesLoop($loop_time, $this->getLoopInterval());
             } else {
@@ -310,6 +337,25 @@ class BotManager
         } else {
             $this->handleWebhook();
         }
+
+        return $this;
+    }
+
+    /**
+     * Handle cron.
+     *
+     * @return \NPM\TelegramBotManager\BotManager
+     * @throws \Longman\TelegramBot\Exception\TelegramException
+     */
+    public function handleCron(): self
+    {
+        $groups = explode(',', $this->params->getScriptParam('g', 'default'));
+
+        $commands = [];
+        foreach ($groups as $group) {
+            $commands = array_merge($commands, $this->params->getBotParam('cron.groups.' . $group, []));
+        }
+        $this->telegram->runCommands($commands);
 
         return $this;
     }
@@ -433,10 +479,6 @@ class BotManager
      */
     public function handleWebhook(): self
     {
-        if (!$this->isValidRequest()) {
-            throw new InvalidAccessException('Invalid access');
-        }
-
         $this->telegram->handle();
 
         return $this;
@@ -464,23 +506,29 @@ class BotManager
      */
     public function isValidRequest(): bool
     {
+        // If we're running from CLI, requests are always valid, unless we're running the tests.
         if ((!self::inTest() && 'cli' === PHP_SAPI) || false === $this->params->getBotParam('validate_request')) {
             return true;
         }
 
         $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
         foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR'] as $key) {
-            $addr = $_SERVER[$key] ?? null;
-            if (filter_var($addr, FILTER_VALIDATE_IP)) {
-                $ip = $addr;
+            if (filter_var($_SERVER[$key] ?? null, FILTER_VALIDATE_IP)) {
+                $ip = $_SERVER[$key];
                 break;
             }
         }
 
-        $lower_dec = (float) sprintf('%u', ip2long(self::TELEGRAM_IP_LOWER));
-        $upper_dec = (float) sprintf('%u', ip2long(self::TELEGRAM_IP_UPPER));
-        $ip_dec    = (float) sprintf('%u', ip2long($ip));
+        $valid_ips = array_merge(
+            [self::TELEGRAM_IP_RANGE],
+            (array) $this->params->getBotParam('valid_ips', [])
+        );
+        foreach ($valid_ips as $valid_ip) {
+            if (IpTools::ipInRange($ip, $valid_ip)) {
+                return true;
+            }
+        }
 
-        return $ip_dec >= $lower_dec && $ip_dec <= $upper_dec;
+        return false;
     }
 }

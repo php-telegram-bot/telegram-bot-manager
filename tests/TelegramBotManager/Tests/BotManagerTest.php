@@ -37,23 +37,33 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
             'secret'       => 'super-secret',
             'mysql'        => [
                 'host'     => PHPUNIT_DB_HOST,
-                'database' => PHPUNIT_DB_NAME,
                 'user'     => PHPUNIT_DB_USER,
-                'password' => PHPUNIT_DB_PASS,
+                'password' => PHPUNIT_DB_PASSWORD,
+                'database' => PHPUNIT_DB_DATABASE,
             ],
         ];
+    }
+
+    /**
+     * To test the live commands, act as if we're being called by Telegram.
+     */
+    protected function makeRequestValid()
+    {
+        $_SERVER['REMOTE_ADDR'] = '149.154.167.197';
     }
 
     public function testSetParameters()
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
-            'admins'      => [1],            // valid
-            'upload_path' => '/upload/path', // valid
-            'paramX'      => 'something'     // invalid
+            'admins' => [1],            // valid
+            'paths'  => [               // valid
+                'upload' => '/upload/path',
+            ],
+            'paramX' => 'something'     // invalid
         ]));
         $params     = $botManager->getParams();
         self::assertEquals([1], $params->getBotParam('admins'));
-        self::assertEquals('/upload/path', $params->getBotParam('upload_path'));
+        self::assertEquals('/upload/path', $params->getBotParam('paths.upload'));
         self::assertNull($params->getBotParam('paramX'));
     }
 
@@ -75,9 +85,12 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
-    public function testSomeVitalsFail()
+    public function testIncompleteVitalsFail()
     {
-        new BotManager(['api_key' => '12345:api_key', 'bot_username' => 'testbot']);
+        new BotManager([
+            'api_key' => '12345:api_key',
+            'webhook' => ['url' => 'https://web/hook.php'],
+        ]);
     }
 
     public function testVitalsSuccess()
@@ -92,25 +105,22 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         $telegram = $bot->getTelegram();
 
         self::assertInstanceOf(Telegram::class, $telegram);
-        self::assertSame(ParamsTest::$demo_vital_params['bot_username'], $telegram->getBotUsername());
         self::assertSame(ParamsTest::$demo_vital_params['api_key'], $telegram->getApiKey());
     }
 
     public function testInitLogging()
     {
-        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+        self::assertFalse(TelegramLog::isDebugLogActive());
+        self::assertFalse(TelegramLog::isErrorLogActive());
+        self::assertFalse(TelegramLog::isUpdateLogActive());
+
+        new BotManager(array_merge(ParamsTest::$demo_vital_params, [
             'logging' => [
                 'debug'  => '/tmp/php-telegram-bot-debuglog.log',
                 'error'  => '/tmp/php-telegram-bot-errorlog.log',
                 'update' => '/tmp/php-telegram-bot-updatelog.log',
             ],
         ]));
-
-        self::assertFalse(TelegramLog::isDebugLogActive());
-        self::assertFalse(TelegramLog::isErrorLogActive());
-        self::assertFalse(TelegramLog::isUpdateLogActive());
-
-        $botManager->initLogging();
 
         self::assertTrue(TelegramLog::isDebugLogActive());
         self::assertTrue(TelegramLog::isErrorLogActive());
@@ -151,7 +161,8 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testValidateAndSetWebhookSuccess()
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
-            'webhook' => 'https://web/hook.php',
+            'webhook' => ['url' => 'https://web/hook.php'],
+            'secret'  => 'secret_12345',
         ]));
 
         TestHelpers::setObjectProperty(
@@ -209,7 +220,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testValidateAndSetWebhookSuccessLiveBot()
     {
         $botManager = new BotManager(array_merge(self::$live_params, [
-            'webhook' => 'https://example.com/hook.php',
+            'webhook' => ['url' => 'https://example.com/hook.php'],
         ]));
 
         // Make sure the webhook isn't set to start with.
@@ -237,12 +248,14 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group live
+     * @runInSeparateProcess
      */
     public function testDeleteWebhookViaRunLiveBot()
     {
+        $this->makeRequestValid();
         $_GET       = ['a' => 'unset'];
         $botManager = new BotManager(array_merge(self::$live_params, [
-            'webhook' => 'https://example.com/hook.php',
+            'webhook' => ['url' => 'https://example.com/hook.php'],
         ]));
         $output     = $botManager->run()->getOutput();
 
@@ -336,12 +349,20 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     public function testSetBotExtras()
     {
         $extras     = [
-            'limiter'         => false,
-            'admins'          => [1, 2, 3],
-            'download_path'   => __DIR__ . '/Download',
-            'upload_path'     => __DIR__ . '/Upload',
-            'command_configs' => [
-                'weather' => ['owm_api_key' => 'owm_api_key_12345'],
+            'limiter'  => [
+                'enabled' => false,
+            ],
+            'admins'   => [1, 2, 3],
+            'paths'    => [
+                'download' => __DIR__ . '/Download',
+                'upload'   => __DIR__ . '/Upload',
+            ],
+            'commands' => [
+                'configs' => [
+                    'weather' => [
+                        'owm_api_key' => 'owm_api_key_12345',
+                    ],
+                ],
             ],
         ];
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, $extras));
@@ -349,11 +370,11 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         $botManager->setBotExtras();
         $telegram = $botManager->getTelegram();
 
-        self::assertAttributeEquals($extras['limiter'], 'limiter_enabled', Request::class);
+        self::assertAttributeEquals($extras['limiter']['enabled'], 'limiter_enabled', Request::class);
         self::assertEquals($extras['admins'], $telegram->getAdminList());
-        self::assertEquals($extras['download_path'], $telegram->getDownloadPath());
-        self::assertEquals($extras['upload_path'], $telegram->getUploadPath());
-        self::assertEquals($extras['command_configs']['weather'], $telegram->getCommandConfig('weather'));
+        self::assertEquals($extras['paths']['download'], $telegram->getDownloadPath());
+        self::assertEquals($extras['paths']['upload'], $telegram->getUploadPath());
+        self::assertEquals($extras['commands']['configs']['weather'], $telegram->getCommandConfig('weather'));
     }
 
     public function testGetOutput()
@@ -428,9 +449,11 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group live
+     * @runInSeparateProcess
      */
     public function testGetUpdatesLiveBot()
     {
+        $this->makeRequestValid();
         $botManager = new BotManager(self::$live_params);
         $output     = $botManager->run()->getOutput();
         self::assertContains('Updates processed: 0', $output);
@@ -438,10 +461,12 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group live
+     * @runInSeparateProcess
      */
     public function testGetUpdatesLoopLiveBot()
     {
-        // Webhook must NOT be set for this to work!
+        $this->makeRequestValid();
+        // Webhook MUST NOT be set for this to work!
         $this->testDeleteWebhookViaRunLiveBot();
 
         // Looping for 5 seconds should be enough to get a result.

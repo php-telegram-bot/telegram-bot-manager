@@ -22,6 +22,7 @@ class Action
         'unset',
         'reset',
         'handle',
+        'cron',
     ];
 
     /**

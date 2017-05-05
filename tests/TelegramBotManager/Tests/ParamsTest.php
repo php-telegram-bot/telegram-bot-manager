@@ -18,21 +18,28 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
      * @var array Demo vital parameters.
      */
     public static $demo_vital_params = [
-        'api_key'      => '12345:api_key',
-        'bot_username' => 'test_bot',
-        'secret'       => 'secret_12345',
+        'api_key' => '12345:api_key',
     ];
 
     /**
      * @var array Demo extra parameters.
      */
     public static $demo_extra_params = [
+        'bot_username'     => 'test_bot',
+        'secret'           => 'secret_12345',
         'validate_request' => true,
-        'webhook'          => 'https://php.telegram.bot/manager.php',
-        'certificate'      => __DIR__ . '/server.crt',
-        'max_connections'  => 20,
-        'allowed_updates'  => ['message', 'edited_channel_post', 'callback_query'],
-        'limiter'          => false,
+        'webhook'          => [
+            'url'             => 'https://php.telegram.bot/manager.php',
+            'certificate'     => __DIR__ . '/server.crt',
+            'max_connections' => 20,
+            'allowed_updates' => ['message', 'edited_channel_post', 'callback_query'],
+        ],
+        'limiter'          => [
+            'enabled' => false,
+            'options' => [
+                'interval' => 0.5,
+            ],
+        ],
         'admins'           => [1],
         'mysql'            => [
             'host'     => '127.0.0.1',
@@ -40,14 +47,34 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
             'password' => 'root',
             'database' => 'telegram_bot',
         ],
-        'download_path'    => __DIR__ . '/Download',
-        'upload_path'      => __DIR__ . '/Upload',
-        'commands_paths'   => __DIR__ . '/CustomCommands',
-        'command_configs'  => [
-            'weather'       => ['owm_api_key' => 'owm_api_key_12345'],
-            'sendtochannel' => ['your_channel' => '@my_channel'],
+        'paths'            => [
+            'download' => __DIR__ . '/Download',
+            'upload'   => __DIR__ . '/Upload',
         ],
-        'botan_token'      => 'botan_12345',
+        'commands'         => [
+            'paths'   => [
+                __DIR__ . '/CustomCommands',
+            ],
+            'configs' => [
+                'weather'       => ['owm_api_key' => 'owm_api_key_12345'],
+                'sendtochannel' => ['your_channel' => '@my_channel'],
+            ],
+        ],
+        'botan'            => [
+            'token' => 'botan_12345',
+        ],
+        'cron'             => [
+            'groups' => [
+                'default'     => [
+                    '/default_cron_command',
+                ],
+                'maintenance' => [
+                    '/db_cleanup',
+                    '/db_repair',
+                    '/log_rotate',
+                ],
+            ],
+        ],
         'custom_input'     => '{"some":"raw", "json":"update"}',
     ];
 
@@ -69,33 +96,18 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
      */
     public function testConstructWithoutApiKey()
     {
-        new Params([
-            'bot_username' => 'test_bot',
-            'secret'       => 'secret_12345',
-        ]);
-    }
-
-    /**
-     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
-     * @expectedExceptionMessage Some vital info is missing: bot_username
-     */
-    public function testConstructWithoutBotUsername()
-    {
-        new Params([
-            'api_key' => '12345:api_key',
-            'secret'  => 'secret_12345',
-        ]);
+        new Params([]);
     }
 
     /**
      * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
-    public function testConstructWithoutSecret()
+    public function testConstructWithWebhookWithoutSecret()
     {
         new Params([
-            'api_key'      => '12345:api_key',
-            'bot_username' => 'test_bot',
+            'api_key' => '12345:api_key',
+            'webhook' => self::$demo_extra_params['webhook'],
         ]);
     }
 
@@ -148,6 +160,13 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
             self::assertEquals(self::$demo_extra_params[$extra_param_key], $params->getBotParam($extra_param_key));
         }
 
+        // Test default return values.
         self::assertNull($params->getBotParam('non-existent'));
+        self::assertTrue($params->getBotParam('non-existent', true));
+        self::assertSame('some-default', $params->getBotParam('non-existent', 'some-default'));
+
+        // Test array-dot notation.
+        self::assertSame([__DIR__ . '/CustomCommands'], $params->getBotParam('commands.paths'));
+        self::assertSame('owm_api_key_12345', $params->getBotParam('commands.configs.weather.owm_api_key'));
     }
 }

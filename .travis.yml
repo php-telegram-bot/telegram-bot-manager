@@ -25,6 +25,10 @@ matrix:
 notifications:
     on_success: never
     on_failure: always
+    webhooks:
+        on_success: always
+        urls:
+            secure: rnvenRUkORTYn2zdE9g0yzLZp3PtnmdL+8Dbf5tmykPsVrihYBm0h7V/A76AnNM3ZF5BiubKnu0hJ3unm0TBJMCd5HCBq2zVKKcgRqZD2AvObo52I5Z8KIc+IVujbQdEmiktgSs5R7zQSqx5VuamlVlW8anEL52t0Iwqo7/UCMa3cdMuunOZ1W9zVkhsrqJGVdSHfv7NRdXftUngUtg6CQIt/274ECL+sjdhpEZvj8qow0OUFB7heXZu11BnkPSoMkytXpGwBAN3aKiT4Of9gpvEq9mQo/7qviLEDgsy57CJiRFJj9Gc3rD5LYpGWtmIMYQYnJpY8esUxe9t/lQCfqRi6eR9PTr8XS1LYxNNaB5iifgHdKhPAXYwcxg1GFKFNTL6O1UDSe72xQmqRtdyegvWRY7ALerBLXoCl5LiwnkRtZ+4J6JaXotEcPjzypHQe7w+xn4zBA0RnX2P2XPu3zXCBM4bL63N/PzKl2UKv0gJB0rW/fTXF5of1z2lQTkDfp7tsdn2nXwH7W0y17MHKe4U9HfknrHNFwWn0gXkhBDdCo2hd25ovjJd3j4utAKPPQyl7iKsyNLlqe3xbe+TV2lfddDORFgKGrVQMZt+exGq0HdmuLimSxfutPSCHCOUHzYuddaBeh0LjF7E/6+OvJXDiJN4afyBj2Ti5A2UCG8=
 
 git:
     depth: 1
@@ -35,14 +39,14 @@ install:
 
 before_script:
     - mysql -u root -e 'create database telegrambot; use telegrambot; source ./vendor/longman/telegram-bot/structure.sql;'
+    - if [[ "$COVERAGE" == "1" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then CODECOV="1"; fi
 
 script:
     - composer check-code
-    - if [[ "$COVERAGE" == "1" ]] ; then composer test-cov-live; fi
-    - if [[ "$COVERAGE" != "1" ]] ; then composer test; fi
+    - if [[ "$CODECOV" == "1" ]]; then composer test-cov-live; else composer test; fi
 
 after_success:
-    - if [[ "$COVERAGE" == "1" ]]; then composer test-cov-upload; fi
+    - if [[ "$CODECOV" == "1" ]]; then composer test-cov-upload; fi
 
 env:
     global:

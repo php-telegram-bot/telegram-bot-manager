@@ -18,10 +18,11 @@ class Params
      * @var array List of valid script parameters.
      */
     private static $valid_script_params = [
-        's',
-        'a',
-        'l',
-        'i',
+        's', // secret
+        'a', // action
+        'l', // loop
+        'i', // interval
+        'g', // group (for cron)
     ];
 
     /**
@@ -29,28 +30,25 @@ class Params
      */
     private static $valid_vital_bot_params = [
         'api_key',
-        'bot_username',
-        'secret',
     ];
 
     /**
      * @var array List of valid extra parameters that can be passed.
      */
     private static $valid_extra_bot_params = [
+        'bot_username',
+        'secret',
         'validate_request',
+        'valid_ips',
         'webhook',
-        'certificate',
-        'max_connections',
-        'allowed_updates',
         'logging',
         'limiter',
         'admins',
         'mysql',
-        'download_path',
-        'upload_path',
-        'commands_paths',
-        'command_configs',
-        'botan_token',
+        'paths',
+        'commands',
+        'botan',
+        'cron',
         'custom_input',
     ];
 
@@ -72,21 +70,32 @@ class Params
      * api_key (string) Telegram Bot API key
      * bot_username (string) Telegram Bot username
      * secret (string) Secret string to validate calls
-     * validate_request (bool) Only allow webhook access from valid Telegram API IPs
-     * webhook (string) URI of the webhook
-     * certificate (string) Path to the self-signed certificate
-     * max_connections (int) Maximum allowed simultaneous HTTPS connections to the webhook
-     * allowed_updates (array) List the types of updates you want your bot to receive
+     * validate_request (bool) Only allow webhook access from valid Telegram API IPs and defined valid_ips
+     * valid_ips (array) Any IPs, besides Telegram API IPs, that are allowed to access the webhook
+     * webhook (array)
+     * - url (string) URI of the webhook
+     * - certificate (string) Path to the self-signed certificate
+     * - max_connections (int) Maximum allowed simultaneous HTTPS connections to the webhook
+     * - allowed_updates (array) List the types of updates you want your bot to receive
      * logging (array) Array of logger files to set.
-     * limiter (bool|array) Set limiter, as bool or options array.
+     * limiter (array)
+     * - enabled (bool) Set limiter.
+     * - options (array) Limiter options.
      * admins (array) List of admins to enable.
      * mysql (array) MySQL credentials to use.
-     * download_path (string) Custom download path to set.
-     * upload_path (string) Custom upload path to set.
-     * commands_paths (array) Custom commands paths to set.
-     * command_configs (array) List of custom command configs.
-     * botan_token (string) Botan token to enable botan.io support.
+     * paths (array)
+     * - download (string) Custom download path to set.
+     * - upload (string) Custom upload path to set.
+     * commands (array)
+     * - paths (array) Custom commands paths to set.
+     * - configs (array) List of custom command configs.
+     * botan (array)
+     * - token (string) Botan token to enable botan.io support.
+     * - options (array) Botan options.
      * custom_input (string) Custom raw JSON string to use as input.
+     * cron (array)
+     * - groups (array) Groups of cron commands to run.
+     *   - default (array) Default group of cron commands.
      *
      * @param array $params All params to set the bot up with.
      *
@@ -115,6 +124,11 @@ class Params
             }
 
             $this->bot_params[$vital_key] = $params[$vital_key];
+        }
+
+        // Special case, where secret MUST be defined if we have a webhook.
+        if (($params['webhook'] ?? null) && !($params['secret'] ?? null)) {
+            throw new InvalidParamsException('Some vital info is missing: secret');
         }
 
         // Set all extra params.
@@ -163,7 +177,7 @@ class Params
     }
 
     /**
-     * Get a specific bot param.
+     * Get a specific bot param, allowing array-dot notation.
      *
      * @param string $param
      * @param mixed  $default
@@ -172,7 +186,17 @@ class Params
      */
     public function getBotParam(string $param, $default = null)
     {
-        return $this->bot_params[$param] ?? $default;
+        $param_path = explode('.', $param);
+
+        $value = $this->bot_params[array_shift($param_path)] ?? null;
+        foreach ($param_path as $sub_param_key) {
+            $value = $value[$sub_param_key] ?? null;
+            if (null === $value) {
+                break;
+            }
+        }
+
+        return $value ?? $default;
     }
 
     /**
