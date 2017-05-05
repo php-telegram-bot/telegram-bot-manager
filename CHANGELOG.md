@@ -7,11 +7,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Execute commands via cron, using `cron` action and `g` parameter.
 ### Changed
 - Remodelled the config array to a more flexible structure.
+- `bot_username` and `secret` are no longer vital parameters.
 ### Deprecated
 ### Removed
 ### Fixed
 - Initialise loggers before anything else, to allow logging of all errors.
 ### Security
+- Enforce non-empty secret when using webhook.
 
 ## [0.43.0] - 2017-04-17
 ### Added

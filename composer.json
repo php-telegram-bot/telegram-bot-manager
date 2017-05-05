@@ -25,7 +25,7 @@
     ],
     "require": {
         "php": "^7.0",
-        "longman/telegram-bot": "^0.43",
+        "longman/telegram-bot": "^0.44",
         "allty/utils-ip": "dev-master"
     },
     "require-dev": {

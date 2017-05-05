@@ -30,14 +30,14 @@ class Params
      */
     private static $valid_vital_bot_params = [
         'api_key',
-        'bot_username',
-        'secret',
     ];
 
     /**
      * @var array List of valid extra parameters that can be passed.
      */
     private static $valid_extra_bot_params = [
+        'bot_username',
+        'secret',
         'validate_request',
         'valid_ips',
         'webhook',
@@ -124,6 +124,11 @@ class Params
             }
 
             $this->bot_params[$vital_key] = $params[$vital_key];
+        }
+
+        // Special case, where secret MUST be defined if we have a webhook.
+        if (($params['webhook'] ?? null) && !($params['secret'] ?? null)) {
+            throw new InvalidParamsException('Some vital info is missing: secret');
         }
 
         // Set all extra params.

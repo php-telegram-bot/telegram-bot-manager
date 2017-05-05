@@ -37,9 +37,9 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
             'secret'       => 'super-secret',
             'mysql'        => [
                 'host'     => PHPUNIT_DB_HOST,
-                'database' => PHPUNIT_DB_NAME,
                 'user'     => PHPUNIT_DB_USER,
-                'password' => PHPUNIT_DB_PASS,
+                'password' => PHPUNIT_DB_PASSWORD,
+                'database' => PHPUNIT_DB_DATABASE,
             ],
         ];
     }
@@ -85,9 +85,12 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
-    public function testSomeVitalsFail()
+    public function testIncompleteVitalsFail()
     {
-        new BotManager(['api_key' => '12345:api_key', 'bot_username' => 'testbot']);
+        new BotManager([
+            'api_key' => '12345:api_key',
+            'webhook' => ['url' => 'https://web/hook.php'],
+        ]);
     }
 
     public function testVitalsSuccess()
@@ -102,7 +105,6 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         $telegram = $bot->getTelegram();
 
         self::assertInstanceOf(Telegram::class, $telegram);
-        self::assertSame(ParamsTest::$demo_vital_params['bot_username'], $telegram->getBotUsername());
         self::assertSame(ParamsTest::$demo_vital_params['api_key'], $telegram->getApiKey());
     }
 
@@ -160,6 +162,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
             'webhook' => ['url' => 'https://web/hook.php'],
+            'secret'  => 'secret_12345',
         ]));
 
         TestHelpers::setObjectProperty(
