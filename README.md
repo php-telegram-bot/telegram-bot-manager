@@ -1,21 +1,21 @@
 # PHP Telegram Bot Manager
 
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/php-telegram-bot/telegram-bot-manager.svg)](https://scrutinizer-ci.com/g/php-telegram-bot/telegram-bot-manager/?branch=master)
-[![Codecov](https://img.shields.io/codecov/c/github/php-telegram-bot/telegram-bot-manager.svg)](https://codecov.io/gh/php-telegram-bot/telegram-bot-manager)
-[![Build Status](https://img.shields.io/travis/php-telegram-bot/telegram-bot-manager.svg)](https://travis-ci.org/php-telegram-bot/telegram-bot-manager)
+[![Scrutinizer Code Quality][code-quality-badge]][code-quality]
+[![Codecov][code-coverage-badge]][code-coverage]
+[![Build Status][build-status-badge]][build-status]
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/noplanman/telegram-bot-manager.svg)](https://packagist.org/packages/noplanman/telegram-bot-manager)
-[![Total Downloads](https://img.shields.io/packagist/dt/noplanman/telegram-bot-manager.svg)](https://packagist.org/packages/noplanman/telegram-bot-manager)
-[![License](https://img.shields.io/packagist/l/noplanman/telegram-bot-manager.svg)](https://github.com/php-telegram-bot/telegram-bot-manager/LICENSE.md)
+[![Latest Stable Version][latest-version-badge]][github-tgbot-manager]
+[![Total Downloads][total-downloads-badge]][packagist-tgbot-manager]
+[![License][license-badge]][license]
 
-This project builds on top of [PHP Telegram Bot](https://github.com/php-telegram-bot/core) and as such, depends on it!
+This project builds on top of [PHP Telegram Bot][github-tgbot-core] and as such, depends on it!
 
 The main purpose of this mini-library is to make the interaction between your webserver and Telegram easier.
-I strongly suggest your read the PHP Telegram Bot [instructions](https://github.com/php-telegram-bot/core#instructions) first, to understand what this library does exactly.
+I strongly suggest your read the PHP Telegram Bot [instructions][github-tgbot-core-instructions] first, to understand what this library does exactly.
 
 Installation and usage is pretty straight forward:
 
-### Require this package with [Composer](https://getcomposer.org/)
+### Require this package with [Composer][composer]
 
 Either run this command in your command line:
 
@@ -168,7 +168,7 @@ Best make it long, random and very unique!
 
 For 84 random characters:
 - If you have `pwgen` installed, just execute `pwgen 84` and choose any one.
-- Or just go [here](https://www.random.org/strings/?num=7&len=12&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new) and put all the output onto a single line.
+- Or just go [here][random-characters] and put all the output onto a single line.
 
 (You get 2 guesses why 84 is a good number :wink:)
 
@@ -313,9 +313,31 @@ Now, the updates can be done either through the [browser](#via-browser) or [via 
 
 ## Development
 
-When running live bot tests on a fork, you must enter the following environment variables to your [repository settings](https://docs.travis-ci.com/user/environment-variables#Defining-Variables-in-Repository-Settings) on travis-ci.org:
+When running live bot tests on a fork, you must enter the following environment variables to your [repository settings][travis-repository-settings] on travis-ci.org:
 ```
 API_KEY="12345:your_api_key"
 BOT_USERNAME="username_of_your_bot"
 ```
 It probably makes sense for you to create a new dummy bot for this.
+
+
+[github-tgbot-core]: https://github.com/php-telegram-bot/core "PHP Telegram Bot on GitHub"
+[github-tgbot-core-instructions]: https://github.com/php-telegram-bot/core#instructions "PHP Telegram Bot instructions on GitHub"
+[github-tgbot-manager]: https://github.com/php-telegram-bot/telegram-bot-manager "PHP Telegram Bot Manager on GitHub"
+[packagist-tgbot-manager]: https://packagist.org/packages/noplanman/telegram-bot-manager "PHP Telegram Bot Manager on Packagist"
+[license]: https://github.com/php-telegram-bot/telegram-bot-manager/blob/master/LICENSE "PHP Telegram Bot Manager license"
+
+[code-quality-badge]: https://img.shields.io/scrutinizer/g/php-telegram-bot/telegram-bot-manager.svg
+[code-quality]: https://scrutinizer-ci.com/g/php-telegram-bot/telegram-bot-manager/?branch=master "Code quality on Scrutinizer"
+[code-coverage-badge]: https://img.shields.io/codecov/c/github/php-telegram-bot/telegram-bot-manager.svg
+[code-coverage]: https://codecov.io/gh/php-telegram-bot/telegram-bot-manager "Code coverage on Codecov"
+[build-status-badge]: https://img.shields.io/travis/php-telegram-bot/telegram-bot-manager.svg
+[build-status]: https://travis-ci.org/php-telegram-bot/telegram-bot-manager "Build status on Travis-CI"
+
+[latest-version-badge]: https://img.shields.io/packagist/v/noplanman/telegram-bot-manager.svg
+[total-downloads-badge]: https://img.shields.io/packagist/dt/noplanman/telegram-bot-manager.svg
+[license-badge]: https://img.shields.io/packagist/l/noplanman/telegram-bot-manager.svg
+
+[random-characters]: https://www.random.org/strings/?num=7&len=12&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new "Generate random characters"
+[travis-repository-settings]: https://docs.travis-ci.com/user/environment-variables#Defining-Variables-in-Repository-Settings "Repository Settings on Travis-CI"
+[composer]: https://getcomposer.org/ "Composer"
