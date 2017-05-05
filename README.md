@@ -129,10 +129,10 @@ try {
     $bot = new BotManager([
         // Vitals!
         'api_key'      => '12345:my_api_key',
-        'bot_username' => 'my_own_bot',
-        'secret'       => 'super_secret',
 
         // Extras.
+        'bot_username' => 'my_own_bot',
+        'secret'       => 'super_secret',
         'webhook'      => [
             'url' => 'https://example.com/manager.php',
         ]
@@ -145,22 +145,25 @@ try {
 
 ### Set vital bot parameters
 
-The vital parameters are:
+The only vital parameters is the API key:
 
 ```php
 $bot = new BotManager([
     // (string) Bot API key provided by @BotFather.
-    'api_key'      => '12345:my_api_key',
-    // (string) Bot username that was defined when creating the bot.
-    'bot_username' => 'my_own_bot',
-    // (string) A secret password required to authorise access to the webhook.
-    'secret'       => 'super_secret',
-
+    'api_key' => '12345:my_api_key',
     ...
 ]);
 ```
 
-The `secret` is a user-defined key that is required to execute any of the library's features.
+### Set extra bot parameters
+
+Apart from the necessary API key, the bot can be easily configured using extra parameters.
+
+Set the webhook? Enable admins? Add custom command paths? Set up logging?
+
+**All no problem!**
+
+The `secret` is a user-defined key that is required to execute any of the library's features via webhook.
 Best make it long, random and very unique!
 
 For 84 random characters:
@@ -169,19 +172,16 @@ For 84 random characters:
 
 (You get 2 guesses why 84 is a good number :wink:)
 
-### Set extra bot parameters
-
-Apart from the necessary vital parameters, the bot can be easily configured using extra parameters.
-
-Enable admins? Add custom command paths? Set up logging?
-
-**All no problem!**
-
-Here is a complete list of all available extra parameters:
+Below is a complete list of all available extra parameters.
 
 ```php
 $bot = new BotManager([
     ...
+    // (string) Bot username that was defined when creating the bot.
+    'bot_username'     => 'my_own_bot',
+
+    // (string) A secret password required to authorise access to the webhook.
+    'secret'           => 'super_secret',
 
     // (array) All options that have to do with the webhook.
     'webhook'          => [
