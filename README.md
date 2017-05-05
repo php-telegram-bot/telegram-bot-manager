@@ -20,7 +20,7 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```bash
-composer require noplanman/telegram-bot-manager:^0.43
+composer require noplanman/telegram-bot-manager:^0.44
 ```
 
 **or**
@@ -29,12 +29,25 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```yaml
 "require": {
-    "noplanman/telegram-bot-manager": "^0.43"
+    "noplanman/telegram-bot-manager": "^0.44"
 }
 ```
 and then run `composer update`
 
 **NOTE:** This will automatically also install PHP Telegram Bot into your project (if it isn't already).
+
+**Advanced:** Due to the fact that the core library is not a stable version yet, this project is partly locked to the core version, to ensure reliable functioning.
+
+It is possible however, to override the core version that this library requires:
+
+```yaml
+"require": {
+    "noplanman/telegram-bot-manager": "^0.44",
+    "longman/telegram-bot": "dev-develop as 0.44"
+}
+```
+
+This example will pull the develop version of the core library, making it appear to be version 0.44, which then satisfies the requirement.
 
 ### Performing actions
 
