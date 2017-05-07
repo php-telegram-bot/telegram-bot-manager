@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="tests/bootstrap.php" colors="true">
+<phpunit bootstrap="vendor/autoload.php"
+         backupGlobals="false"
+         backupStaticAttributes="false"
+         beStrictAboutOutputDuringTests="true"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         verbose="true"
+>
     <testsuites>
         <testsuite name="TelegramBotManager Test Suite">
-            <directory>tests/</directory>
+            <directory suffix="Test.php">tests/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
-        <whitelist>
+        <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src/</directory>
         </whitelist>
     </filter>
 
     <php>
         <ini name="date.timezone" value="UTC"/>
-        <ini name="error_reporting" value="-1" />
-        <const name="PHPUNIT_TEST" value="true" />
+        <ini name="error_reporting" value="-1"/>
+        <const name="PHPUNIT_TEST" value="true"/>
         <const name="PHPUNIT_DB_HOST" value="127.0.0.1"/>
         <const name="PHPUNIT_DB_USER" value="root"/>
         <const name="PHPUNIT_DB_PASSWORD" value=""/>
