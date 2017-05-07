@@ -8,19 +8,19 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager\Tests;
+namespace TelegramBot\TelegramBotManager\Tests;
 
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
-use NPM\TelegramBotManager\BotManager;
+use TelegramBot\TelegramBotManager\BotManager;
 
 /**
  * Class BotManagerTest.php
  *
  * Leave all member variables public to allow easy modification.
  *
- * @package NPM\TelegramBotManager
+ * @package TelegramBot\TelegramBotManager
  */
 class BotManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -73,7 +73,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
+     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: api_key
      */
     public function testNoVitalsFail()
@@ -82,7 +82,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \NPM\TelegramBotManager\Exception\InvalidParamsException
+     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
     public function testIncompleteVitalsFail()
@@ -128,7 +128,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \NPM\TelegramBotManager\Exception\InvalidAccessException
+     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
      * @expectedExceptionMessage Invalid access
      */
     public function testValidateSecretFail()
@@ -263,7 +263,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \NPM\TelegramBotManager\Exception\InvalidWebhookException
+     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
      * @expectedExceptionMessage Invalid webhook
      */
     public function testValidateAndSetWebhookFailSetWithoutWebhook()
@@ -275,7 +275,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \NPM\TelegramBotManager\Exception\InvalidWebhookException
+     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
      * @expectedExceptionMessage Invalid webhook
      */
     public function testValidateAndSetWebhookFailResetWithoutWebhook()

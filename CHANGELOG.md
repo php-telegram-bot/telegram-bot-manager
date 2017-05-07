@@ -6,6 +6,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Move to `php-telegram-bot/telegram-bot-manager` on packagist.
+- Move to `TelegramBot\TelegramBotManager` namespace.
 ### Deprecated
 ### Removed
 ### Fixed

@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager\Exception;
+namespace TelegramBot\TelegramBotManager\Exception;
 
 class InvalidAccessException extends BotManagerException
 {

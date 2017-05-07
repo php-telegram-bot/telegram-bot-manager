@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager;
+namespace TelegramBot\TelegramBotManager;
 
-use NPM\TelegramBotManager\Exception\InvalidParamsException;
+use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
 
 class Params
 {
@@ -99,7 +99,7 @@ class Params
      *
      * @param array $params All params to set the bot up with.
      *
-     * @throws \NPM\TelegramBotManager\Exception\InvalidParamsException
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
      */
     public function __construct(array $params)
     {
@@ -112,8 +112,8 @@ class Params
      *
      * @param $params
      *
-     * @return \NPM\TelegramBotManager\Params
-     * @throws \NPM\TelegramBotManager\Exception\InvalidParamsException
+     * @return \TelegramBot\TelegramBotManager\Params
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
      */
     private function validateAndSetBotParams($params): self
     {
@@ -149,7 +149,7 @@ class Params
      * https://url/entry.php?s=<secret>&a=<action>&l=<loop>
      * $ php entry.php s=<secret> a=<action> l=<loop>
      *
-     * @return \NPM\TelegramBotManager\Params
+     * @return \TelegramBot\TelegramBotManager\Params
      */
     private function validateAndSetScriptParams(): self
     {
