@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager\Tests;
+namespace TelegramBot\TelegramBotManager\Tests;
 
 class TestHelpers
 {

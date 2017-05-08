@@ -11,6 +11,11 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [1.0.0] - 2017-05-08
+### Changed
+- [:exclamation:][1.0.0-bc-move] Move to `php-telegram-bot/telegram-bot-manager` on packagist.
+- [:exclamation:][1.0.0-bc-move] Move to `TelegramBot\TelegramBotManager` namespace.
+
 ## [0.44.0] - 2017-05-05
 ### Added
 - Ability to define custom valid IPs to access webhook.
@@ -77,4 +82,5 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - First minor version that contains the basic functionality.
 
+[1.0.0-bc-move]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#namespace-and-package-name-changed "Namespace and package name changed"
 [0.44.0-bc-parameter-structure]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#parameter-structure-changed "Parameter structure changed"

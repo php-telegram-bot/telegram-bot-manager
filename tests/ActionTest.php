@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager\Tests;
+namespace TelegramBot\TelegramBotManager\Tests;
 
-use NPM\TelegramBotManager\Action;
+use TelegramBot\TelegramBotManager\Action;
 
 class ActionTest extends \PHPUnit\Framework\TestCase
 {
@@ -24,7 +24,7 @@ class ActionTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \NPM\TelegramBotManager\Exception\InvalidActionException
+     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidActionException
      * @expectedExceptionMessageRegExp /^Invalid action: non-existent$/
      */
     public function testConstructFail()

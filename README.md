@@ -20,16 +20,16 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```bash
-composer require noplanman/telegram-bot-manager:^0.44
+composer require php-telegram-bot/telegram-bot-manager:^1.0
 ```
 
 **or**
 
-For existing Composer projects, edit your project's `composer.json` file to require `noplanman/telegram-bot-manager`:
+For existing Composer projects, edit your project's `composer.json` file to require `php-telegram-bot/telegram-bot-manager`:
 
 ```yaml
 "require": {
-    "noplanman/telegram-bot-manager": "^0.44"
+    "php-telegram-bot/telegram-bot-manager": "^1.0"
 }
 ```
 and then run `composer update`
@@ -42,7 +42,7 @@ It is possible however, to override the core version that this library requires:
 
 ```yaml
 "require": {
-    "noplanman/telegram-bot-manager": "^0.44",
+    "php-telegram-bot/telegram-bot-manager": "^1.0",
     "longman/telegram-bot": "dev-develop as 0.44"
 }
 ```
@@ -133,7 +133,7 @@ Let's start off with a simple example that uses the webhook method:
 ```php
 <?php
 
-use NPM\TelegramBotManager\BotManager;
+use TelegramBot\TelegramBotManager\BotManager;
 
 // Load composer.
 require_once __DIR__ . '/vendor/autoload.php';
@@ -308,12 +308,12 @@ $bot = new BotManager([
 
 ### Using getUpdates method
 
-Using the `getUpdates` method requires a MySQL database connection:
+Using the `getUpdates` method must not have a `webhook` parameter set and requires a MySQL database connection:
 ```php
 $bot = new BotManager([
     ...
     // Extras.
-    'mysql'   => [
+    'mysql' => [
         'host'     => '127.0.0.1',
         'user'     => 'root',
         'password' => 'root',
@@ -337,7 +337,7 @@ It probably makes sense for you to create a new dummy bot for this.
 [github-tgbot-core]: https://github.com/php-telegram-bot/core "PHP Telegram Bot on GitHub"
 [github-tgbot-core-instructions]: https://github.com/php-telegram-bot/core#instructions "PHP Telegram Bot instructions on GitHub"
 [github-tgbot-manager]: https://github.com/php-telegram-bot/telegram-bot-manager "PHP Telegram Bot Manager on GitHub"
-[packagist-tgbot-manager]: https://packagist.org/packages/noplanman/telegram-bot-manager "PHP Telegram Bot Manager on Packagist"
+[packagist-tgbot-manager]: https://packagist.org/packages/php-telegram-bot/telegram-bot-manager "PHP Telegram Bot Manager on Packagist"
 [license]: https://github.com/php-telegram-bot/telegram-bot-manager/blob/master/LICENSE "PHP Telegram Bot Manager license"
 
 [code-quality-badge]: https://img.shields.io/scrutinizer/g/php-telegram-bot/telegram-bot-manager.svg
@@ -347,9 +347,9 @@ It probably makes sense for you to create a new dummy bot for this.
 [build-status-badge]: https://img.shields.io/travis/php-telegram-bot/telegram-bot-manager.svg
 [build-status]: https://travis-ci.org/php-telegram-bot/telegram-bot-manager "Build status on Travis-CI"
 
-[latest-version-badge]: https://img.shields.io/packagist/v/noplanman/telegram-bot-manager.svg
-[total-downloads-badge]: https://img.shields.io/packagist/dt/noplanman/telegram-bot-manager.svg
-[license-badge]: https://img.shields.io/packagist/l/noplanman/telegram-bot-manager.svg
+[latest-version-badge]: https://img.shields.io/packagist/v/php-telegram-bot/telegram-bot-manager.svg
+[total-downloads-badge]: https://img.shields.io/packagist/dt/php-telegram-bot/telegram-bot-manager.svg
+[license-badge]: https://img.shields.io/packagist/l/php-telegram-bot/telegram-bot-manager.svg
 
 [random-characters]: https://www.random.org/strings/?num=7&len=12&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new "Generate random characters"
 [travis-repository-settings]: https://docs.travis-ci.com/user/environment-variables#Defining-Variables-in-Repository-Settings "Repository Settings on Travis-CI"
