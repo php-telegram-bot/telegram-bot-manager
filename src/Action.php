@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager;
+namespace TelegramBot\TelegramBotManager;
 
-use NPM\TelegramBotManager\Exception\InvalidActionException;
+use TelegramBot\TelegramBotManager\Exception\InvalidActionException;
 
 class Action
 {
@@ -35,7 +35,7 @@ class Action
      *
      * @param string $action
      *
-     * @throws \NPM\TelegramBotManager\Exception\InvalidActionException
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidActionException
      */
     public function __construct($action = 'handle')
     {

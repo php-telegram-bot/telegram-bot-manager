@@ -8,15 +8,15 @@
  * file that was distributed with this source code.
  */
 
-namespace NPM\TelegramBotManager;
+namespace TelegramBot\TelegramBotManager;
 
 use Allty\Utils\IpTools;
 use Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
-use NPM\TelegramBotManager\Exception\InvalidAccessException;
-use NPM\TelegramBotManager\Exception\InvalidWebhookException;
+use TelegramBot\TelegramBotManager\Exception\InvalidAccessException;
+use TelegramBot\TelegramBotManager\Exception\InvalidWebhookException;
 
 class BotManager
 {
@@ -36,12 +36,12 @@ class BotManager
     private $telegram;
 
     /**
-     * @var \NPM\TelegramBotManager\Params Object that manages the parameters.
+     * @var \TelegramBot\TelegramBotManager\Params Object that manages the parameters.
      */
     private $params;
 
     /**
-     * @var \NPM\TelegramBotManager\Action Object that contains the current action.
+     * @var \TelegramBot\TelegramBotManager\Action Object that contains the current action.
      */
     private $action;
 
@@ -50,8 +50,8 @@ class BotManager
      *
      * @param array $params
      *
-     * @throws \NPM\TelegramBotManager\Exception\InvalidParamsException
-     * @throws \NPM\TelegramBotManager\Exception\InvalidActionException
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidActionException
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function __construct(array $params)
@@ -92,7 +92,7 @@ class BotManager
     /**
      * Get the Params object.
      *
-     * @return \NPM\TelegramBotManager\Params
+     * @return \TelegramBot\TelegramBotManager\Params
      */
     public function getParams(): Params
     {
@@ -102,7 +102,7 @@ class BotManager
     /**
      * Get the Action object.
      *
-     * @return \NPM\TelegramBotManager\Action
+     * @return \TelegramBot\TelegramBotManager\Action
      */
     public function getAction(): Action
     {
@@ -112,10 +112,10 @@ class BotManager
     /**
      * Run this thing in all its glory!
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \NPM\TelegramBotManager\Exception\InvalidAccessException
-     * @throws \NPM\TelegramBotManager\Exception\InvalidWebhookException
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
      * @throws \Exception
      */
     public function run(): self
@@ -145,7 +145,7 @@ class BotManager
      *
      * @param array $log_paths
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Exception
      */
     public function initLogging(array $log_paths): self
@@ -164,8 +164,8 @@ class BotManager
      *
      * @param bool $force Force validation, even on CLI.
      *
-     * @return \NPM\TelegramBotManager\BotManager
-     * @throws \NPM\TelegramBotManager\Exception\InvalidAccessException
+     * @return \TelegramBot\TelegramBotManager\BotManager
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
      */
     public function validateSecret(bool $force = false): self
     {
@@ -184,9 +184,9 @@ class BotManager
     /**
      * Make sure the webhook is valid and perform the requested webhook operation.
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \NPM\TelegramBotManager\Exception\InvalidWebhookException
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
      */
     public function validateAndSetWebhook(): self
     {
@@ -224,7 +224,7 @@ class BotManager
      *
      * @param string $output
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      */
     private function handleOutput(string $output): self
     {
@@ -240,7 +240,7 @@ class BotManager
     /**
      * Set any extra bot features that have been assigned on construction.
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function setBotExtras(): self
@@ -254,7 +254,7 @@ class BotManager
     /**
      * Set extra bot parameters for Telegram object.
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function setBotExtrasTelegram(): self
@@ -293,7 +293,7 @@ class BotManager
     /**
      * Set extra bot parameters for Request class.
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     protected function setBotExtrasRequest(): self
@@ -322,8 +322,8 @@ class BotManager
     /**
      * Handle the request, which calls either the Webhook or getUpdates method respectively.
      *
-     * @return \NPM\TelegramBotManager\BotManager
-     * @throws \NPM\TelegramBotManager\Exception\InvalidAccessException
+     * @return \TelegramBot\TelegramBotManager\BotManager
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleRequest(): self
@@ -344,7 +344,7 @@ class BotManager
     /**
      * Handle cron.
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleCron(): self
@@ -403,7 +403,7 @@ class BotManager
      * @param int $loop_time_in_seconds
      * @param int $loop_interval_in_seconds
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleGetUpdatesLoop(int $loop_time_in_seconds, int $loop_interval_in_seconds = 2): self
@@ -426,7 +426,7 @@ class BotManager
     /**
      * Handle the updates using the getUpdates method.
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
      */
     public function handleGetUpdates(): self
@@ -473,9 +473,9 @@ class BotManager
     /**
      * Handle the updates using the Webhook method.
      *
-     * @return \NPM\TelegramBotManager\BotManager
+     * @return \TelegramBot\TelegramBotManager\BotManager
      * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \NPM\TelegramBotManager\Exception\InvalidAccessException
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
      */
     public function handleWebhook(): self
     {
