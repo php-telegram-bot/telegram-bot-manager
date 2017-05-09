@@ -6,11 +6,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
-- Use more stable `longman/ip-tools` for IP matching.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+
+## [1.0.1] - 2017-05-09
+### Changed
+- Use more stable `longman/ip-tools` for IP matching.
 
 ## [1.0.0] - 2017-05-08
 ### Changed
