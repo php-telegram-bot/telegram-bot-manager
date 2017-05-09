@@ -4,64 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "00065e8f19ff2375ea717d4fdbc0368a",
+    "content-hash": "6176605fa23dd9f5126cb3740c6ce1ba",
     "packages": [
-        {
-            "name": "allty/utils-ip",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/noplanman/Utils-IP-Tools.git",
-                "reference": "e0be3e1836be704b45439a7dc7afceb4f0c91708"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/noplanman/Utils-IP-Tools/zipball/e0be3e1836be704b45439a7dc7afceb4f0c91708",
-                "reference": "e0be3e1836be704b45439a7dc7afceb4f0c91708",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Allty\\Utils\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Allty\\Utils\\Test\\": "tests/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Matthias ETIENNE",
-                    "email": "matt@allty.com"
-                },
-                {
-                    "name": "Armando Lüscher",
-                    "email": "armando@noplanman.ch"
-                }
-            ],
-            "description": "Allty IP Utils",
-            "homepage": "https://github.com/mattallty/Utils-IP-Tools",
-            "keywords": [
-                "ip",
-                "range",
-                "utils"
-            ],
-            "support": {
-                "source": "https://github.com/noplanman/Utils-IP-Tools/tree/master"
-            },
-            "time": "2017-04-18 11:20:58"
-        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "6.2.3",
@@ -239,6 +183,62 @@
                 "url"
             ],
             "time": "2017-03-20T17:10:46+00:00"
+        },
+        {
+            "name": "longman/ip-tools",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/akalongman/php-ip-tools.git",
+                "reference": "6c050dfbf91811d14b9b3aa31fb7116eac0f0a18"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/akalongman/php-ip-tools/zipball/6c050dfbf91811d14b9b3aa31fb7116eac0f0a18",
+                "reference": "6c050dfbf91811d14b9b3aa31fb7116eac0f0a18",
+                "shasum": ""
+            },
+            "require": {
+                "ext-bcmath": "*",
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpspec/phpspec": "~2.1",
+                "phpunit/phpunit": "~4.1",
+                "squizlabs/php_codesniffer": "~2.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Longman\\IPTools\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Avtandil Kikabidze aka LONGMAN",
+                    "email": "akalongman@gmail.com",
+                    "homepage": "https://longman.me",
+                    "role": "Developer"
+                }
+            ],
+            "description": "PHP IP Tools for manipulation with IPv4 and IPv6",
+            "homepage": "https://github.com/akalongman/php-ip-tools",
+            "keywords": [
+                "IP",
+                "Match",
+                "compare",
+                "ipv4",
+                "ipv6",
+                "mask",
+                "subnet",
+                "tools",
+                "utilities"
+            ],
+            "time": "2016-10-23T20:08:46+00:00"
         },
         {
             "name": "longman/telegram-bot",
@@ -2047,9 +2047,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "allty/utils-ip": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
