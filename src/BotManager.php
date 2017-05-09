@@ -10,7 +10,7 @@
 
 namespace TelegramBot\TelegramBotManager;
 
-use Allty\Utils\IpTools;
+use Longman\IPTools\Ip;
 use Longman\TelegramBot\Entities;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
@@ -519,16 +519,9 @@ class BotManager
             }
         }
 
-        $valid_ips = array_merge(
+        return Ip::match($ip, array_merge(
             [self::TELEGRAM_IP_RANGE],
             (array) $this->params->getBotParam('valid_ips', [])
-        );
-        foreach ($valid_ips as $valid_ip) {
-            if (IpTools::ipInRange($ip, $valid_ip)) {
-                return true;
-            }
-        }
-
-        return false;
+        ));
     }
 }
