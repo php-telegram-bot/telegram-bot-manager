@@ -17,16 +17,10 @@
             "role": "Developer"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/noplanman/Utils-IP-Tools"
-        }
-    ],
     "require": {
         "php": "^7.0",
         "longman/telegram-bot": "^0.44",
-        "allty/utils-ip": "dev-master"
+        "longman/ip-tools": "^1.2"
     },
     "require-dev": {
         "jakub-onderka/php-parallel-lint": "^0.9.2",

@@ -158,7 +158,7 @@ try {
 
 ### Set vital bot parameters
 
-The only vital parameters is the API key:
+The only vital parameter is the API key:
 
 ```php
 $bot = new BotManager([

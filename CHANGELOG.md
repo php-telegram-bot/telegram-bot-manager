@@ -11,6 +11,10 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [1.0.1] - 2017-05-09
+### Changed
+- Use more stable `longman/ip-tools` for IP matching.
+
 ## [1.0.0] - 2017-05-08
 ### Changed
 - [:exclamation:][1.0.0-bc-move] Move to `php-telegram-bot/telegram-bot-manager` on packagist.
