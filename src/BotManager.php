@@ -334,17 +334,15 @@ class BotManager
      */
     public function handleRequest(): self
     {
-        if (empty($this->params->getBotParam('webhook.url'))) {
-            if ($loop_time = $this->getLoopTime()) {
-                $this->handleGetUpdatesLoop($loop_time, $this->getLoopInterval());
-            } else {
-                $this->handleGetUpdates();
-            }
-        } else {
-            $this->handleWebhook();
+        if ($this->params->getBotParam('webhook.url')) {
+            return $this->handleWebhook();
         }
 
-        return $this;
+        if ($loop_time = $this->getLoopTime()) {
+            return $this->handleGetUpdatesLoop($loop_time, $this->getLoopInterval());
+        }
+
+        return $this->handleGetUpdates();
     }
 
     /**
