@@ -357,9 +357,9 @@ class BotManager
 
         $commands = [];
         foreach ($groups as $group) {
-            $commands = array_merge($commands, $this->params->getBotParam('cron.groups.' . $group, []));
+            $commands[] = $this->params->getBotParam('cron.groups.' . $group, []);
         }
-        $this->telegram->runCommands($commands);
+        $this->telegram->runCommands(array_merge(...$commands));
 
         return $this;
     }
