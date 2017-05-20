@@ -139,6 +139,9 @@ class BotManager
             $this->handleRequest();
         } elseif ($this->action->isAction('cron')) {
             $this->handleCron();
+        } elseif ($this->action->isAction('webhookinfo')) {
+            $webhookinfo = Request::getWebhookInfo();
+            print_r($webhookinfo->getResult() ?: $webhookinfo->printError());
         }
 
         return $this;
