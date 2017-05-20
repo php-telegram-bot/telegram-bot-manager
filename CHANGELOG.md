@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - `webhookinfo` action to get result from `getWebhookInfo`.
 ### Changed
+- Clean up and refactor some methods.
 ### Deprecated
 ### Removed
 ### Fixed
