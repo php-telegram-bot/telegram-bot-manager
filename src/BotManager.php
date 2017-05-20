@@ -124,6 +124,11 @@ class BotManager
         $this->validateSecret();
         $this->validateRequest();
 
+        if ($this->action->isAction('webhookinfo')) {
+            $webhookinfo = Request::getWebhookInfo();
+            print_r($webhookinfo->getResult() ?: $webhookinfo->printError());
+            return $this;
+        }
         if ($this->action->isAction(['set', 'unset', 'reset'])) {
             return $this->validateAndSetWebhook();
         }
@@ -134,9 +139,6 @@ class BotManager
             $this->handleRequest();
         } elseif ($this->action->isAction('cron')) {
             $this->handleCron();
-        } elseif ($this->action->isAction('webhookinfo')) {
-            $webhookinfo = Request::getWebhookInfo();
-            print_r($webhookinfo->getResult() ?: $webhookinfo->printError());
         }
 
         return $this;
