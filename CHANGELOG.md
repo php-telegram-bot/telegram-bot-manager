@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- `webhookinfo` action to get result from `getWebhookInfo`.
 ### Changed
 ### Deprecated
 ### Removed

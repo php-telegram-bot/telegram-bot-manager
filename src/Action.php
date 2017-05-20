@@ -23,6 +23,7 @@ class Action
         'reset',
         'handle',
         'cron',
+        'webhookinfo',
     ];
 
     /**
