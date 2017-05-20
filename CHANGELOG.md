@@ -10,6 +10,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Passing an empty array to `webhook.allowed_updates` parameter now correctly resets to defaults.
 ### Security
 
 ## [1.0.1] - 2017-05-09

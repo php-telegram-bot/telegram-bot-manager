@@ -209,7 +209,13 @@ class BotManager
                 'certificate'     => $webhook['certificate'] ?? null,
                 'max_connections' => $webhook['max_connections'] ?? null,
                 'allowed_updates' => $webhook['allowed_updates'] ?? null,
-            ]);
+            ], function ($v, $k) {
+                if ($k === 'allowed_updates') {
+                    // Special case for allowed_updates, which can be an empty array.
+                    return is_array($v);
+                }
+                return !empty($v);
+            }, ARRAY_FILTER_USE_BOTH);
 
             $this->handleOutput(
                 $this->telegram->setWebhook(
