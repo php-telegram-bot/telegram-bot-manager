@@ -110,14 +110,29 @@ class Params
     /**
      * Validate and set up the vital and extra params.
      *
-     * @param $params
+     * @param array $params
      *
      * @return \TelegramBot\TelegramBotManager\Params
      * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
      */
-    private function validateAndSetBotParams($params): self
+    private function validateAndSetBotParams(array $params): self
     {
-        // Set all vital params.
+        $this->validateAndSetBotParamsVital($params);
+        $this->validateAndSetBotParamsSpecial($params);
+        $this->validateAndSetBotParamsExtra($params);
+
+        return $this;
+    }
+
+    /**
+     * Set all vital params.
+     *
+     * @param array $params
+     *
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     */
+    private function validateAndSetBotParamsVital(array $params)
+    {
         foreach (self::$valid_vital_bot_params as $vital_key) {
             if (!array_key_exists($vital_key, $params)) {
                 throw new InvalidParamsException('Some vital info is missing: ' . $vital_key);
@@ -125,13 +140,30 @@ class Params
 
             $this->bot_params[$vital_key] = $params[$vital_key];
         }
+    }
 
+    /**
+     * Special case parameters.
+     *
+     * @param array $params
+     *
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     */
+    private function validateAndSetBotParamsSpecial(array $params)
+    {
         // Special case, where secret MUST be defined if we have a webhook.
         if (($params['webhook'] ?? null) && !($params['secret'] ?? null)) {
             throw new InvalidParamsException('Some vital info is missing: secret');
         }
+    }
 
-        // Set all extra params.
+    /**
+     * Set all extra params.
+     *
+     * @param array $params
+     */
+    private function validateAndSetBotParamsExtra(array $params)
+    {
         foreach (self::$valid_extra_bot_params as $extra_key) {
             if (!array_key_exists($extra_key, $params)) {
                 continue;
@@ -139,8 +171,6 @@ class Params
 
             $this->bot_params[$extra_key] = $params[$extra_key];
         }
-
-        return $this;
     }
 
     /**
@@ -153,27 +183,43 @@ class Params
      */
     private function validateAndSetScriptParams(): self
     {
+        $this->setScriptParams();
+        $this->validateScriptParams();
+
+        return $this;
+    }
+
+    /**
+     * Set script parameters from query string or CLI.
+     */
+    private function setScriptParams()
+    {
         $this->script_params = $_GET;
 
-        // If we're running from CLI, properly set script parameters.
-        if ('cli' === PHP_SAPI) {
-            // We don't need the first arg (the file name).
-            $args = array_slice($_SERVER['argv'], 1);
-
-            /** @var array $args */
-            foreach ($args as $arg) {
-                @list($key, $val) = explode('=', $arg);
-                isset($key, $val) && $this->script_params[$key] = $val;
-            }
+        // If we're not running from CLI, script parameters are already set from $_GET.
+        if ('cli' !== PHP_SAPI) {
+            return;
         }
 
-        // Keep only valid ones.
+        // We don't need the first arg (the file name).
+        $args = array_slice($_SERVER['argv'], 1);
+
+        /** @var array $args */
+        foreach ($args as $arg) {
+            @list($key, $val) = explode('=', $arg);
+            isset($key, $val) && $this->script_params[$key] = $val;
+        }
+    }
+
+    /**
+     * Keep only valid script parameters.
+     */
+    private function validateScriptParams()
+    {
         $this->script_params = array_intersect_key(
             $this->script_params,
             array_fill_keys(self::$valid_script_params, null)
         );
-
-        return $this;
     }
 
     /**
