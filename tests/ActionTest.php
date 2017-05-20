@@ -21,6 +21,7 @@ class ActionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('reset', (new Action('reset'))->getAction());
         self::assertEquals('handle', (new Action('handle'))->getAction());
         self::assertEquals('cron', (new Action('cron'))->getAction());
+        self::assertEquals('webhookinfo', (new Action('webhookinfo'))->getAction());
     }
 
     /**

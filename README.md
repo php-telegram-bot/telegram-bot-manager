@@ -59,8 +59,8 @@ There are a few parameters available to get things rolling:
 | --------- | ----------- |
 | s         | **s**ecret: This is a special secret value defined in the main `manager.php` file. |
 |           | This parameter is required to call the script via browser! |
-| a         | **a**ction: The actual action to perform. (handle (default), cron, set, unset, reset) |
-|           | **handle** executes the `getUpdates` method; **cron** executes cron commands; **set** / **unset** / **reset** the webhook. |
+| a         | **a**ction: The actual action to perform. (handle (default), webhookinfo, cron, set, unset, reset) |
+|           | **handle** executes the `getUpdates` method; **webhookinfo** to get result from `getWebhookInfo`, **cron** executes cron commands; **set** / **unset** / **reset** the webhook. |
 | l         | **l**oop: Number of seconds to loop the script for (used for getUpdates method). |
 |           | This would be used mainly via CLI, to continually get updates for a certain period. |
 | i         | **i**nterval: Number of seconds to wait between getUpdates requests (used for getUpdates method, default is 2). |
