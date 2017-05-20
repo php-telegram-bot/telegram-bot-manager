@@ -122,18 +122,17 @@ class BotManager
     {
         // Make sure this is a valid call.
         $this->validateSecret();
-
-        if (!$this->isValidRequest()) {
-            throw new InvalidAccessException('Invalid access');
-        }
+        $this->validateRequest();
 
         if ($this->action->isAction(['set', 'unset', 'reset'])) {
-            $this->validateAndSetWebhook();
-        } elseif ($this->action->isAction('handle')) {
-            $this->setBotExtras();
+            return $this->validateAndSetWebhook();
+        }
+
+        $this->setBotExtras();
+
+        if ($this->action->isAction('handle')) {
             $this->handleRequest();
         } elseif ($this->action->isAction('cron')) {
-            $this->setBotExtras();
             $this->handleCron();
         }
 
@@ -527,5 +526,17 @@ class BotManager
             [self::TELEGRAM_IP_RANGE],
             (array) $this->params->getBotParam('valid_ips', [])
         ));
+    }
+
+    /**
+     * Make sure this is a valid request.
+     *
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
+     */
+    private function validateRequest()
+    {
+        if (!$this->isValidRequest()) {
+            throw new InvalidAccessException('Invalid access');
+        }
     }
 }
