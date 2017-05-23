@@ -180,7 +180,8 @@ The `secret` is a user-defined key that is required to execute any of the librar
 Best make it long, random and very unique!
 
 For 84 random characters:
-- If you have `pwgen` installed, just execute `pwgen 84` and choose any one.
+- If you have `pwgen` installed, just execute `pwgen 84 1` and copy the output.
+- If you have `openssl` installed, use `openssl rand -hex 84`.
 - Or just go [here][random-characters] and put all the output onto a single line.
 
 (You get 2 guesses why 84 is a good number :wink:)
