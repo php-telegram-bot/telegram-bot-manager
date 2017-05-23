@@ -5,14 +5,19 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
-- `webhookinfo` action to get result from `getWebhookInfo`.
 ### Changed
-- Clean up and refactor some methods.
 ### Deprecated
 ### Removed
 ### Fixed
-- Passing an empty array to `webhook.allowed_updates` parameter now correctly resets to defaults.
 ### Security
+
+## [1.1.0] - 2017-05-23
+### Added
+- `webhookinfo` action to get result from `getWebhookInfo`.
+### Changed
+- Clean up and refactor some methods.
+### Fixed
+- Passing an empty array to `webhook.allowed_updates` parameter now correctly resets to defaults.
 
 ## [1.0.1] - 2017-05-09
 ### Changed
