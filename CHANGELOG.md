@@ -11,6 +11,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [1.1.0] - 2017-05-23
+### Added
+- `webhookinfo` action to get result from `getWebhookInfo`.
+### Changed
+- Clean up and refactor some methods.
+### Fixed
+- Passing an empty array to `webhook.allowed_updates` parameter now correctly resets to defaults.
+
 ## [1.0.1] - 2017-05-09
 ### Changed
 - Use more stable `longman/ip-tools` for IP matching.

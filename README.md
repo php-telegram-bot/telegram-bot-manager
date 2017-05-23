@@ -59,8 +59,8 @@ There are a few parameters available to get things rolling:
 | --------- | ----------- |
 | s         | **s**ecret: This is a special secret value defined in the main `manager.php` file. |
 |           | This parameter is required to call the script via browser! |
-| a         | **a**ction: The actual action to perform. (handle (default), cron, set, unset, reset) |
-|           | **handle** executes the `getUpdates` method; **cron** executes cron commands; **set** / **unset** / **reset** the webhook. |
+| a         | **a**ction: The actual action to perform. (handle (default), webhookinfo, cron, set, unset, reset) |
+|           | **handle** executes the `getUpdates` method; **webhookinfo** to get result from `getWebhookInfo`, **cron** executes cron commands; **set** / **unset** / **reset** the webhook. |
 | l         | **l**oop: Number of seconds to loop the script for (used for getUpdates method). |
 |           | This would be used mainly via CLI, to continually get updates for a certain period. |
 | i         | **i**nterval: Number of seconds to wait between getUpdates requests (used for getUpdates method, default is 2). |
@@ -180,7 +180,8 @@ The `secret` is a user-defined key that is required to execute any of the librar
 Best make it long, random and very unique!
 
 For 84 random characters:
-- If you have `pwgen` installed, just execute `pwgen 84` and choose any one.
+- If you have `pwgen` installed, just execute `pwgen 84 1` and copy the output.
+- If you have `openssl` installed, use `openssl rand -hex 84`.
 - Or just go [here][random-characters] and put all the output onto a single line.
 
 (You get 2 guesses why 84 is a good number :wink:)

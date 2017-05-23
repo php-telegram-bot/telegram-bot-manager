@@ -122,18 +122,22 @@ class BotManager
     {
         // Make sure this is a valid call.
         $this->validateSecret();
+        $this->validateRequest();
 
-        if (!$this->isValidRequest()) {
-            throw new InvalidAccessException('Invalid access');
+        if ($this->action->isAction('webhookinfo')) {
+            $webhookinfo = Request::getWebhookInfo();
+            print_r($webhookinfo->getResult() ?: $webhookinfo->printError());
+            return $this;
+        }
+        if ($this->action->isAction(['set', 'unset', 'reset'])) {
+            return $this->validateAndSetWebhook();
         }
 
-        if ($this->action->isAction(['set', 'unset', 'reset'])) {
-            $this->validateAndSetWebhook();
-        } elseif ($this->action->isAction('handle')) {
-            $this->setBotExtras();
+        $this->setBotExtras();
+
+        if ($this->action->isAction('handle')) {
             $this->handleRequest();
         } elseif ($this->action->isAction('cron')) {
-            $this->setBotExtras();
             $this->handleCron();
         }
 
@@ -206,7 +210,13 @@ class BotManager
                 'certificate'     => $webhook['certificate'] ?? null,
                 'max_connections' => $webhook['max_connections'] ?? null,
                 'allowed_updates' => $webhook['allowed_updates'] ?? null,
-            ]);
+            ], function ($v, $k) {
+                if ($k === 'allowed_updates') {
+                    // Special case for allowed_updates, which can be an empty array.
+                    return is_array($v);
+                }
+                return !empty($v);
+            }, ARRAY_FILTER_USE_BOTH);
 
             $this->handleOutput(
                 $this->telegram->setWebhook(
@@ -328,17 +338,15 @@ class BotManager
      */
     public function handleRequest(): self
     {
-        if (empty($this->params->getBotParam('webhook.url'))) {
-            if ($loop_time = $this->getLoopTime()) {
-                $this->handleGetUpdatesLoop($loop_time, $this->getLoopInterval());
-            } else {
-                $this->handleGetUpdates();
-            }
-        } else {
-            $this->handleWebhook();
+        if ($this->params->getBotParam('webhook.url')) {
+            return $this->handleWebhook();
         }
 
-        return $this;
+        if ($loop_time = $this->getLoopTime()) {
+            return $this->handleGetUpdatesLoop($loop_time, $this->getLoopInterval());
+        }
+
+        return $this->handleGetUpdates();
     }
 
     /**
@@ -353,9 +361,9 @@ class BotManager
 
         $commands = [];
         foreach ($groups as $group) {
-            $commands = array_merge($commands, $this->params->getBotParam('cron.groups.' . $group, []));
+            $commands[] = $this->params->getBotParam('cron.groups.' . $group, []);
         }
-        $this->telegram->runCommands($commands);
+        $this->telegram->runCommands(array_merge(...$commands));
 
         return $this;
     }
@@ -523,5 +531,17 @@ class BotManager
             [self::TELEGRAM_IP_RANGE],
             (array) $this->params->getBotParam('valid_ips', [])
         ));
+    }
+
+    /**
+     * Make sure this is a valid request.
+     *
+     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
+     */
+    private function validateRequest()
+    {
+        if (!$this->isValidRequest()) {
+            throw new InvalidAccessException('Invalid access');
+        }
     }
 }
