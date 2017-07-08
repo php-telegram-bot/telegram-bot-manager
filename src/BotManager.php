@@ -462,6 +462,8 @@ class BotManager
                     $chat_id = $update_content->getFrom()->getId();
                     $text    = $update_content->getQuery();
                 }
+                
+                 $text = (is_null($text)?'':$text);
 
                 $output .= sprintf(
                     '%d: %s' . PHP_EOL,
