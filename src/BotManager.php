@@ -46,6 +46,11 @@ class BotManager
     private $action;
 
     /**
+     * @var callable
+     */
+    private $custom_get_updates_callback;
+
+    /**
      * BotManager constructor.
      *
      * @param array $params
@@ -432,6 +437,19 @@ class BotManager
     }
 
     /**
+     * Set a custom callback for handling the output of the getUpdates results.
+     *
+     * @param callable $callback
+     *
+     * @return \TelegramBot\TelegramBotManager\BotManager
+     */
+    public function setCustomGetUpdatesCallback(callable $callback): BotManager
+    {
+        $this->custom_get_updates_callback = $callback;
+        return $this;
+    }
+
+    /**
      * Handle the updates using the getUpdates method.
      *
      * @return \TelegramBot\TelegramBotManager\BotManager
@@ -439,45 +457,56 @@ class BotManager
      */
     public function handleGetUpdates(): self
     {
-        $output = date('Y-m-d H:i:s', time()) . ' - ';
+        $get_updates_response = $this->telegram->handleGetUpdates();
 
-        $response = $this->telegram->handleGetUpdates();
-        if ($response->isOk()) {
-            $results = array_filter((array) $response->getResult());
-
-            $output .= sprintf('Updates processed: %d' . PHP_EOL, count($results));
-
-            /** @var Entities\Update $result */
-            foreach ($results as $result) {
-                $chat_id = 0;
-                $text    = 'Nothing';
-
-                $update_content = $result->getUpdateContent();
-                if ($update_content instanceof Entities\Message) {
-                    $chat_id = $update_content->getFrom()->getId();
-                    $text    = $update_content->getText();
-                } elseif ($update_content instanceof Entities\InlineQuery ||
-                          $update_content instanceof Entities\ChosenInlineResult
-                ) {
-                    $chat_id = $update_content->getFrom()->getId();
-                    $text    = $update_content->getQuery();
-                }
-                
-                 $text = (is_null($text)?'':$text);
-
-                $output .= sprintf(
-                    '%d: %s' . PHP_EOL,
-                    $chat_id,
-                    preg_replace('/\s+/', ' ', trim($text))
-                );
-            }
+        // Check if the user has set a custom callback for handling the response.
+        if ($this->custom_get_updates_callback !== null) {
+            $this->handleOutput(call_user_func($this->custom_get_updates_callback, $get_updates_response));
         } else {
-            $output .= sprintf('Failed to fetch updates: %s' . PHP_EOL, $response->printError());
+            $this->handleOutput($this->defaultGetUpdatesCallback($get_updates_response));
         }
 
-        $this->handleOutput($output);
-
         return $this;
+    }
+
+    /**
+     * Return the default output for getUpdates handling.
+     *
+     * @param Entities\ServerResponse $get_updates_response
+     *
+     * @return string
+     */
+    protected function defaultGetUpdatesCallback($get_updates_response): string
+    {
+        $results = array_filter((array) $get_updates_response->getResult());
+
+        $output = date('Y-m-d H:i:s') . ' - ';
+        $output .= sprintf('Updates processed: %d' . PHP_EOL, count($results));
+
+        /** @var Entities\Update $result */
+        foreach ($results as $result) {
+            $chat_id = 0;
+            $text    = 'Nothing';
+
+            $update_content = $result->getUpdateContent();
+            if ($update_content instanceof Entities\Message) {
+                $chat_id = $update_content->getFrom()->getId();
+                $text    = $update_content->getType();
+            } elseif ($update_content instanceof Entities\InlineQuery ||
+                      $update_content instanceof Entities\ChosenInlineResult
+            ) {
+                $chat_id = $update_content->getFrom()->getId();
+                $text    = $update_content->getQuery();
+            }
+
+            $output .= sprintf(
+                '%d: %s' . PHP_EOL,
+                $chat_id,
+                preg_replace('/\s+/', ' ', trim($text))
+            );
+        }
+
+        return $output;
     }
 
     /**
