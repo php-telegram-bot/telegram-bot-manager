@@ -29,7 +29,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^1.0"
+    "php-telegram-bot/telegram-bot-manager": "^1.2"
 }
 ```
 and then run `composer update`
@@ -42,8 +42,8 @@ It is possible however, to override the core version that this library requires:
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^1.0",
-    "longman/telegram-bot": "dev-develop as 0.44"
+    "php-telegram-bot/telegram-bot-manager": "^1.2",
+    "longman/telegram-bot": "dev-develop as 0.45"
 }
 ```
 

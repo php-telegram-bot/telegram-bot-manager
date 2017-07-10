@@ -16,7 +16,6 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Custom output callback can be defined for getUpdates method.
 ### Changed
 - Default output of getUpdates method now shows the message type or query text, not the text message content.
-### Deprecated
 ### Fixed
 - GetUpdates method would crash if a non-text message was sent.
 
