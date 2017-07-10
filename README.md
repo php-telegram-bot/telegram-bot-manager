@@ -325,6 +325,43 @@ $bot = new BotManager([
 
 Now, the updates can be done either through the [browser](#via-browser) or [via CLI](#via-cli).
 
+#### Custom getUpdates output
+
+A callback can be defined, to override the default output when updates are handled via getUpdates.
+
+Example of the default output:
+```
+...
+2017-07-10 14:59:25 - Updates processed: 1
+123456: <text>
+2017-07-10 14:59:27 - Updates processed: 0
+2017-07-10 14:59:30 - Updates processed: 0
+2017-07-10 14:59:32 - Updates processed: 0
+2017-07-10 14:59:34 - Updates processed: 1
+123456: <photo>
+2017-07-10 14:59:36 - Updates processed: 0
+...
+```
+
+Using custom callback that must return a string:
+```php
+// In manager.php after $bot has been defined:
+$bot->setCustomGetUpdatesCallback(function (ServerResponse $get_updates_response) {
+    $results = array_filter((array) $get_updates_response->getResult());
+
+    return sprintf('There are %d update(s)' . PHP_EOL, count($results));
+});
+```
+output:
+```
+...
+There are 0 update(s)
+There are 0 update(s)
+There are 2 update(s)
+There are 1 update(s)
+...
+```
+
 ## Development
 
 When running live bot tests on a fork, you must enter the following environment variables to your [repository settings][travis-repository-settings] on travis-ci.org:
