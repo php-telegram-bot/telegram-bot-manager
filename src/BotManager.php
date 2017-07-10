@@ -478,25 +478,28 @@ class BotManager
      */
     protected function defaultGetUpdatesCallback($get_updates_response): string
     {
+        /** @var Entities\Update[] $results */
         $results = array_filter((array) $get_updates_response->getResult());
 
-        $output = date('Y-m-d H:i:s') . ' - ';
-        $output .= sprintf('Updates processed: %d' . PHP_EOL, count($results));
+        $output = sprintf(
+            '%s - Updates processed: %d' . PHP_EOL,
+            date('Y-m-d H:i:s'),
+            count($results)
+        );
 
-        /** @var Entities\Update $result */
         foreach ($results as $result) {
             $chat_id = 0;
-            $text    = 'Nothing';
+            $text    = '<n/a>';
 
             $update_content = $result->getUpdateContent();
             if ($update_content instanceof Entities\Message) {
                 $chat_id = $update_content->getFrom()->getId();
-                $text    = $update_content->getType();
+                $text    = sprintf('<%s>', $update_content->getType());
             } elseif ($update_content instanceof Entities\InlineQuery ||
                       $update_content instanceof Entities\ChosenInlineResult
             ) {
                 $chat_id = $update_content->getFrom()->getId();
-                $text    = $update_content->getQuery();
+                $text    = sprintf('<query> %s', $update_content->getQuery());
             }
 
             $output .= sprintf(
