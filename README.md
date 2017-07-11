@@ -20,7 +20,7 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```bash
-composer require php-telegram-bot/telegram-bot-manager:^1.0
+composer require php-telegram-bot/telegram-bot-manager:^1.2
 ```
 
 **or**
