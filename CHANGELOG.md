@@ -9,6 +9,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Deprecated
 ### Removed
 ### Fixed
+- Secret should not be required when using CLI for getUpdates.
 ### Security
 
 ## [1.2.0] - 2017-07-10
