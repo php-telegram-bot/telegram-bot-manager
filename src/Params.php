@@ -152,8 +152,11 @@ class Params
     private function validateAndSetBotParamsSpecial(array $params)
     {
         // Special case, where secret MUST be defined if we have a webhook.
-        if (($params['webhook'] ?? null) && !($params['secret'] ?? null)) {
-            throw new InvalidParamsException('Some vital info is missing: secret');
+        if (($params['webhook']['url'] ?? null) && !($params['secret'] ?? null)) {
+            // This does not apply when using CLI, but make sure it gets tested for!
+            if ('cli' !== PHP_SAPI || BotManager::inTest()) {
+                throw new InvalidParamsException('Some vital info is missing: secret');
+            }
         }
     }
 
