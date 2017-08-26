@@ -11,6 +11,13 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [1.2.2] - 2017-08-26
+### Added
+- Linked version numbers in changelog for easy verification of code changes. 
+### Changed
+- Bumped to core version 0.48.0
+- Bumped dependencies.
+
 ## [1.2.1] - 2017-07-12
 ### Fixed
 - Secret should not be required when using CLI for getUpdates.
@@ -108,3 +115,21 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 [1.0.0-bc-move]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#namespace-and-package-name-changed "Namespace and package name changed"
 [0.44.0-bc-parameter-structure]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#parameter-structure-changed "Parameter structure changed"
+
+[Unreleased]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/master...develop
+[1.2.2]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.2.1...1.2.2
+[1.2.1]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.2.0...1.2.1
+[1.2.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.1.0...1.2.0
+[1.1.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.0.1...1.1.0
+[1.0.1]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.0.0...1.0.1
+[1.0.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.44.0...1.0.0
+[0.44.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.43.0...0.44.0
+[0.43.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.42.0.1...0.43.0
+[0.42.0.1]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.42.0...0.42.0.1
+[0.42.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.4.0...0.42.0
+[0.4.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.3.1...0.4.0
+[0.3.1]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.3.0...0.3.1
+[0.3.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.2.1...0.3.0
+[0.2.1]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.2...0.2.1
+[0.2]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.1.1...0.2
+[0.1.1]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/0.1...0.1.1
