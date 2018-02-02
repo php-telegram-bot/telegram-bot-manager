@@ -205,7 +205,7 @@ class Params
         }
 
         // We don't need the first arg (the file name).
-        $args = array_slice($_SERVER['argv'], 1);
+        $args = \array_slice($_SERVER['argv'], 1);
 
         /** @var array $args */
         foreach ($args as $arg) {

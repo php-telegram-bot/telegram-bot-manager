@@ -33,6 +33,8 @@ class TestHelpers
      * @param string $class    Class that contains the static property.
      * @param string $property Name of the property who's value we want to set.
      * @param mixed  $value    The value to set to the property.
+     *
+     * @throws \ReflectionException
      */
     public static function setStaticProperty($class, $property, $value)
     {

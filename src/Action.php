@@ -56,7 +56,7 @@ class Action
      */
     public function isAction($actions): bool
     {
-        return in_array($this->action, (array) $actions, true);
+        return \in_array($this->action, (array) $actions, true);
     }
 
     /**
