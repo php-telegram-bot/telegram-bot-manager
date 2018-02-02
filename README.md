@@ -246,10 +246,12 @@ $bot = new BotManager([
 
     // (array) Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!).
     'mysql'            => [
-        'host'     => '127.0.0.1',
-        'user'     => 'root',
-        'password' => 'root',
-        'database' => 'telegram_bot',
+        'host'         => '127.0.0.1',
+        'user'         => 'root',
+        'password'     => 'root',
+        'database'     => 'telegram_bot',
+        'table_prefix' => 'tbl_prfx_', // optional
+        'encoding'     => 'utf8mb4',   // optional
     ],
 
     // (array) List of configurable paths.
@@ -315,10 +317,12 @@ $bot = new BotManager([
     ...
     // Extras.
     'mysql' => [
-        'host'     => '127.0.0.1',
-        'user'     => 'root',
-        'password' => 'root',
-        'database' => 'telegram_bot',
+        'host'         => '127.0.0.1',
+        'user'         => 'root',
+        'password'     => 'root',
+        'database'     => 'telegram_bot',
+        'table_prefix' => 'tbl_prfx_', // optional
+        'encoding'     => 'utf8mb4',   // optional
     ],
 ]);
 ```

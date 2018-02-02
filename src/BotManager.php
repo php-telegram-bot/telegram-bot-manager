@@ -278,7 +278,6 @@ class BotManager
     {
         $simple_extras = [
             'admins'         => 'enableAdmins',
-            'mysql'          => 'enableMySql',
             'commands.paths' => 'addCommandsPaths',
             'custom_input'   => 'setCustomInput',
             'paths.download' => 'setDownloadPath',
@@ -290,6 +289,15 @@ class BotManager
             if (null !== $param) {
                 $this->telegram->$method($param);
             }
+        }
+
+        // Database.
+        if ($mysql_config = $this->params->getBotParam('mysql', [])) {
+            $this->telegram->enableMySql(
+                $mysql_config,
+                $mysql_config['table_prefix'] ?? null,
+                $mysql_config['encoding'] ?? 'utf8mb4'
+            );
         }
 
         // Custom command configs.

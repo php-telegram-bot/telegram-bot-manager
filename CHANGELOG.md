@@ -5,6 +5,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Allow usage of table prefixes and custom encoding.
 ### Changed
 ### Deprecated
 ### Removed
