@@ -43,7 +43,7 @@ It is possible however, to override the core version that this library requires:
 ```yaml
 "require": {
     "php-telegram-bot/telegram-bot-manager": "^1.2",
-    "longman/telegram-bot": "dev-develop as 0.48"
+    "longman/telegram-bot": "dev-develop as 0.52"
 }
 ```
 
