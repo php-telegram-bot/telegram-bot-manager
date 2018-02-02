@@ -487,6 +487,14 @@ class BotManager
      */
     protected function defaultGetUpdatesCallback($get_updates_response): string
     {
+        if (!$get_updates_response->isOk()) {
+            return sprintf(
+                '%s - Failed to fetch updates' . PHP_EOL . '%s',
+                date('Y-m-d H:i:s'),
+                $get_updates_response->printError(true)
+            );
+        }
+
         /** @var Entities\Update[] $results */
         $results = array_filter((array) $get_updates_response->getResult());
 
