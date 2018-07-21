@@ -20,7 +20,7 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```bash
-composer require php-telegram-bot/telegram-bot-manager:^1.2
+composer require php-telegram-bot/telegram-bot-manager:^1.3
 ```
 
 **or**
@@ -29,7 +29,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^1.2"
+    "php-telegram-bot/telegram-bot-manager": "^1.3"
 }
 ```
 and then run `composer update`
@@ -42,12 +42,12 @@ It is possible however, to override the core version that this library requires:
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^1.2",
-    "longman/telegram-bot": "dev-develop as 0.52"
+    "php-telegram-bot/telegram-bot-manager": "^1.3",
+    "longman/telegram-bot": "dev-develop as 0.54"
 }
 ```
 
-This example will pull the develop version of the core library, making it appear to be version 0.48, which then satisfies the requirement.
+This example will pull the develop version of the core library, making it appear to be version 0.54, which then satisfies the requirement.
 
 ### Performing actions
 
@@ -247,11 +247,12 @@ $bot = new BotManager([
     // (array) Mysql credentials to connect a database (necessary for [`getUpdates`](#using-getupdates-method) method!).
     'mysql'            => [
         'host'         => '127.0.0.1',
+        'port'         => 3306,           // optional
         'user'         => 'root',
         'password'     => 'root',
         'database'     => 'telegram_bot',
-        'table_prefix' => 'tbl_prfx_', // optional
-        'encoding'     => 'utf8mb4',   // optional
+        'table_prefix' => 'tbl_prfx_',    // optional
+        'encoding'     => 'utf8mb4',      // optional
     ],
 
     // (array) List of configurable paths.
@@ -318,11 +319,12 @@ $bot = new BotManager([
     // Extras.
     'mysql' => [
         'host'         => '127.0.0.1',
+        'port'         => 3306,           // optional
         'user'         => 'root',
         'password'     => 'root',
         'database'     => 'telegram_bot',
-        'table_prefix' => 'tbl_prfx_', // optional
-        'encoding'     => 'utf8mb4',   // optional
+        'table_prefix' => 'tbl_prfx_',    // optional
+        'encoding'     => 'utf8mb4',      // optional
     ],
 ]);
 ```
