@@ -8,7 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Allow usage of table prefixes and custom encoding.
 - Add error message when trying to use getUpdates without database connection.
 ### Changed
-- Bumped to core version 0.52.0
+- Bumped to core version 0.54.0
 - Bumped dependencies.
 ### Deprecated
 ### Removed
