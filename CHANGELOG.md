@@ -5,12 +5,15 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
+- Test up to PHP 7.3 in Travis-CI.
 ### Changed
 - Use the new Telegram API webhook IP ranges.
+- Upgraded dependencies and bumped core to version 0.56.0.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+- Minimum PHP version is now 7.1.
 
 ## [1.3.0] - 2018-07-21
 ### Added
