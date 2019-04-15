@@ -6,6 +6,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Use the new Telegram API webhook IP ranges.
 ### Deprecated
 ### Removed
 ### Fixed

@@ -21,9 +21,10 @@ use TelegramBot\TelegramBotManager\Exception\InvalidWebhookException;
 class BotManager
 {
     /**
-     * @var string Telegram post servers IP range
+     * @var array Telegram webhook servers IP ranges
+     * @link https://core.telegram.org/bots/webhooks#the-short-version
      */
-    const TELEGRAM_IP_RANGE = '149.154.167.197-149.154.167.233';
+    public const TELEGRAM_IP_RANGES = ['149.154.160.0/20', '91.108.4.0/22'];
 
     /**
      * @var string The output for testing, instead of echoing
@@ -578,7 +579,7 @@ class BotManager
         }
 
         return Ip::match($ip, array_merge(
-            [self::TELEGRAM_IP_RANGE],
+            self::TELEGRAM_IP_RANGES,
             (array) $this->params->getBotParam('valid_ips', [])
         ));
     }
