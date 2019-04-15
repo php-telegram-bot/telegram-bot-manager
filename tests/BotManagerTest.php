@@ -431,19 +431,23 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         unset($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_CLIENT_IP'], $_SERVER['REMOTE_ADDR']);
 
         // Lower range.
-        $_SERVER['REMOTE_ADDR'] = '149.154.167.196';
+        $_SERVER['REMOTE_ADDR'] = '149.154.159.255';
         self::assertFalse($botManager->isValidRequest());
-        $_SERVER['REMOTE_ADDR'] = '149.154.167.197';
+        $_SERVER['REMOTE_ADDR'] = '149.154.160.0';
         self::assertTrue($botManager->isValidRequest());
-        $_SERVER['REMOTE_ADDR'] = '149.154.167.198';
+        $_SERVER['REMOTE_ADDR'] = '91.108.3.255';
+        self::assertFalse($botManager->isValidRequest());
+        $_SERVER['REMOTE_ADDR'] = '91.108.4.0';
         self::assertTrue($botManager->isValidRequest());
 
         // Upper range.
-        $_SERVER['REMOTE_ADDR'] = '149.154.167.232';
+        $_SERVER['REMOTE_ADDR'] = '149.154.175.255';
         self::assertTrue($botManager->isValidRequest());
-        $_SERVER['REMOTE_ADDR'] = '149.154.167.233';
+        $_SERVER['REMOTE_ADDR'] = '149.154.176.0';
+        self::assertFalse($botManager->isValidRequest());
+        $_SERVER['REMOTE_ADDR'] = '91.108.7.255';
         self::assertTrue($botManager->isValidRequest());
-        $_SERVER['REMOTE_ADDR'] = '149.154.167.234';
+        $_SERVER['REMOTE_ADDR'] = '91.108.8.0';
         self::assertFalse($botManager->isValidRequest());
     }
 
