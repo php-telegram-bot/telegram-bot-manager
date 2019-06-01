@@ -5,13 +5,18 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 ## [Unreleased]
 ### Added
-- Test up to PHP 7.3 in Travis-CI.
 ### Changed
-- Use the new Telegram API webhook IP ranges.
-- Upgraded dependencies and bumped core to version 0.56.0.
 ### Deprecated
 ### Removed
 ### Fixed
+### Security
+
+## [1.4.0] - 2019-06-01
+### Added
+- Test up to PHP 7.3 in Travis-CI.
+### Changed
+- Use the new Telegram API webhook IP ranges.
+- Upgraded dependencies and bumped core to version 0.57.0.
 ### Security
 - Minimum PHP version is now 7.1.
 
@@ -129,6 +134,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [0.44.0-bc-parameter-structure]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#parameter-structure-changed "Parameter structure changed"
 
 [Unreleased]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/master...develop
+[1.4.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.2.2...1.3.0
 [1.2.2]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.2.1...1.2.2
 [1.2.1]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.2.0...1.2.1

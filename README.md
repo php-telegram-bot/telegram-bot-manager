@@ -20,7 +20,7 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```bash
-composer require php-telegram-bot/telegram-bot-manager:^1.3
+composer require php-telegram-bot/telegram-bot-manager:^1.4
 ```
 
 **or**
@@ -29,7 +29,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^1.3"
+    "php-telegram-bot/telegram-bot-manager": "^1.4"
 }
 ```
 and then run `composer update`
@@ -42,12 +42,12 @@ It is possible however, to override the core version that this library requires:
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^1.3",
-    "longman/telegram-bot": "dev-develop as 0.54"
+    "php-telegram-bot/telegram-bot-manager": "^1.4",
+    "longman/telegram-bot": "dev-develop as 0.57"
 }
 ```
 
-This example will pull the develop version of the core library, making it appear to be version 0.54, which then satisfies the requirement.
+This example will pull the develop version of the core library, making it appear to be version 0.57, which then satisfies the requirement.
 
 ### Performing actions
 
