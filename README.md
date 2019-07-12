@@ -1,10 +1,14 @@
 # PHP Telegram Bot Manager
 
+[![Join the bot support group on Telegram][support-group-badge]][support-group]
+[![Donate][donate-badge]](#donate)
+
 [![Scrutinizer Code Quality][code-quality-badge]][code-quality]
 [![Codecov][code-coverage-badge]][code-coverage]
 [![Build Status][build-status-badge]][build-status]
 
 [![Latest Stable Version][latest-version-badge]][github-tgbot-manager]
+[![Dependencies][dependencies-badge]][Tidelift]
 [![Total Downloads][total-downloads-badge]][packagist-tgbot-manager]
 [![License][license-badge]][license]
 
@@ -15,7 +19,7 @@ I strongly suggest your read the PHP Telegram Bot [instructions][github-tgbot-co
 
 Installation and usage is pretty straight forward:
 
-### Require this package with [Composer][composer]
+### Require this package with [Composer]
 
 Either run this command in your command line:
 
@@ -34,7 +38,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 ```
 and then run `composer update`
 
-**NOTE:** This will automatically also install PHP Telegram Bot into your project (if it isn't already).
+**NOTE:** This will automatically also install [PHP Telegram Bot][github-tgbot-core] into your project (if it isn't already).
 
 **Advanced:** Due to the fact that the core library is not a stable version yet, this project is partly locked to the core version, to ensure reliable functioning.
 
@@ -377,6 +381,37 @@ BOT_USERNAME="username_of_your_bot"
 ```
 It probably makes sense for you to create a new dummy bot for this.
 
+## Security
+
+See [SECURITY](SECURITY.md) for more information.
+
+## Donate
+
+All work on this bot consists of many hours of coding during our free time, to provide you with a Telegram Bot library that is easy to use and extend.
+If you enjoy using this library and would like to say thank you, donations are a great way to show your support.
+
+Donations are invested back into the project :+1:
+
+Thank you for keeping this project alive :pray:
+
+- [![Patreon](https://user-images.githubusercontent.com/9423417/59235980-a5fa6b80-8be3-11e9-8ae7-020bc4ae9baa.png) Patreon.com/phptelegrambot][Patreon]
+- [![OpenCollective](https://user-images.githubusercontent.com/9423417/59235978-a561d500-8be3-11e9-89be-82ec54be1546.png) OpenCollective.com/php-telegram-bot][OpenCollective]
+- [![Ko-fi](https://user-images.githubusercontent.com/9423417/59235976-a561d500-8be3-11e9-911d-b1908c3e6a33.png) Ko-fi.com/phptelegrambot][Ko-fi]
+- [![Tidelift](https://user-images.githubusercontent.com/9423417/59235982-a6930200-8be3-11e9-8ac2-bfb6991d80c5.png) Tidelift.com/longman/telegram-bot][Tidelift]
+- [![Liberapay](https://user-images.githubusercontent.com/9423417/59235977-a561d500-8be3-11e9-9d16-bc3b13d3ceba.png) Liberapay.com/PHP-Telegram-Bot][Liberapay]
+- [![PayPal](https://user-images.githubusercontent.com/9423417/59235981-a5fa6b80-8be3-11e9-9761-15eb7a524cb0.png) PayPal.me/noplanman][PayPal-noplanman] (account of @noplanman)
+
+---
+
+<div align="center">
+    <b>
+        <a href="https://tidelift.com/subscription/pkg/packagist-php-telegram-bot-telegram-bot-manager?utm_source=packagist-php-telegram-bot-telegram-bot-manager&utm_medium=referral&utm_campaign=readme-footer">Get professional support for this package with a Tidelift subscription</a>
+    </b>
+    <br>
+    <sub>
+        Tidelift helps make open source sustainable for maintainers while giving companies<br>assurances about security, maintenance, and licensing for their dependencies.
+    </sub>
+</div>
 
 [github-tgbot-core]: https://github.com/php-telegram-bot/core "PHP Telegram Bot on GitHub"
 [github-tgbot-core-instructions]: https://github.com/php-telegram-bot/core#instructions "PHP Telegram Bot instructions on GitHub"
@@ -384,6 +419,9 @@ It probably makes sense for you to create a new dummy bot for this.
 [packagist-tgbot-manager]: https://packagist.org/packages/php-telegram-bot/telegram-bot-manager "PHP Telegram Bot Manager on Packagist"
 [license]: https://github.com/php-telegram-bot/telegram-bot-manager/blob/master/LICENSE "PHP Telegram Bot Manager license"
 
+[support-group-badge]: https://img.shields.io/badge/telegram-@PHP__Telegram__Bot__Support-64659d.svg
+[support-group]: https://telegram.me/PHP_Telegram_Bot_Support
+[donate-badge]: https://img.shields.io/badge/%F0%9F%92%99-Donate%20%2F%20Support%20Us-blue.svg
 [code-quality-badge]: https://img.shields.io/scrutinizer/g/php-telegram-bot/telegram-bot-manager.svg
 [code-quality]: https://scrutinizer-ci.com/g/php-telegram-bot/telegram-bot-manager/?branch=master "Code quality on Scrutinizer"
 [code-coverage-badge]: https://img.shields.io/codecov/c/github/php-telegram-bot/telegram-bot-manager.svg
@@ -392,9 +430,17 @@ It probably makes sense for you to create a new dummy bot for this.
 [build-status]: https://travis-ci.org/php-telegram-bot/telegram-bot-manager "Build status on Travis-CI"
 
 [latest-version-badge]: https://img.shields.io/packagist/v/php-telegram-bot/telegram-bot-manager.svg
+[dependencies-badge]: https://tidelift.com/badges/github/php-telegram-bot/core?style=flat
 [total-downloads-badge]: https://img.shields.io/packagist/dt/php-telegram-bot/telegram-bot-manager.svg
 [license-badge]: https://img.shields.io/packagist/l/php-telegram-bot/telegram-bot-manager.svg
 
 [random-characters]: https://www.random.org/strings/?num=7&len=12&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new "Generate random characters"
 [travis-repository-settings]: https://docs.travis-ci.com/user/environment-variables#Defining-Variables-in-Repository-Settings "Repository Settings on Travis-CI"
-[composer]: https://getcomposer.org/ "Composer"
+[Composer]: https://getcomposer.org/ "Composer"
+
+[Patreon]: https://www.patreon.com/phptelegrambot "Support us on Patreon"
+[OpenCollective]: https://opencollective.com/php-telegram-bot "Support us on Open Collective"
+[Ko-fi]: https://ko-fi.com/phptelegrambot "Support us on Ko-fi"
+[Tidelift]: https://tidelift.com/subscription/pkg/packagist-php-telegram-bot-telegram-bot-manager?utm_source=packagist-php-telegram-bot-telegram-bot-manager&utm_medium=referral&utm_campaign=readme "Support us on Tidelift"
+[Liberapay]: https://liberapay.com/PHP-Telegram-Bot "Donate with Liberapay"
+[PayPal-noplanman]: https://paypal.me/noplanman "Donate with PayPal"

@@ -6,10 +6,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Adopt issue templates and git/GitHub related meta from upstream core.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+- Security disclosure managed by [Tidelift].
 
 ## [1.4.0] - 2019-06-01
 ### Added
@@ -129,6 +131,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [0.1] - 2016-08-20
 ### Added
 - First minor version that contains the basic functionality.
+
+[Tidelift]: https://tidelift.com/subscription/pkg/packagist-php-telegram-bot-telegram-bot-manager?utm_source=packagist-php-telegram-bot-telegram-bot-manager&utm_medium=referral&utm_campaign=changelog
 
 [1.0.0-bc-move]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#namespace-and-package-name-changed "Namespace and package name changed"
 [0.44.0-bc-parameter-structure]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#parameter-structure-changed "Parameter structure changed"
