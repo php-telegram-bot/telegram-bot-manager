@@ -6,6 +6,8 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
+- Upgraded dependencies and bumped core to version 0.59.0.
+- Code style is now PSR12.
 ### Deprecated
 ### Removed
 ### Fixed

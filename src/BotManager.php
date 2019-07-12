@@ -83,7 +83,7 @@ class BotManager
      */
     public static function inTest(): bool
     {
-        return \defined('PHPUNIT_TEST') && PHPUNIT_TEST === true;
+        return \defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE === true;
     }
 
     /**
@@ -162,6 +162,8 @@ class BotManager
      */
     public function initLogging(array $log_paths): self
     {
+        (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
+
         foreach ($log_paths as $logger => $logfile) {
             ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
             ('error' === $logger) && TelegramLog::initErrorLog($logfile);

@@ -27,7 +27,7 @@
     <php>
         <ini name="date.timezone" value="UTC"/>
         <ini name="error_reporting" value="-1"/>
-        <const name="PHPUNIT_TEST" value="true"/>
+        <const name="PHPUNIT_TESTSUITE" value="true"/>
         <const name="PHPUNIT_DB_HOST" value="127.0.0.1"/>
         <const name="PHPUNIT_DB_USER" value="root"/>
         <const name="PHPUNIT_DB_PASSWORD" value=""/>
