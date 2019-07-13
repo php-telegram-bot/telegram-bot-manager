@@ -1,3 +1,22 @@
-composer.phar
-/vendor/
-phpunit.xml
+# Composer
+/composer.phar
+/vendor
+
+# Test-Related Files
+/clover.xml
+/phpcs.xml
+/phpunit.xml
+
+# phpDocumentor Logs
+phpdoc-*
+
+# IDE & System-Related Files
+.buildpath
+.project
+.settings
+.idea
+.phpintel
+._*
+.DS_Store
+.Spotlight-V100
+.Trashes
