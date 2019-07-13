@@ -60,9 +60,6 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
                 'sendtochannel' => ['your_channel' => '@my_channel'],
             ],
         ],
-        'botan'            => [
-            'token' => 'botan_12345',
-        ],
         'cron'             => [
             'groups' => [
                 'default'     => [

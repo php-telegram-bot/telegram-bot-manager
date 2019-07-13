@@ -307,12 +307,6 @@ class BotManager
             $this->telegram->setCommandConfig($command, $config);
         }
 
-        // Botan with options.
-        if ($botan_token = $this->params->getBotParam('botan.token')) {
-            $botan_options = $this->params->getBotParam('botan.options', []);
-            $this->telegram->enableBotan($botan_token, $botan_options);
-        }
-
         return $this;
     }
 

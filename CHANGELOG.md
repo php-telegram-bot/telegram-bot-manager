@@ -8,6 +8,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Changed
 ### Deprecated
 ### Removed
+- Botan.io has been removed (see php-telegram-bot/core#924)
 ### Fixed
 ### Security
 

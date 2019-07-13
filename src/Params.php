@@ -47,7 +47,6 @@ class Params
         'mysql',
         'paths',
         'commands',
-        'botan',
         'cron',
         'custom_input',
     ];
@@ -89,9 +88,6 @@ class Params
      * commands (array)
      * - paths (array) Custom commands paths to set.
      * - configs (array) List of custom command configs.
-     * botan (array)
-     * - token (string) Botan token to enable botan.io support.
-     * - options (array) Botan options.
      * custom_input (string) Custom raw JSON string to use as input.
      * cron (array)
      * - groups (array) Groups of cron commands to run.

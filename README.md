@@ -276,17 +276,6 @@ $bot = new BotManager([
         ],
     ],
 
-    // (array) All options that have to do with botan.
-    'botan'            => [
-        // (string) The Botan.io token to be used for analytics.
-        'token'   => 'botan_12345',
-        // (array) Any extra options to pass to botan.
-        'options' => [
-            // (float) Custom timeout for requests.
-            'timeout' => 3,
-        ],
-    ],
-
     // (array) All options that have to do with cron.
     'cron'             => [
         // (array) List of groups that contain the commands to execute.
