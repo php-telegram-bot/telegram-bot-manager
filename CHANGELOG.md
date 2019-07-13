@@ -11,6 +11,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Adopt issue templates and git/GitHub related meta from upstream core.
 ### Deprecated
 ### Removed
+- Botan.io has been removed (see php-telegram-bot/core#924)
 ### Fixed
 ### Security
 - Security disclosure managed by [Tidelift].
