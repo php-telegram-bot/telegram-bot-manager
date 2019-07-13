@@ -45,7 +45,7 @@ before_script:
 
 script:
   - composer check-code
-  - if [[ "$CODECOV" == "1" ]]; then composer test-cov-live; else composer test; fi
+  - if [[ "$CODECOV" == "1" ]]; then composer test-cov; else composer test; fi
 
 after_success:
   - if [[ "$CODECOV" == "1" ]]; then composer test-cov-upload; fi
