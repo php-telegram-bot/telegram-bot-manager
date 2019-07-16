@@ -12,6 +12,7 @@ namespace TelegramBot\TelegramBotManager;
 
 use Exception;
 use Longman\IPTools\Ip;
+use Longman\TelegramBot\Entities\CallbackQuery;
 use Longman\TelegramBot\Entities\ChosenInlineResult;
 use Longman\TelegramBot\Entities\InlineQuery;
 use Longman\TelegramBot\Entities\Message;
@@ -510,22 +511,27 @@ class BotManager
         );
 
         foreach ($results as $result) {
-            $chat_id = 0;
-            $text    = '<n/a>';
-
             $update_content = $result->getUpdateContent();
+
+            $chat_id = 'n/a';
+            $text    = $result->getUpdateType();
+
             if ($update_content instanceof Message) {
+                /** @var Message $update_content */
                 $chat_id = $update_content->getChat()->getId();
-                $text    = sprintf('<%s>', $update_content->getType());
-            } elseif ($update_content instanceof InlineQuery
-                || $update_content instanceof ChosenInlineResult
-            ) {
+                $text    .= ";{$update_content->getType()}";
+            } elseif ($update_content instanceof InlineQuery || $update_content instanceof ChosenInlineResult) {
+                /** @var InlineQuery|ChosenInlineResult $update_content */
                 $chat_id = $update_content->getFrom()->getId();
-                $text    = sprintf('<query> %s', $update_content->getQuery());
+                $text    .= ";{$update_content->getQuery()}";
+            } elseif ($update_content instanceof CallbackQuery) {
+                /** @var CallbackQuery $update_content */
+                $chat_id = $update_content->getMessage()->getChat()->getId();
+                $text    .= ";{$update_content->getData()}";
             }
 
             $output .= sprintf(
-                '%d: %s' . PHP_EOL,
+                '%d: <%s>' . PHP_EOL,
                 $chat_id,
                 preg_replace('/\s+/', ' ', trim($text))
             );
