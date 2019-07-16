@@ -10,12 +10,20 @@
 
 namespace TelegramBot\TelegramBotManager;
 
+use Exception;
 use Longman\IPTools\Ip;
-use Longman\TelegramBot\Entities;
+use Longman\TelegramBot\Entities\ChosenInlineResult;
+use Longman\TelegramBot\Entities\InlineQuery;
+use Longman\TelegramBot\Entities\Message;
+use Longman\TelegramBot\Entities\ServerResponse;
+use Longman\TelegramBot\Entities\Update;
+use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 use TelegramBot\TelegramBotManager\Exception\InvalidAccessException;
+use TelegramBot\TelegramBotManager\Exception\InvalidActionException;
+use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
 use TelegramBot\TelegramBotManager\Exception\InvalidWebhookException;
 
 class BotManager
@@ -32,17 +40,17 @@ class BotManager
     private $output = '';
 
     /**
-     * @var \Longman\TelegramBot\Telegram
+     * @var Telegram
      */
     private $telegram;
 
     /**
-     * @var \TelegramBot\TelegramBotManager\Params Object that manages the parameters.
+     * @var Params Object that manages the parameters.
      */
     private $params;
 
     /**
-     * @var \TelegramBot\TelegramBotManager\Action Object that contains the current action.
+     * @var Action Object that contains the current action.
      */
     private $action;
 
@@ -56,10 +64,10 @@ class BotManager
      *
      * @param array $params
      *
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidActionException
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \Exception
+     * @throws InvalidParamsException
+     * @throws InvalidActionException
+     * @throws TelegramException
+     * @throws Exception
      */
     public function __construct(array $params)
     {
@@ -83,13 +91,13 @@ class BotManager
      */
     public static function inTest(): bool
     {
-        return \defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE === true;
+        return defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE === true;
     }
 
     /**
      * Return the Telegram object.
      *
-     * @return \Longman\TelegramBot\Telegram
+     * @return Telegram
      */
     public function getTelegram(): Telegram
     {
@@ -99,7 +107,7 @@ class BotManager
     /**
      * Get the Params object.
      *
-     * @return \TelegramBot\TelegramBotManager\Params
+     * @return Params
      */
     public function getParams(): Params
     {
@@ -109,7 +117,7 @@ class BotManager
     /**
      * Get the Action object.
      *
-     * @return \TelegramBot\TelegramBotManager\Action
+     * @return Action
      */
     public function getAction(): Action
     {
@@ -119,11 +127,11 @@ class BotManager
     /**
      * Run this thing in all its glory!
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
-     * @throws \Exception
+     * @return BotManager
+     * @throws TelegramException
+     * @throws InvalidAccessException
+     * @throws InvalidWebhookException
+     * @throws Exception
      */
     public function run(): self
     {
@@ -157,12 +165,12 @@ class BotManager
      *
      * @param array $log_paths
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Exception
+     * @return BotManager
+     * @throws Exception
      */
     public function initLogging(array $log_paths): self
     {
-        (defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE) || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
+        self::inTest() || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
 
         foreach ($log_paths as $logger => $logfile) {
             ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
@@ -178,8 +186,8 @@ class BotManager
      *
      * @param bool $force Force validation, even on CLI.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
+     * @return BotManager
+     * @throws InvalidAccessException
      */
     public function validateSecret(bool $force = false): self
     {
@@ -198,9 +206,9 @@ class BotManager
     /**
      * Make sure the webhook is valid and perform the requested webhook operation.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
+     * @return BotManager
+     * @throws TelegramException
+     * @throws InvalidWebhookException
      */
     public function validateAndSetWebhook(): self
     {
@@ -223,7 +231,7 @@ class BotManager
             ], function ($v, $k) {
                 if ($k === 'allowed_updates') {
                     // Special case for allowed_updates, which can be an empty array.
-                    return \is_array($v);
+                    return is_array($v);
                 }
                 return !empty($v);
             }, ARRAY_FILTER_USE_BOTH);
@@ -244,7 +252,7 @@ class BotManager
      *
      * @param string $output
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
+     * @return BotManager
      */
     private function handleOutput(string $output): self
     {
@@ -260,8 +268,8 @@ class BotManager
     /**
      * Set any extra bot features that have been assigned on construction.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotManager
+     * @throws TelegramException
      */
     public function setBotExtras(): self
     {
@@ -274,8 +282,8 @@ class BotManager
     /**
      * Set extra bot parameters for Telegram object.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotManager
+     * @throws TelegramException
      */
     protected function setBotExtrasTelegram(): self
     {
@@ -315,8 +323,8 @@ class BotManager
     /**
      * Set extra bot parameters for Request class.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotManager
+     * @throws TelegramException
      */
     protected function setBotExtrasRequest(): self
     {
@@ -344,8 +352,8 @@ class BotManager
     /**
      * Handle the request, which calls either the Webhook or getUpdates method respectively.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotManager
+     * @throws TelegramException
      */
     public function handleRequest(): self
     {
@@ -363,8 +371,8 @@ class BotManager
     /**
      * Handle cron.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotManager
+     * @throws TelegramException
      */
     public function handleCron(): self
     {
@@ -392,7 +400,7 @@ class BotManager
             return 0;
         }
 
-        if (\is_string($loop_time) && '' === trim($loop_time)) {
+        if (is_string($loop_time) && '' === trim($loop_time)) {
             return 604800; // Default to 7 days.
         }
 
@@ -408,7 +416,7 @@ class BotManager
     {
         $interval_time = $this->params->getScriptParam('i');
 
-        if (null === $interval_time || (\is_string($interval_time) && '' === trim($interval_time))) {
+        if (null === $interval_time || (is_string($interval_time) && '' === trim($interval_time))) {
             return 2;
         }
 
@@ -422,8 +430,8 @@ class BotManager
      * @param int $loop_time_in_seconds
      * @param int $loop_interval_in_seconds
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotManager
+     * @throws TelegramException
      */
     public function handleGetUpdatesLoop(int $loop_time_in_seconds, int $loop_interval_in_seconds = 2): self
     {
@@ -447,7 +455,7 @@ class BotManager
      *
      * @param callable $callback
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
+     * @return BotManager
      */
     public function setCustomGetUpdatesCallback(callable $callback): BotManager
     {
@@ -458,8 +466,8 @@ class BotManager
     /**
      * Handle the updates using the getUpdates method.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotManager
+     * @throws TelegramException
      */
     public function handleGetUpdates(): self
     {
@@ -467,7 +475,7 @@ class BotManager
 
         // Check if the user has set a custom callback for handling the response.
         if ($this->custom_get_updates_callback !== null) {
-            $this->handleOutput(\call_user_func($this->custom_get_updates_callback, $get_updates_response));
+            $this->handleOutput(call_user_func($this->custom_get_updates_callback, $get_updates_response));
         } else {
             $this->handleOutput($this->defaultGetUpdatesCallback($get_updates_response));
         }
@@ -478,7 +486,7 @@ class BotManager
     /**
      * Return the default output for getUpdates handling.
      *
-     * @param Entities\ServerResponse $get_updates_response
+     * @param ServerResponse $get_updates_response
      *
      * @return string
      */
@@ -492,7 +500,7 @@ class BotManager
             );
         }
 
-        /** @var Entities\Update[] $results */
+        /** @var Update[] $results */
         $results = array_filter((array) $get_updates_response->getResult());
 
         $output = sprintf(
@@ -506,11 +514,11 @@ class BotManager
             $text    = '<n/a>';
 
             $update_content = $result->getUpdateContent();
-            if ($update_content instanceof Entities\Message) {
+            if ($update_content instanceof Message) {
                 $chat_id = $update_content->getChat()->getId();
                 $text    = sprintf('<%s>', $update_content->getType());
-            } elseif ($update_content instanceof Entities\InlineQuery ||
-                      $update_content instanceof Entities\ChosenInlineResult
+            } elseif ($update_content instanceof InlineQuery
+                || $update_content instanceof ChosenInlineResult
             ) {
                 $chat_id = $update_content->getFrom()->getId();
                 $text    = sprintf('<query> %s', $update_content->getQuery());
@@ -529,8 +537,8 @@ class BotManager
     /**
      * Handle the updates using the Webhook method.
      *
-     * @return \TelegramBot\TelegramBotManager\BotManager
-     * @throws \Longman\TelegramBot\Exception\TelegramException
+     * @return BotManager
+     * @throws TelegramException
      */
     public function handleWebhook(): self
     {
@@ -583,9 +591,9 @@ class BotManager
     /**
      * Make sure this is a valid request.
      *
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
+     * @throws InvalidAccessException
      */
-    private function validateRequest()
+    private function validateRequest(): void
     {
         if (!$this->isValidRequest()) {
             throw new InvalidAccessException('Invalid access');

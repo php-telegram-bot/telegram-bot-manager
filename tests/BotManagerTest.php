@@ -14,6 +14,8 @@ use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use Longman\TelegramBot\TelegramLog;
 use TelegramBot\TelegramBotManager\BotManager;
+use TelegramBot\TelegramBotManager\Exception\InvalidAccessException;
+use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
 
 /**
  * Class BotManagerTest.php
@@ -47,12 +49,12 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     /**
      * To test the live commands, act as if we're being called by Telegram.
      */
-    protected function makeRequestValid()
+    protected function makeRequestValid(): void
     {
         $_SERVER['REMOTE_ADDR'] = '149.154.167.197';
     }
 
-    public function testSetParameters()
+    public function testSetParameters(): void
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
             'admins' => [1],            // valid
@@ -67,39 +69,35 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertNull($params->getBotParam('paramX'));
     }
 
-    public function testInTest()
+    public function testInTest(): void
     {
         self::assertTrue(BotManager::inTest());
     }
 
-    /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
-     * @expectedExceptionMessage Some vital info is missing: api_key
-     */
-    public function testNoVitalsFail()
+    public function testNoVitalsFail(): void
     {
+        $this->expectException(InvalidParamsException::class);
+        $this->expectExceptionMessage('Some vital info is missing: api_key');
         new BotManager([]);
     }
 
-    /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
-     * @expectedExceptionMessage Some vital info is missing: secret
-     */
-    public function testIncompleteVitalsFail()
+    public function testIncompleteVitalsFail(): void
     {
+        $this->expectException(InvalidParamsException::class);
+        $this->expectExceptionMessage('Some vital info is missing: secret');
         new BotManager([
             'api_key' => '12345:api_key',
             'webhook' => ['url' => 'https://web/hook.php'],
         ]);
     }
 
-    public function testVitalsSuccess()
+    public function testVitalsSuccess(): void
     {
         new BotManager(ParamsTest::$demo_vital_params);
         self::assertTrue(true);
     }
 
-    public function testValidTelegramObject()
+    public function testValidTelegramObject(): void
     {
         $bot      = new BotManager(ParamsTest::$demo_vital_params);
         $telegram = $bot->getTelegram();
@@ -108,7 +106,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(ParamsTest::$demo_vital_params['api_key'], $telegram->getApiKey());
     }
 
-    public function testInitLogging()
+    public function testInitLogging(): void
     {
         self::assertFalse(TelegramLog::isDebugLogActive());
         self::assertFalse(TelegramLog::isErrorLogActive());
@@ -127,12 +125,10 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertTrue(TelegramLog::isUpdateLogActive());
     }
 
-    /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidAccessException
-     * @expectedExceptionMessage Invalid access
-     */
-    public function testValidateSecretFail()
+    public function testValidateSecretFail(): void
     {
+        $this->expectException(InvalidAccessException::class);
+        $this->expectExceptionMessage('Invalid access');
         $_GET       = ['s' => 'NOT_my_secret_12345'];
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
             'secret' => 'my_secret_12345',
@@ -141,7 +137,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         $botManager->validateSecret(true);
     }
 
-    public function testValidateSecretSuccess()
+    public function testValidateSecretSuccess(): void
     {
         // Force validation to test non-CLI scenario.
         $_GET = ['s' => 'my_secret_12345'];
@@ -158,7 +154,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertTrue(true);
     }
 
-    public function testValidateAndSetWebhookSuccess()
+    public function testValidateAndSetWebhookSuccess(): void
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
             'webhook' => ['url' => 'https://web/hook.php'],
@@ -177,14 +173,14 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         $telegram = $botManager->getTelegram();
 
         /** @var \PHPUnit_Framework_MockObject_MockObject $telegram */
-        $telegram->expects(static::any())
+        $telegram
             ->method('setWebhook')
             ->with('https://web/hook.php?a=handle&s=secret_12345')
             ->will(static::returnSelf());
-        $telegram->expects(static::any())
+        $telegram
             ->method('deleteWebhook')
             ->will(static::returnSelf());
-        $telegram->expects(static::any())
+        $telegram
             ->method('getDescription')
             ->will(static::onConsecutiveCalls(
                 'Webhook was set', // set
@@ -217,7 +213,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     /**
      * @group live
      */
-    public function testValidateAndSetWebhookSuccessLiveBot()
+    public function testValidateAndSetWebhookSuccessLiveBot(): void
     {
         $botManager = new BotManager(array_merge(self::$live_params, [
             'webhook' => ['url' => 'https://example.com/hook.php'],
@@ -250,7 +246,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      * @group live
      * @runInSeparateProcess
      */
-    public function testDeleteWebhookViaRunLiveBot()
+    public function testDeleteWebhookViaRunLiveBot(): void
     {
         $this->makeRequestValid();
         $_GET       = ['a' => 'unset'];
@@ -266,7 +262,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
      * @expectedExceptionMessage Invalid webhook
      */
-    public function testValidateAndSetWebhookFailSetWithoutWebhook()
+    public function testValidateAndSetWebhookFailSetWithoutWebhook(): void
     {
         $_GET = ['a' => 'set'];
         (new BotManager(array_merge(ParamsTest::$demo_vital_params, [
@@ -278,7 +274,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
      * @expectedExceptionMessage Invalid webhook
      */
-    public function testValidateAndSetWebhookFailResetWithoutWebhook()
+    public function testValidateAndSetWebhookFailResetWithoutWebhook(): void
     {
         $_GET = ['a' => 'reset'];
         (new BotManager(array_merge(ParamsTest::$demo_vital_params, [
@@ -286,7 +282,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         ])))->validateAndSetWebhook();
     }
 
-    public function testGetLoopTime()
+    public function testGetLoopTime(): void
     {
         // Parameter not set.
         self::assertSame(0, (new BotManager(ParamsTest::$demo_vital_params))->getLoopTime());
@@ -316,7 +312,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(12345, (new BotManager(ParamsTest::$demo_vital_params))->getLoopTime());
     }
 
-    public function testGetLoopInterval()
+    public function testGetLoopInterval(): void
     {
         // Parameter not set.
         self::assertSame(2, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
@@ -346,7 +342,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertSame(12345, (new BotManager(ParamsTest::$demo_vital_params))->getLoopInterval());
     }
 
-    public function testSetBotExtras()
+    public function testSetBotExtras(): void
     {
         $extras     = [
             'limiter'  => [
@@ -377,7 +373,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertEquals($extras['commands']['configs']['weather'], $telegram->getCommandConfig('weather'));
     }
 
-    public function testGetOutput()
+    public function testGetOutput(): void
     {
         $botManager = new BotManager(ParamsTest::$demo_vital_params);
         self::assertEmpty($botManager->getOutput());
@@ -393,14 +389,14 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertEmpty($botManager->getOutput());
     }
 
-    public function testIsValidRequestValidateByDefault()
+    public function testIsValidRequestValidateByDefault(): void
     {
         $botManager = new BotManager(ParamsTest::$demo_vital_params);
         self::assertInternalType('bool', $botManager->getParams()->getBotParam('validate_request'));
         self::assertTrue($botManager->getParams()->getBotParam('validate_request'));
     }
 
-    public function testIsValidRequestFailValidation()
+    public function testIsValidRequestFailValidation(): void
     {
         $botManager = new BotManager(ParamsTest::$demo_vital_params);
 
@@ -413,7 +409,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testIsValidRequestSkipValidation()
+    public function testIsValidRequestSkipValidation(): void
     {
         $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
             'validate_request' => false,
@@ -424,7 +420,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($botManager->isValidRequest());
     }
 
-    public function testIsValidRequestValidate()
+    public function testIsValidRequestValidate(): void
     {
         $botManager = new BotManager(ParamsTest::$demo_vital_params);
 
@@ -455,7 +451,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      * @group live
      * @runInSeparateProcess
      */
-    public function testGetUpdatesLiveBot()
+    public function testGetUpdatesLiveBot(): void
     {
         $this->makeRequestValid();
         $botManager = new BotManager(self::$live_params);
@@ -467,7 +463,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      * @group live
      * @runInSeparateProcess
      */
-    public function testGetUpdatesLoopLiveBot()
+    public function testGetUpdatesLoopLiveBot(): void
     {
         $this->makeRequestValid();
         // Webhook MUST NOT be set for this to work!

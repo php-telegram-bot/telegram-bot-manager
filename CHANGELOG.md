@@ -6,51 +6,50 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ## [Unreleased]
 ### Added
 ### Changed
-- Upgraded dependencies and bumped core to version 0.59.0.
-- Code style is now PSR12.
-- Adopt issue templates and git/GitHub related meta from upstream core.
+- Upgraded dependencies and bumped core to version 0.59.0. (#48)
+- Code style is now PSR12. (#48)
+- Adopt issue templates and git/GitHub related meta from upstream core. (#49)
+- Simplify FQNs, cleanup tests and update changelog.
 ### Deprecated
 ### Removed
-- Botan.io has been removed (see php-telegram-bot/core#924)
+- Botan.io has been removed (see php-telegram-bot/core#924). (#50)
 ### Fixed
 ### Security
-- Security disclosure managed by [Tidelift].
+- Security disclosure managed by [Tidelift]. (#49)
 
 ## [1.4.0] - 2019-06-01
 ### Added
-- Test up to PHP 7.3 in Travis-CI.
+- Test up to PHP 7.3 in Travis-CI. (#47)
 ### Changed
-- Use the new Telegram API webhook IP ranges.
-- Upgraded dependencies and bumped core to version 0.57.0.
+- Use the new Telegram API webhook IP ranges. (#46)
+- Upgraded dependencies and bumped core to version 0.57.0. (#47)
 ### Security
-- Minimum PHP version is now 7.1.
+- Minimum PHP version is now 7.1. (#47)
 
 ## [1.3.0] - 2018-07-21
 ### Added
 - Allow usage of table prefixes and custom encoding.
-- Add error message when trying to use getUpdates without database connection.
+- Add error message when trying to use getUpdates without database connection. (#41)
 ### Changed
-- Bumped to core version 0.54.0
-- Bumped dependencies.
+- Upgraded dependencies and bumped core to version 0.54.0.
 
 ## [1.2.2] - 2017-08-26
 ### Added
 - Linked version numbers in changelog for easy verification of code changes. 
 ### Changed
-- Bumped to core version 0.48.0
-- Bumped dependencies.
+- Upgraded dependencies and bumped core to version 0.48.0.
 
 ## [1.2.1] - 2017-07-12
 ### Fixed
-- Secret should not be required when using CLI for getUpdates.
+- Secret should not be required when using CLI for getUpdates. (#36)
 
 ## [1.2.0] - 2017-07-10
 ### Added
-- Custom output callback can be defined for getUpdates method.
+- Custom output callback can be defined for getUpdates method. (#34)
 ### Changed
-- Default output of getUpdates method now shows the message type or query text, not the text message content.
+- Default output of getUpdates method now shows the message type or query text, not the text message content. (#34)
 ### Fixed
-- GetUpdates method would crash if a non-text message was sent.
+- GetUpdates method would crash if a non-text message was sent. (#34)
 
 ## [1.1.0] - 2017-05-23
 ### Added
@@ -91,7 +90,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Changelog.
 ### Changed
-- (!) Rename vital parameter `botname` to `bot_username` everywhere.
+- :exclamation: Rename vital parameter `botname` to `bot_username` everywhere.
 ### Fixed
 - Some code style issues.
 

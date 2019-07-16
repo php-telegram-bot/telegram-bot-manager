@@ -19,7 +19,7 @@ class TestHelpers
      * @param string $property Name of the property who's value we want to set.
      * @param mixed  $value    The value to set to the property.
      */
-    public static function setObjectProperty($object, $property, $value)
+    public static function setObjectProperty($object, $property, $value): void
     {
         $ref_object   = new \ReflectionObject($object);
         $ref_property = $ref_object->getProperty($property);
@@ -36,7 +36,7 @@ class TestHelpers
      *
      * @throws \ReflectionException
      */
-    public static function setStaticProperty($class, $property, $value)
+    public static function setStaticProperty($class, $property, $value): void
     {
         $ref_property = new \ReflectionProperty($class, $property);
         $ref_property->setAccessible(true);
@@ -50,7 +50,7 @@ class TestHelpers
      * @param string $method Name of the method to call.
      * @param array  $args   Parameters to pass to method.
      */
-    public static function callObjectMethod($object, $method, array $args = [])
+    public static function callObjectMethod($object, $method, array $args = []): void
     {
         $ref_object = new \ReflectionObject($object);
         $ref_method = $ref_object->getMethod($method);

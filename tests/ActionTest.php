@@ -11,10 +11,11 @@
 namespace TelegramBot\TelegramBotManager\Tests;
 
 use TelegramBot\TelegramBotManager\Action;
+use TelegramBot\TelegramBotManager\Exception\InvalidActionException;
 
 class ActionTest extends \PHPUnit\Framework\TestCase
 {
-    public function testConstruct()
+    public function testConstruct(): void
     {
         self::assertEquals('set', (new Action('set'))->getAction());
         self::assertEquals('unset', (new Action('unset'))->getAction());
@@ -24,16 +25,14 @@ class ActionTest extends \PHPUnit\Framework\TestCase
         self::assertEquals('webhookinfo', (new Action('webhookinfo'))->getAction());
     }
 
-    /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidActionException
-     * @expectedExceptionMessageRegExp /^Invalid action: non-existent$/
-     */
-    public function testConstructFail()
+    public function testConstructFail(): void
     {
+        $this->expectException(InvalidActionException::class);
+        $this->expectExceptionMessage('Invalid action: non-existent');
         new Action('non-existent');
     }
 
-    public function testIsAction()
+    public function testIsAction(): void
     {
         $action = new Action('set');
         self::assertTrue($action->isAction('set'));

@@ -36,7 +36,7 @@ class Action
      *
      * @param string $action
      *
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidActionException
+     * @throws InvalidActionException
      */
     public function __construct($action = 'handle')
     {
@@ -56,7 +56,7 @@ class Action
      */
     public function isAction($actions): bool
     {
-        return \in_array($this->action, (array) $actions, true);
+        return in_array($this->action, (array) $actions, true);
     }
 
     /**
