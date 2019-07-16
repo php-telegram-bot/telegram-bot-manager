@@ -95,7 +95,7 @@ class Params
      *
      * @param array $params All params to set the bot up with.
      *
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     * @throws InvalidParamsException
      */
     public function __construct(array $params)
     {
@@ -108,8 +108,8 @@ class Params
      *
      * @param array $params
      *
-     * @return \TelegramBot\TelegramBotManager\Params
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     * @return Params
+     * @throws InvalidParamsException
      */
     private function validateAndSetBotParams(array $params): self
     {
@@ -125,9 +125,9 @@ class Params
      *
      * @param array $params
      *
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     * @throws InvalidParamsException
      */
-    private function validateAndSetBotParamsVital(array $params)
+    private function validateAndSetBotParamsVital(array $params): void
     {
         foreach (self::$valid_vital_bot_params as $vital_key) {
             if (!array_key_exists($vital_key, $params)) {
@@ -143,9 +143,9 @@ class Params
      *
      * @param array $params
      *
-     * @throws \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     * @throws InvalidParamsException
      */
-    private function validateAndSetBotParamsSpecial(array $params)
+    private function validateAndSetBotParamsSpecial(array $params): void
     {
         // Special case, where secret MUST be defined if we have a webhook.
         if (($params['webhook']['url'] ?? null) && !($params['secret'] ?? null)) {
@@ -161,7 +161,7 @@ class Params
      *
      * @param array $params
      */
-    private function validateAndSetBotParamsExtra(array $params)
+    private function validateAndSetBotParamsExtra(array $params): void
     {
         foreach (self::$valid_extra_bot_params as $extra_key) {
             if (!array_key_exists($extra_key, $params)) {
@@ -178,7 +178,7 @@ class Params
      * https://url/entry.php?s=<secret>&a=<action>&l=<loop>
      * $ php entry.php s=<secret> a=<action> l=<loop>
      *
-     * @return \TelegramBot\TelegramBotManager\Params
+     * @return Params
      */
     private function validateAndSetScriptParams(): self
     {
@@ -191,7 +191,7 @@ class Params
     /**
      * Set script parameters from query string or CLI.
      */
-    private function setScriptParams()
+    private function setScriptParams(): void
     {
         $this->script_params = $_GET;
 
@@ -201,7 +201,7 @@ class Params
         }
 
         // We don't need the first arg (the file name).
-        $args = \array_slice($_SERVER['argv'], 1);
+        $args = array_slice($_SERVER['argv'], 1);
 
         /** @var array $args */
         foreach ($args as $arg) {
@@ -213,7 +213,7 @@ class Params
     /**
      * Keep only valid script parameters.
      */
-    private function validateScriptParams()
+    private function validateScriptParams(): void
     {
         $this->script_params = array_intersect_key(
             $this->script_params,

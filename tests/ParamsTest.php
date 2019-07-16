@@ -81,7 +81,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         $_GET = [];
     }
 
-    public function testConstruct()
+    public function testConstruct(): void
     {
         new Params(self::$demo_vital_params);
         self::assertTrue(true);
@@ -91,7 +91,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
      * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: api_key
      */
-    public function testConstructWithoutApiKey()
+    public function testConstructWithoutApiKey(): void
     {
         new Params([]);
     }
@@ -100,7 +100,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
      * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
-    public function testConstructWithWebhookWithoutSecret()
+    public function testConstructWithWebhookWithoutSecret(): void
     {
         new Params([
             'api_key' => '12345:api_key',
@@ -108,7 +108,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         ]);
     }
 
-    public function testScriptParamInvalidParameterFormat()
+    public function testScriptParamInvalidParameterFormat(): void
     {
         $_SERVER['argv'] = [basename(__FILE__), 'invalid-param-format'];
 
@@ -119,7 +119,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         self::assertEmpty($params->getScriptParams());
     }
 
-    public function testSetAndGetScriptParams()
+    public function testSetAndGetScriptParams(): void
     {
         $_SERVER['argv'] = [basename(__FILE__)];
         $params          = new Params(self::$demo_vital_params);
@@ -139,7 +139,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         self::assertNull($params->getScriptParam('non-existent'));
     }
 
-    public function testSetAndGetBotParams()
+    public function testSetAndGetBotParams(): void
     {
         $all_params = array_merge(self::$demo_vital_params, self::$demo_extra_params);
         $params     = new Params($all_params);
