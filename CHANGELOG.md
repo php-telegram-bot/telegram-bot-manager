@@ -15,6 +15,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - Botan.io has been removed (see php-telegram-bot/core#924). (#50)
 ### Fixed
 - Fix and improve getUpdates output.
+- Don't output deprecation notices if no logging is enabled.
 ### Security
 - Security disclosure managed by [Tidelift]. (#49)
 
