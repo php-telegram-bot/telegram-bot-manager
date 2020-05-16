@@ -10,9 +10,9 @@
 
 namespace TelegramBot\TelegramBotManager\Tests;
 
-use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\TelegramLog;
+use PhpTelegramBot\Core\Request;
+use PhpTelegramBot\Core\Telegram;
+use PhpTelegramBot\Core\TelegramLog;
 use TelegramBot\TelegramBotManager\BotManager;
 use TelegramBot\TelegramBotManager\Exception\InvalidAccessException;
 use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
