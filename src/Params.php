@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace TelegramBot\TelegramBotManager;
+namespace PhpTelegramBot\PhpTelegramBotManager;
 
-use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidParamsException;
 
 class Params
 {

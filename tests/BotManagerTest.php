@@ -8,21 +8,21 @@
  * file that was distributed with this source code.
  */
 
-namespace TelegramBot\TelegramBotManager\Tests;
+namespace PhpTelegramBot\PhpTelegramBotManager\Tests;
 
-use Longman\TelegramBot\Request;
-use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\TelegramLog;
-use TelegramBot\TelegramBotManager\BotManager;
-use TelegramBot\TelegramBotManager\Exception\InvalidAccessException;
-use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
+use PhpTelegramBot\Core\Request;
+use PhpTelegramBot\Core\Telegram;
+use PhpTelegramBot\Core\TelegramLog;
+use PhpTelegramBot\PhpTelegramBotManager\BotManager;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidAccessException;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidParamsException;
 
 /**
  * Class BotManagerTest.php
  *
  * Leave all member variables public to allow easy modification.
  *
- * @package TelegramBot\TelegramBotManager
+ * @package PhpTelegramBot\PhpTelegramBotManager
  */
 class BotManagerTest extends \PHPUnit\Framework\TestCase
 {
@@ -259,7 +259,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
+     * @expectedException \PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidWebhookException
      * @expectedExceptionMessage Invalid webhook
      */
     public function testValidateAndSetWebhookFailSetWithoutWebhook(): void
@@ -271,7 +271,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidWebhookException
+     * @expectedException \PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidWebhookException
      * @expectedExceptionMessage Invalid webhook
      */
     public function testValidateAndSetWebhookFailResetWithoutWebhook(): void

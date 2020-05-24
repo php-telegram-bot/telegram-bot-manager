@@ -47,7 +47,7 @@ It is possible however, to override the core version that this library requires:
 ```yaml
 "require": {
     "php-telegram-bot/telegram-bot-manager": "^1.4",
-    "longman/telegram-bot": "dev-develop as 0.59"
+    "php-telegram-bot/core": "dev-develop as 0.59"
 }
 ```
 
@@ -137,7 +137,7 @@ Let's start off with a simple example that uses the webhook method:
 ```php
 <?php
 
-use TelegramBot\TelegramBotManager\BotManager;
+use PhpTelegramBot\PhpTelegramBotManager\BotManager;
 
 // Load composer.
 require_once __DIR__ . '/vendor/autoload.php';
