@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace TelegramBot\TelegramBotManager;
+namespace PhpTelegramBot\PhpTelegramBotManager;
 
 use Exception;
 use Longman\IPTools\Ip;
@@ -22,10 +22,10 @@ use PhpTelegramBot\Core\Exception\TelegramException;
 use PhpTelegramBot\Core\Request;
 use PhpTelegramBot\Core\Telegram;
 use PhpTelegramBot\Core\TelegramLog;
-use TelegramBot\TelegramBotManager\Exception\InvalidAccessException;
-use TelegramBot\TelegramBotManager\Exception\InvalidActionException;
-use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
-use TelegramBot\TelegramBotManager\Exception\InvalidWebhookException;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidAccessException;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidActionException;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidParamsException;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidWebhookException;
 
 class BotManager
 {

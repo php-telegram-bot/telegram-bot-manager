@@ -53,7 +53,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][1.2.2]
 ### Added
-- Linked version numbers in changelog for easy verification of code changes. 
+- Linked version numbers in changelog for easy verification of code changes.
 ### Changed
 - Upgraded dependencies and bumped core to version 0.48.0.
 
@@ -94,7 +94,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 - [:ledger: View file changes][1.0.0]
 ### Changed
 - [:exclamation:][1.0.0-bc-move] Move to `php-telegram-bot/telegram-bot-manager` on packagist.
-- [:exclamation:][1.0.0-bc-move] Move to `TelegramBot\TelegramBotManager` namespace.
+- [:exclamation:][1.0.0-bc-move] Move to `PhpTelegramBot\PhpTelegramBotManager` namespace.
 
 ## [0.44.0] - 2017-05-05
 ### Notes

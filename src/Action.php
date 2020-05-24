@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace TelegramBot\TelegramBotManager;
+namespace PhpTelegramBot\PhpTelegramBotManager;
 
-use TelegramBot\TelegramBotManager\Exception\InvalidActionException;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidActionException;
 
 class Action
 {

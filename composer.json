@@ -1,13 +1,13 @@
 {
-    "name": "php-telegram-bot/telegram-bot-manager",
+    "name": "php-telegram-bot/php-telegram-bot-manager",
     "type": "library",
     "description": "PHP Telegram Bot Manager",
     "keywords": ["telegram", "bot", "manager"],
     "license": "MIT",
-    "homepage": "https://github.com/php-telegram-bot/telegram-bot-manager",
+    "homepage": "https://github.com/php-telegram-bot/php-telegram-bot-manager",
     "support": {
-        "issues": "https://github.com/php-telegram-bot/telegram-bot-manager/issues",
-        "source": "https://github.com/php-telegram-bot/telegram-bot-manager"
+        "issues": "https://github.com/php-telegram-bot/php-telegram-bot-manager/issues",
+        "source": "https://github.com/php-telegram-bot/php-telegram-bot-manager"
     },
     "authors": [
         {
@@ -30,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "TelegramBot\\TelegramBotManager\\": "src"
+            "PhpTelegramBot\\PhpTelegramBotManager\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "TelegramBot\\TelegramBotManager\\Tests\\": "tests"
+            "PhpTelegramBot\\PhpTelegramBotManager\\Tests\\": "tests"
         }
     },
     "scripts": {

@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace TelegramBot\TelegramBotManager\Tests;
+namespace PhpTelegramBot\PhpTelegramBotManager\Tests;
 
-use TelegramBot\TelegramBotManager\Action;
-use TelegramBot\TelegramBotManager\Exception\InvalidActionException;
+use PhpTelegramBot\PhpTelegramBotManager\Action;
+use PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidActionException;
 
 class ActionTest extends \PHPUnit\Framework\TestCase
 {

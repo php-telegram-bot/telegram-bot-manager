@@ -137,7 +137,7 @@ Let's start off with a simple example that uses the webhook method:
 ```php
 <?php
 
-use TelegramBot\TelegramBotManager\BotManager;
+use PhpTelegramBot\PhpTelegramBotManager\BotManager;
 
 // Load composer.
 require_once __DIR__ . '/vendor/autoload.php';

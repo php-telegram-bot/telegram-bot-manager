@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace TelegramBot\TelegramBotManager\Tests;
+namespace PhpTelegramBot\PhpTelegramBotManager\Tests;
 
-use TelegramBot\TelegramBotManager\Params;
+use PhpTelegramBot\PhpTelegramBotManager\Params;
 
 class ParamsTest extends \PHPUnit\Framework\TestCase
 {
@@ -88,7 +88,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     * @expectedException \PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: api_key
      */
     public function testConstructWithoutApiKey(): void
@@ -97,7 +97,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
+     * @expectedException \PhpTelegramBot\PhpTelegramBotManager\Exception\InvalidParamsException
      * @expectedExceptionMessage Some vital info is missing: secret
      */
     public function testConstructWithWebhookWithoutSecret(): void
