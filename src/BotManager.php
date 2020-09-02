@@ -237,9 +237,10 @@ class BotManager
                 return !empty($v);
             }, ARRAY_FILTER_USE_BOTH);
 
+            $webhook['url'] .= parse_url($webhook['url'], PHP_URL_QUERY) === null ? '?' : '&';
             $this->handleOutput(
                 $this->telegram->setWebhook(
-                    $webhook['url'] . '?a=handle&s=' . $this->params->getBotParam('secret'),
+                    $webhook['url'] . 'a=handle&s=' . $this->params->getBotParam('secret'),
                     $webhook_params
                 )->getDescription() . PHP_EOL
             );
