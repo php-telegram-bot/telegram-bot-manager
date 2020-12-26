@@ -1,36 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php"
-         backupGlobals="false"
-         backupStaticAttributes="false"
-         beStrictAboutOutputDuringTests="true"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnError="false"
-         stopOnFailure="false"
-         verbose="true"
->
-    <testsuites>
-        <testsuite name="TelegramBotManager Test Suite">
-            <directory suffix="Test.php">tests/</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src/</directory>
-        </whitelist>
-    </filter>
-
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd">
+    <coverage>
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+        <exclude>
+            <directory suffix=".php">./src/Exception</directory>
+        </exclude>
+    </coverage>
     <php>
         <ini name="date.timezone" value="UTC"/>
         <ini name="error_reporting" value="-1"/>
         <const name="PHPUNIT_TESTSUITE" value="true"/>
         <const name="PHPUNIT_DB_HOST" value="127.0.0.1"/>
+        <const name="PHPUNIT_DB_PORT" value="3306"/>
         <const name="PHPUNIT_DB_USER" value="root"/>
         <const name="PHPUNIT_DB_PASSWORD" value=""/>
         <const name="PHPUNIT_DB_DATABASE" value="telegrambot"/>
     </php>
+    <testsuites>
+        <testsuite name="TelegramBotManager Test Suite">
+            <directory>tests/</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>

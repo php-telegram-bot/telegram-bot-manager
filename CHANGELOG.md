@@ -14,6 +14,18 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [1.6.0] - 2020-12-26
+### Notes
+- [:ledger: View file changes][1.6.0]
+### Changed
+- Upgraded dependencies and bumped core to version 0.70.*.
+- Upgrade code to PHP 7.3.
+- Update Travis-CI and Scrutinizer configs.
+### Removed
+- [:exclamation:][1.6.0-bc-remove-botmanager-initlogging] Remove `BotManager::initLogging()` method and require separate logging initialisation with `TelegramLog::initialize`.
+### Security
+- Minimum PHP 7.3, allow PHP 8.0.
+
 ## [1.5.0] - 2019-07-29
 ### Notes
 - [:ledger: View file changes][1.5.0]
@@ -54,7 +66,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][1.2.2]
 ### Added
-- Linked version numbers in changelog for easy verification of code changes. 
+- Linked version numbers in changelog for easy verification of code changes.
 ### Changed
 - Upgraded dependencies and bumped core to version 0.48.0.
 
@@ -187,10 +199,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 
 [Tidelift]: https://tidelift.com/subscription/pkg/packagist-php-telegram-bot-telegram-bot-manager?utm_source=packagist-php-telegram-bot-telegram-bot-manager&utm_medium=referral&utm_campaign=changelog
 
+[1.6.0-bc-remove-botmanager-initlogging]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#remove-botmanagerinitlogging "Remove BotManager::initLogging()"
 [1.0.0-bc-move]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#namespace-and-package-name-changed "Namespace and package name changed"
 [0.44.0-bc-parameter-structure]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#parameter-structure-changed "Parameter structure changed"
 
 [Unreleased]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/master...develop
+[1.6.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.4.0...1.5.0
 [1.4.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.3.0...1.4.0
 [1.3.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.2.2...1.3.0

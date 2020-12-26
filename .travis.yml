@@ -1,27 +1,23 @@
-sudo: required
+dist: bionic
 language: php
 
 addons:
-  mariadb: 10.1
+  mariadb: 10.2
 
 cache:
   directories:
     - vendor
     - $HOME/.composer/cache
 
-matrix:
-  include:
-    - php: 7.3
-    - php: 7.2
-    - php: 7.1
-      env: COVERAGE=1
-    - php: 7.1
-      env: DEPS=low
-    - php: nightly
-    - php: hhvm
+php:
+  - 7.3
+  - 7.4
+  - 8.0snapshot
+  - nightly
+
+jobs:
   allow_failures:
     - php: nightly
-    - php: hhvm
   fast_finish: true
 
 notifications:
@@ -36,12 +32,11 @@ git:
   depth: 1
 
 install:
-  - if [ "$DEPS" == "low" ]; then travis_retry composer update --prefer-source --prefer-lowest --prefer-stable --no-interaction; fi
-  - if [ "$DEPS" != "low" ]; then travis_retry composer install --prefer-source --no-interaction; fi
+  - travis_retry composer install --prefer-dist --no-interaction
 
 before_script:
   - mysql -u root -e 'create database telegrambot; use telegrambot; source ./vendor/longman/telegram-bot/structure.sql;'
-  - if [[ "$COVERAGE" == "1" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then CODECOV="1"; fi
+  - if [[ "$TRAVIS_PHP_VERSION" == "7.3" ]] && [[ "$TRAVIS_PULL_REQUEST" == "false" ]]; then CODECOV="1"; fi
 
 script:
   - composer check-code

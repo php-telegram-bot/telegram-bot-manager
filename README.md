@@ -24,7 +24,7 @@ Installation and usage is pretty straight forward:
 Either run this command in your command line:
 
 ```bash
-composer require php-telegram-bot/telegram-bot-manager:^1.4
+composer require php-telegram-bot/telegram-bot-manager:^1.6
 ```
 
 **or**
@@ -33,7 +33,7 @@ For existing Composer projects, edit your project's `composer.json` file to requ
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^1.4"
+    "php-telegram-bot/telegram-bot-manager": "^1.6"
 }
 ```
 and then run `composer update`
@@ -46,12 +46,12 @@ It is possible however, to override the core version that this library requires:
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^1.4",
-    "longman/telegram-bot": "dev-develop as 0.59"
+    "php-telegram-bot/telegram-bot-manager": "^1.6",
+    "longman/telegram-bot": "dev-develop as 0.70"
 }
 ```
 
-This example will pull the develop version of the core library, making it appear to be version 0.57, which then satisfies the requirement.
+This example will pull the develop version of the core library, making it appear to be version 0.70, which then satisfies the requirement.
 
 ### Performing actions
 
@@ -176,7 +176,7 @@ $bot = new BotManager([
 
 Apart from the necessary API key, the bot can be easily configured using extra parameters.
 
-Set the webhook? Enable admins? Add custom command paths? Set up logging?
+Set the webhook? Enable admins? Add custom command paths?
 
 **All no problem!**
 
@@ -222,16 +222,6 @@ $bot = new BotManager([
         '10/8',            // CIDR (short)
         '5.6.*',           // wildcard
         '1.1.1.1-2.2.2.2', // range
-    ],
-
-    // (array) Paths where the log files should be put.
-    'logging'          => [
-        // (string) Log file for all incoming update requests.
-        'update' => __DIR__ . '/php-telegram-bot-update.log',
-        // (string) Log file for debug purposes.
-        'debug'  => __DIR__ . '/php-telegram-bot-debug.log',
-        // (string) Log file for all errors.
-        'error'  => __DIR__ . '/php-telegram-bot-error.log',
     ],
 
     // (array) All options that have to do with the limiter.
@@ -292,7 +282,6 @@ $bot = new BotManager([
             'maintenance' => [
                 '/db_cleanup',
                 '/db_repair',
-                '/log_rotate',
                 '/message_admins Maintenance completed',
             ],
         ],

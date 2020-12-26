@@ -21,7 +21,6 @@ use Longman\TelegramBot\Entities\Update;
 use Longman\TelegramBot\Exception\TelegramException;
 use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
-use Longman\TelegramBot\TelegramLog;
 use TelegramBot\TelegramBotManager\Exception\InvalidAccessException;
 use TelegramBot\TelegramBotManager\Exception\InvalidActionException;
 use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
@@ -30,8 +29,8 @@ use TelegramBot\TelegramBotManager\Exception\InvalidWebhookException;
 class BotManager
 {
     /**
-     * @var array Telegram webhook servers IP ranges
      * @link https://core.telegram.org/bots/webhooks#the-short-version
+     * @var array Telegram webhook servers IP ranges
      */
     public const TELEGRAM_IP_RANGES = ['149.154.160.0/20', '91.108.4.0/22'];
 
@@ -72,16 +71,13 @@ class BotManager
      */
     public function __construct(array $params)
     {
-        // Initialise logging before anything else, to allow errors to be logged.
-        $this->initLogging($params['logging'] ?? []);
-
         $this->params = new Params($params);
         $this->action = new Action($this->params->getScriptParam('a'));
 
         // Set up a new Telegram instance.
         $this->telegram = new Telegram(
             $this->params->getBotParam('api_key'),
-            $this->params->getBotParam('bot_username')
+            $this->params->getBotParam('bot_username') ?? ''
         );
     }
 
@@ -156,27 +152,6 @@ class BotManager
             $this->handleRequest();
         } elseif ($this->action->isAction('cron')) {
             $this->handleCron();
-        }
-
-        return $this;
-    }
-
-    /**
-     * Initialise all loggers.
-     *
-     * @param array $log_paths
-     *
-     * @return BotManager
-     * @throws Exception
-     */
-    public function initLogging(array $log_paths): self
-    {
-        empty($log_paths) || self::inTest() || trigger_error(__METHOD__ . ' is deprecated and will be removed soon. Initialise with a preconfigured logger instance instead using "TelegramLog::initialize($logger)".', E_USER_DEPRECATED);
-
-        foreach ($log_paths as $logger => $logfile) {
-            ('debug' === $logger) && TelegramLog::initDebugLog($logfile);
-            ('error' === $logger) && TelegramLog::initErrorLog($logfile);
-            ('update' === $logger) && TelegramLog::initUpdateLog($logfile);
         }
 
         return $this;
@@ -308,7 +283,7 @@ class BotManager
         if ($mysql_config = $this->params->getBotParam('mysql', [])) {
             $this->telegram->enableMySql(
                 $mysql_config,
-                $mysql_config['table_prefix'] ?? null,
+                $mysql_config['table_prefix'] ?? '',
                 $mysql_config['encoding'] ?? 'utf8mb4'
             );
         }

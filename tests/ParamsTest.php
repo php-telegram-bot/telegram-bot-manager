@@ -75,7 +75,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         'custom_input'     => '{"some":"raw", "json":"update"}',
     ];
 
-    public function setUp()
+    public function setUp(): void
     {
         // Make sure we start with a clean slate.
         $_GET = [];
@@ -87,21 +87,17 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
         self::assertTrue(true);
     }
 
-    /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
-     * @expectedExceptionMessage Some vital info is missing: api_key
-     */
     public function testConstructWithoutApiKey(): void
     {
+        $this->expectExceptionMessage("Some vital info is missing: api_key");
+        $this->expectException(\TelegramBot\TelegramBotManager\Exception\InvalidParamsException::class);
         new Params([]);
     }
 
-    /**
-     * @expectedException \TelegramBot\TelegramBotManager\Exception\InvalidParamsException
-     * @expectedExceptionMessage Some vital info is missing: secret
-     */
     public function testConstructWithWebhookWithoutSecret(): void
     {
+        $this->expectExceptionMessage("Some vital info is missing: secret");
+        $this->expectException(\TelegramBot\TelegramBotManager\Exception\InvalidParamsException::class);
         new Params([
             'api_key' => '12345:api_key',
             'webhook' => self::$demo_extra_params['webhook'],

@@ -2,10 +2,17 @@
 <ruleset name="PHP Telegram Bot Manager">
     <description>PHP Code Sniffer</description>
 
+    <arg value="snp"/>
     <arg name="colors"/>
-    <arg name="parallel" value="8"/>
+    <arg name="extensions" value="php"/>
     <arg name="encoding" value="utf-8"/>
+    <arg name="parallel" value="8"/>
     <arg name="report-width" value="150"/>
 
-    <rule ref="PSR12"/>
+    <file>src/</file>
+    <file>tests/</file>
+
+    <rule ref="PSR12">
+        <exclude name="PSR12.Files"/>
+    </rule>
 </ruleset>
