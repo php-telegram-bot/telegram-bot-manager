@@ -502,7 +502,8 @@ class BotManager
                 $text    .= ";{$update_content->getQuery()}";
             } elseif ($update_content instanceof CallbackQuery) {
                 /** @var CallbackQuery $update_content */
-                $chat_id = $update_content->getMessage()->getChat()->getId();
+                $message = $update_content->getMessage();
+                $chat_id = ($message!==null && $message->getChat()!==null) ? $message->getChat()->getId() : null;
                 $text    .= ";{$update_content->getData()}";
             }
 
