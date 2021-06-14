@@ -7,16 +7,25 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
-- Allow webhook to contain custom query parameters.
 ### Changed
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
 
+## [1.7.0] - 2021-06-14
+### Notes
+- [:ledger: View file changes][1.7.0]
+### Changed
+- Bumped core to version 0.73.*.
+### Fixed
+- `chat_id` output for `getUpdates` method. (#65)
+
 ## [1.6.0] - 2020-12-26
 ### Notes
 - [:ledger: View file changes][1.6.0]
+### Added
+- Allow webhook to contain custom query parameters. (#59)
 ### Changed
 - Upgraded dependencies and bumped core to version 0.70.*.
 - Upgrade code to PHP 7.3.
@@ -204,6 +213,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [0.44.0-bc-parameter-structure]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#parameter-structure-changed "Parameter structure changed"
 
 [Unreleased]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/master...develop
+[1.7.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.6.0...1.7.0
 [1.6.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.5.0...1.6.0
 [1.5.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.4.0...1.5.0
 [1.4.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.3.0...1.4.0

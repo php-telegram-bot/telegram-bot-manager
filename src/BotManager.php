@@ -28,6 +28,8 @@ use TelegramBot\TelegramBotManager\Exception\InvalidWebhookException;
 
 class BotManager
 {
+    public const VERSION = '1.7.0';
+
     /**
      * @link https://core.telegram.org/bots/webhooks#the-short-version
      * @var array Telegram webhook servers IP ranges
@@ -503,12 +505,15 @@ class BotManager
             } elseif ($update_content instanceof CallbackQuery) {
                 /** @var CallbackQuery $update_content */
                 $message = $update_content->getMessage();
-                $chat_id = ($message && $message->getChat()) ? $message->getChat()->getId() : null;
-                $text    .= ";{$update_content->getData()}";
+                if ($message && $message->getChat()) {
+                    $chat_id = $message->getChat()->getId();
+                }
+
+                $text .= ";{$update_content->getData()}";
             }
 
             $output .= sprintf(
-                '%d: <%s>' . PHP_EOL,
+                '%s: <%s>' . PHP_EOL,
                 $chat_id,
                 preg_replace('/\s+/', ' ', trim($text))
             );
