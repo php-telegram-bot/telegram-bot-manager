@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": "^7.3|^8.0",
-        "longman/telegram-bot": "^0.73",
+        "longman/telegram-bot": "^0.74",
         "longman/ip-tools": "^1.2",
         "psr/log": "^1.1"
     },
