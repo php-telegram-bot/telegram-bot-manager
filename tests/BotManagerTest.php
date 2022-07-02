@@ -47,12 +47,24 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    protected function setUp(): void
+    {
+        unset($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_CLIENT_IP'], $_SERVER['REMOTE_ADDR'], $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN']);
+
+        parent::setUp();
+    }
+
     /**
      * To test the live commands, act as if we're being called by Telegram.
      */
-    protected function makeRequestValid(): void
+    protected function makeRequestIpValid(): void
     {
         $_SERVER['REMOTE_ADDR'] = '149.154.167.197';
+    }
+
+    protected function applyRequestSecretToken(?string $token): void
+    {
+        $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] = $token;
     }
 
     public function testSetParameters(): void
@@ -233,7 +245,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testDeleteWebhookViaRunLiveBot(): void
     {
-        $this->makeRequestValid();
+        $this->makeRequestIpValid();
         $_GET       = ['a' => 'unset'];
         $botManager = new BotManager(array_merge(self::$live_params, [
             'webhook' => ['url' => 'https://example.com/hook.php'],
@@ -380,11 +392,22 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($botManager->getParams()->getBotParam('validate_request'));
     }
 
-    public function testIsValidRequestFailValidation(): void
+    public function testIsValidRequestSkipValidation(): void
+    {
+        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'validate_request' => false,
+            'webhook'          => ['secret_token' => 'top-secret'],
+        ]));
+
+        $_SERVER['REMOTE_ADDR'] = '1.1.1.1';
+        $this->applyRequestSecretToken('not-legit');
+
+        self::assertTrue($botManager->isValidRequest());
+    }
+
+    public function testIsValidRequestIpFailValidation(): void
     {
         $botManager = new BotManager(ParamsTest::$demo_vital_params);
-
-        unset($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_CLIENT_IP'], $_SERVER['REMOTE_ADDR']);
 
         foreach (['HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'] as $key) {
             $_SERVER[$key] = '1.1.1.1';
@@ -393,22 +416,9 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function testIsValidRequestSkipValidation(): void
-    {
-        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
-            'validate_request' => false,
-        ]));
-
-        unset($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_CLIENT_IP'], $_SERVER['REMOTE_ADDR']);
-
-        self::assertTrue($botManager->isValidRequest());
-    }
-
-    public function testIsValidRequestValidate(): void
+    public function testIsValidRequestIpValidate(): void
     {
         $botManager = new BotManager(ParamsTest::$demo_vital_params);
-
-        unset($_SERVER['HTTP_X_FORWARDED_FOR'], $_SERVER['HTTP_CLIENT_IP'], $_SERVER['REMOTE_ADDR']);
 
         // Lower range.
         $_SERVER['REMOTE_ADDR'] = '149.154.159.255';
@@ -431,13 +441,46 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         self::assertFalse($botManager->isValidRequest());
     }
 
+    public function testIsValidRequestSecretTokenValidation(): void
+    {
+        $this->makeRequestIpValid();
+
+        // NO config + NO header = VALID
+        $botManager = new BotManager(ParamsTest::$demo_vital_params);
+        self::assertTrue($botManager->isValidRequest());
+
+        // NO config + YES header = INVALID
+        $this->applyRequestSecretToken('top-secret');
+        self::assertFalse($botManager->isValidRequest());
+
+        // YES config + NO header = INVALID
+        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'webhook' => ['secret_token' => 'top-secret'],
+        ]));
+        $this->applyRequestSecretToken(null);
+        self::assertFalse($botManager->isValidRequest());
+
+        // YES config + YES header
+        $botManager = new BotManager(array_merge(ParamsTest::$demo_vital_params, [
+            'webhook' => ['secret_token' => 'top-secret'],
+        ]));
+
+        // + NO equal = INVALID
+        $this->applyRequestSecretToken('not-legit');
+        self::assertFalse($botManager->isValidRequest());
+
+        // + YES equal = VALID
+        $this->applyRequestSecretToken('top-secret');
+        self::assertTrue($botManager->isValidRequest());
+    }
+
     /**
      * @group live
      * @runInSeparateProcess
      */
     public function testGetUpdatesLiveBot(): void
     {
-        $this->makeRequestValid();
+        $this->makeRequestIpValid();
         $botManager = new BotManager(self::$live_params);
         $output     = $botManager->run()->getOutput();
         self::assertStringContainsString('Updates processed: 0', $output);
@@ -449,7 +492,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetUpdatesLoopLiveBot(): void
     {
-        $this->makeRequestValid();
+        $this->makeRequestIpValid();
         // Webhook MUST NOT be set for this to work!
         $this->testDeleteWebhookViaRunLiveBot();
 

@@ -7,6 +7,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Notes
 - [:ledger: View file changes][Unreleased]
 ### Added
+- Enforce `secret_token` webhook validation check.
 ### Changed
 ### Deprecated
 ### Removed
