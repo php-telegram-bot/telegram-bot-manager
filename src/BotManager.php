@@ -28,7 +28,7 @@ use TelegramBot\TelegramBotManager\Exception\InvalidWebhookException;
 
 class BotManager
 {
-    public const VERSION = '1.7.0';
+    public const VERSION = '2.0.0';
 
     /**
      * @link https://core.telegram.org/bots/webhooks#the-short-version
