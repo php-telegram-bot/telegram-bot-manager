@@ -14,10 +14,7 @@ use TelegramBot\TelegramBotManager\Exception\InvalidActionException;
 
 class Action
 {
-    /**
-     * @var array List of valid actions that can be called.
-     */
-    private static $valid_actions = [
+    private static array $valid_actions = [
         'set',
         'unset',
         'reset',
@@ -26,19 +23,12 @@ class Action
         'webhookinfo',
     ];
 
-    /**
-     * @var string Action to be executed.
-     */
-    private $action;
+    private string $action;
 
     /**
-     * Action constructor.
-     *
-     * @param string $action
-     *
      * @throws InvalidActionException
      */
-    public function __construct($action = 'handle')
+    public function __construct(?string $action = 'handle')
     {
         $this->action = $action ?: 'handle';
 
@@ -47,33 +37,16 @@ class Action
         }
     }
 
-    /**
-     * Check if the current action is one of the passed ones.
-     *
-     * @param string|array $actions
-     *
-     * @return bool
-     */
-    public function isAction($actions): bool
+    public function isAction(array|string $actions): bool
     {
         return in_array($this->action, (array) $actions, true);
     }
 
-    /**
-     * Return the current action.
-     *
-     * @return string
-     */
     public function getAction(): string
     {
         return $this->action;
     }
 
-    /**
-     * Return a list of valid actions.
-     *
-     * @return array
-     */
     public static function getValidActions(): array
     {
         return self::$valid_actions;

@@ -14,10 +14,7 @@ use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
 
 class Params
 {
-    /**
-     * @var array List of valid script parameters.
-     */
-    private static $valid_script_params = [
+    private static array $valid_script_params = [
         's', // secret
         'a', // action
         'l', // loop
@@ -25,17 +22,11 @@ class Params
         'g', // group (for cron)
     ];
 
-    /**
-     * @var array List of vital parameters that must be passed.
-     */
-    private static $valid_vital_bot_params = [
+    private static array $valid_vital_bot_params = [
         'api_key',
     ];
 
-    /**
-     * @var array List of valid extra parameters that can be passed.
-     */
-    private static $valid_extra_bot_params = [
+    private static array $valid_extra_bot_params = [
         'bot_username',
         'secret',
         'validate_request',
@@ -51,50 +42,13 @@ class Params
         'custom_input',
     ];
 
-    /**
-     * @var array List of all params passed to the script.
-     */
-    private $script_params = [];
+    private array $script_params = [];
 
-    /**
-     * @var array List of all params passed at construction, predefined with defaults.
-     */
-    private $bot_params = [
+    private array $bot_params = [
         'validate_request' => true,
     ];
 
     /**
-     * Params constructor.
-     *
-     * api_key (string) Telegram Bot API key
-     * bot_username (string) Telegram Bot username
-     * secret (string) Secret string to validate calls
-     * validate_request (bool) Only allow webhook access from valid Telegram API IPs and defined valid_ips
-     * valid_ips (array) Any IPs, besides Telegram API IPs, that are allowed to access the webhook
-     * webhook (array)
-     * - url (string) URI of the webhook
-     * - certificate (string) Path to the self-signed certificate
-     * - max_connections (int) Maximum allowed simultaneous HTTPS connections to the webhook
-     * - allowed_updates (array) List the types of updates you want your bot to receive
-     * logging (array) Array of logger files to set.
-     * limiter (array)
-     * - enabled (bool) Set limiter.
-     * - options (array) Limiter options.
-     * admins (array) List of admins to enable.
-     * mysql (array) MySQL credentials to use.
-     * paths (array)
-     * - download (string) Custom download path to set.
-     * - upload (string) Custom upload path to set.
-     * commands (array)
-     * - paths (array) Custom commands paths to set.
-     * - configs (array) List of custom command configs.
-     * custom_input (string) Custom raw JSON string to use as input.
-     * cron (array)
-     * - groups (array) Groups of cron commands to run.
-     *   - default (array) Default group of cron commands.
-     *
-     * @param array $params All params to set the bot up with.
-     *
      * @throws InvalidParamsException
      */
     public function __construct(array $params)
@@ -104,11 +58,6 @@ class Params
     }
 
     /**
-     * Validate and set up the vital and extra params.
-     *
-     * @param array $params
-     *
-     * @return Params
      * @throws InvalidParamsException
      */
     private function validateAndSetBotParams(array $params): self
@@ -121,10 +70,6 @@ class Params
     }
 
     /**
-     * Set all vital params.
-     *
-     * @param array $params
-     *
      * @throws InvalidParamsException
      */
     private function validateAndSetBotParamsVital(array $params): void
@@ -139,10 +84,6 @@ class Params
     }
 
     /**
-     * Special case parameters.
-     *
-     * @param array $params
-     *
      * @throws InvalidParamsException
      */
     private function validateAndSetBotParamsSpecial(array $params): void
@@ -156,11 +97,6 @@ class Params
         }
     }
 
-    /**
-     * Set all extra params.
-     *
-     * @param array $params
-     */
     private function validateAndSetBotParamsExtra(array $params): void
     {
         foreach (self::$valid_extra_bot_params as $extra_key) {
@@ -177,8 +113,6 @@ class Params
      *
      * https://url/entry.php?s=<secret>&a=<action>&l=<loop>
      * $ php entry.php s=<secret> a=<action> l=<loop>
-     *
-     * @return Params
      */
     private function validateAndSetScriptParams(): self
     {
@@ -188,9 +122,6 @@ class Params
         return $this;
     }
 
-    /**
-     * Set script parameters from query string or CLI.
-     */
     private function setScriptParams(): void
     {
         $this->script_params = $_GET;
@@ -209,9 +140,6 @@ class Params
         }
     }
 
-    /**
-     * Keep only valid script parameters.
-     */
     private function validateScriptParams(): void
     {
         $this->script_params = array_intersect_key(
@@ -220,15 +148,7 @@ class Params
         );
     }
 
-    /**
-     * Get a specific bot param, allowing array-dot notation.
-     *
-     * @param string $param
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    public function getBotParam(string $param, $default = null)
+    public function getBotParam(string $param, mixed $default = null): mixed
     {
         $param_path = explode('.', $param);
 
@@ -243,34 +163,16 @@ class Params
         return $value ?? $default;
     }
 
-    /**
-     * Get an array of all bot params.
-     *
-     * @return array
-     */
     public function getBotParams(): array
     {
         return $this->bot_params;
     }
 
-    /**
-     * Get a specific script param.
-     *
-     * @param string $param
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    public function getScriptParam(string $param, $default = null)
+    public function getScriptParam(string $param, mixed $default = null): mixed
     {
         return $this->script_params[$param] ?? $default;
     }
 
-    /**
-     * Get an array of all script params.
-     *
-     * @return array
-     */
     public function getScriptParams(): array
     {
         return $this->script_params;

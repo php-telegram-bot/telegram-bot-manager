@@ -12,5 +12,4 @@ namespace TelegramBot\TelegramBotManager\Exception;
 
 class InvalidAccessException extends BotManagerException
 {
-
 }
