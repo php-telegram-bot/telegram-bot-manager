@@ -47,9 +47,6 @@ class ActionTest extends \PHPUnit\Framework\TestCase
         self::assertTrue($action->isAction(Action::getValidActions()));
 
         // Test some weird values.
-        self::assertFalse($action->isAction(null));
-        self::assertFalse($action->isAction(true));
-        self::assertFalse($action->isAction(1));
         self::assertFalse($action->isAction('non-existent'));
     }
 }

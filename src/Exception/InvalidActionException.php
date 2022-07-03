@@ -12,5 +12,4 @@ namespace TelegramBot\TelegramBotManager\Exception;
 
 class InvalidActionException extends BotManagerException
 {
-
 }

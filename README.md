@@ -5,7 +5,7 @@
 
 [![Scrutinizer Code Quality][code-quality-badge]][code-quality]
 [![Codecov][code-coverage-badge]][code-coverage]
-[![Build Status][build-status-badge]][build-status]
+[![Tests Status][tests-status-badge]][tests-status]
 
 [![Latest Stable Version][latest-version-badge]][github-tgbot-manager]
 [![Dependencies][dependencies-badge]][Tidelift]
@@ -354,7 +354,7 @@ There are 1 update(s)
 
 ## Development
 
-When running live bot tests on a fork, you must enter the following environment variables to your [repository settings][travis-repository-settings] on travis-ci.org:
+When running live bot tests on a fork, you must enter the following environment variables to your [repository settings][github-actions-encrypted-secrets]:
 ```
 API_KEY="12345:your_api_key"
 BOT_USERNAME="username_of_your_bot"
@@ -406,8 +406,8 @@ Thank you for keeping this project alive :pray:
 [code-quality]: https://scrutinizer-ci.com/g/php-telegram-bot/telegram-bot-manager/?branch=master "Code quality on Scrutinizer"
 [code-coverage-badge]: https://img.shields.io/codecov/c/github/php-telegram-bot/telegram-bot-manager.svg
 [code-coverage]: https://codecov.io/gh/php-telegram-bot/telegram-bot-manager "Code coverage on Codecov"
-[build-status-badge]: https://img.shields.io/travis/php-telegram-bot/telegram-bot-manager.svg
-[build-status]: https://travis-ci.org/php-telegram-bot/telegram-bot-manager "Build status on Travis-CI"
+[tests-status-badge]: https://github.com/php-telegram-bot/telegram-bot-manager/workflows/tests.yml/badge.svg?branch=master
+[tests-status]: https://github.com/php-telegram-bot/telegram-bot-manager/workflows/tests.yml "Tests status on GitHub Actions"
 
 [latest-version-badge]: https://img.shields.io/packagist/v/php-telegram-bot/telegram-bot-manager.svg
 [dependencies-badge]: https://tidelift.com/badges/github/php-telegram-bot/core?style=flat
@@ -415,7 +415,7 @@ Thank you for keeping this project alive :pray:
 [license-badge]: https://img.shields.io/packagist/l/php-telegram-bot/telegram-bot-manager.svg
 
 [random-characters]: https://www.random.org/strings/?num=7&len=12&digits=on&upperalpha=on&loweralpha=on&unique=on&format=plain&rnd=new "Generate random characters"
-[travis-repository-settings]: https://docs.travis-ci.com/user/environment-variables#Defining-Variables-in-Repository-Settings "Repository Settings on Travis-CI"
+[github-actions-encrypted-secrets]: https://docs.github.com/en/actions/security-guides/encrypted-secrets "Encrypted Secrets for GitHub Actions"
 [Composer]: https://getcomposer.org/ "Composer"
 
 [Patreon]: https://www.patreon.com/phptelegrambot "Support us on Patreon"

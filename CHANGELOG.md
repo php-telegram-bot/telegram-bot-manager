@@ -9,10 +9,14 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Added
 - Enforce `secret_token` webhook validation check.
 ### Changed
+- Bumped core to version 0.78.*.
+- Upgrade code to PHP 8.0.
+- Moved tests to GitHub Actions.
 ### Deprecated
 ### Removed
 ### Fixed
 ### Security
+- Minimum PHP 8.0.
 
 ## [1.7.0] - 2021-06-14
 ### Notes

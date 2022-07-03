@@ -33,6 +33,7 @@ class ParamsTest extends \PHPUnit\Framework\TestCase
             'certificate'     => __DIR__ . '/server.crt',
             'max_connections' => 20,
             'allowed_updates' => ['message', 'edited_channel_post', 'callback_query'],
+            'secret_token'    => 'secret_token_12345',
         ],
         'limiter'          => [
             'enabled' => false,

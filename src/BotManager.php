@@ -36,105 +36,56 @@ class BotManager
      */
     public const TELEGRAM_IP_RANGES = ['149.154.160.0/20', '91.108.4.0/22'];
 
-    /**
-     * @var string The output for testing, instead of echoing
-     */
-    private $output = '';
+    private string $output = '';
+    private Telegram $telegram;
+    private Params $params;
+    private Action $action;
+    private ?Closure $custom_get_updates_callback = null;
 
     /**
-     * @var Telegram
-     */
-    private $telegram;
-
-    /**
-     * @var Params Object that manages the parameters.
-     */
-    private $params;
-
-    /**
-     * @var Action Object that contains the current action.
-     */
-    private $action;
-
-    /**
-     * @var callable
-     */
-    private $custom_get_updates_callback;
-
-    /**
-     * BotManager constructor.
-     *
-     * @param array $params
-     *
      * @throws InvalidParamsException
      * @throws InvalidActionException
      * @throws TelegramException
-     * @throws Exception
      */
     public function __construct(array $params)
     {
         $this->params = new Params($params);
         $this->action = new Action($this->params->getScriptParam('a'));
 
-        // Set up a new Telegram instance.
         $this->telegram = new Telegram(
             $this->params->getBotParam('api_key'),
             $this->params->getBotParam('bot_username') ?? ''
         );
     }
 
-    /**
-     * Check if we're busy running the PHPUnit tests.
-     *
-     * @return bool
-     */
     public static function inTest(): bool
     {
         return defined('PHPUNIT_TESTSUITE') && PHPUNIT_TESTSUITE === true;
     }
 
-    /**
-     * Return the Telegram object.
-     *
-     * @return Telegram
-     */
     public function getTelegram(): Telegram
     {
         return $this->telegram;
     }
 
-    /**
-     * Get the Params object.
-     *
-     * @return Params
-     */
     public function getParams(): Params
     {
         return $this->params;
     }
 
-    /**
-     * Get the Action object.
-     *
-     * @return Action
-     */
     public function getAction(): Action
     {
         return $this->action;
     }
 
     /**
-     * Run this thing in all its glory!
-     *
-     * @return BotManager
      * @throws TelegramException
      * @throws InvalidAccessException
      * @throws InvalidWebhookException
      * @throws Exception
      */
-    public function run(): self
+    public function run(): static
     {
-        // Make sure this is a valid call.
         $this->validateSecret();
         $this->validateRequest();
 
@@ -160,14 +111,9 @@ class BotManager
     }
 
     /**
-     * Make sure the passed secret is valid.
-     *
-     * @param bool $force Force validation, even on CLI.
-     *
-     * @return BotManager
      * @throws InvalidAccessException
      */
-    public function validateSecret(bool $force = false): self
+    public function validateSecret(bool $force = false): static
     {
         // If we're running from CLI, secret isn't necessary.
         if ($force || 'cli' !== PHP_SAPI) {
@@ -182,13 +128,10 @@ class BotManager
     }
 
     /**
-     * Make sure the webhook is valid and perform the requested webhook operation.
-     *
-     * @return BotManager
      * @throws TelegramException
      * @throws InvalidWebhookException
      */
-    public function validateAndSetWebhook(): self
+    public function validateAndSetWebhook(): static
     {
         $webhook = $this->params->getBotParam('webhook');
         if (empty($webhook['url'] ?? null) && $this->action->isAction(['set', 'reset'])) {
@@ -227,14 +170,7 @@ class BotManager
         return $this;
     }
 
-    /**
-     * Save the test output and echo it if we're not in a test.
-     *
-     * @param string $output
-     *
-     * @return BotManager
-     */
-    private function handleOutput(string $output): self
+    private function handleOutput(string $output): static
     {
         $this->output .= $output;
 
@@ -246,12 +182,9 @@ class BotManager
     }
 
     /**
-     * Set any extra bot features that have been assigned on construction.
-     *
-     * @return BotManager
      * @throws TelegramException
      */
-    public function setBotExtras(): self
+    public function setBotExtras(): static
     {
         $this->setBotExtrasTelegram();
         $this->setBotExtrasRequest();
@@ -260,12 +193,9 @@ class BotManager
     }
 
     /**
-     * Set extra bot parameters for Telegram object.
-     *
-     * @return BotManager
      * @throws TelegramException
      */
-    protected function setBotExtrasTelegram(): self
+    protected function setBotExtrasTelegram(): static
     {
         $simple_extras = [
             'admins'         => 'enableAdmins',
@@ -301,12 +231,9 @@ class BotManager
     }
 
     /**
-     * Set extra bot parameters for Request class.
-     *
-     * @return BotManager
      * @throws TelegramException
      */
-    protected function setBotExtrasRequest(): self
+    protected function setBotExtrasRequest(): static
     {
         $request_extras = [
             // None at the moment...
@@ -330,12 +257,9 @@ class BotManager
     }
 
     /**
-     * Handle the request, which calls either the Webhook or getUpdates method respectively.
-     *
-     * @return BotManager
      * @throws TelegramException
      */
-    public function handleRequest(): self
+    public function handleRequest(): static
     {
         if ($this->params->getBotParam('webhook.url')) {
             return $this->handleWebhook();
@@ -349,12 +273,9 @@ class BotManager
     }
 
     /**
-     * Handle cron.
-     *
-     * @return BotManager
      * @throws TelegramException
      */
-    public function handleCron(): self
+    public function handleCron(): static
     {
         $groups = explode(',', $this->params->getScriptParam('g', 'default'));
 
@@ -367,11 +288,6 @@ class BotManager
         return $this;
     }
 
-    /**
-     * Get the number of seconds the script should loop.
-     *
-     * @return int
-     */
     public function getLoopTime(): int
     {
         $loop_time = $this->params->getScriptParam('l');
@@ -387,11 +303,6 @@ class BotManager
         return max(0, (int) $loop_time);
     }
 
-    /**
-     * Get the number of seconds the script should wait after each getUpdates request.
-     *
-     * @return int
-     */
     public function getLoopInterval(): int
     {
         $interval_time = $this->params->getScriptParam('i');
@@ -405,15 +316,9 @@ class BotManager
     }
 
     /**
-     * Loop the getUpdates method for the passed amount of seconds.
-     *
-     * @param int $loop_time_in_seconds
-     * @param int $loop_interval_in_seconds
-     *
-     * @return BotManager
      * @throws TelegramException
      */
-    public function handleGetUpdatesLoop(int $loop_time_in_seconds, int $loop_interval_in_seconds = 2): self
+    public function handleGetUpdatesLoop(int $loop_time_in_seconds, int $loop_interval_in_seconds = 2): static
     {
         // Remember the time we started this loop.
         $now = time();
@@ -430,32 +335,23 @@ class BotManager
         return $this;
     }
 
-    /**
-     * Set a custom callback for handling the output of the getUpdates results.
-     *
-     * @param callable $callback
-     *
-     * @return BotManager
-     */
-    public function setCustomGetUpdatesCallback(callable $callback): BotManager
+    public function setCustomGetUpdatesCallback(callable $callback): static
     {
-        $this->custom_get_updates_callback = $callback;
+        $this->custom_get_updates_callback = Closure::fromCallable($callback);
+
         return $this;
     }
 
     /**
-     * Handle the updates using the getUpdates method.
-     *
-     * @return BotManager
      * @throws TelegramException
      */
-    public function handleGetUpdates(): self
+    public function handleGetUpdates(): static
     {
         $get_updates_response = $this->telegram->handleGetUpdates();
 
         // Check if the user has set a custom callback for handling the response.
-        if ($this->custom_get_updates_callback !== null) {
-            $this->handleOutput(call_user_func($this->custom_get_updates_callback, $get_updates_response));
+        if ($this->custom_get_updates_callback) {
+            $this->handleOutput(($this->custom_get_updates_callback)($get_updates_response));
         } else {
             $this->handleOutput($this->defaultGetUpdatesCallback($get_updates_response));
         }
@@ -463,14 +359,7 @@ class BotManager
         return $this;
     }
 
-    /**
-     * Return the default output for getUpdates handling.
-     *
-     * @param ServerResponse $get_updates_response
-     *
-     * @return string
-     */
-    protected function defaultGetUpdatesCallback($get_updates_response): string
+    protected function defaultGetUpdatesCallback(ServerResponse $get_updates_response): string
     {
         if (!$get_updates_response->isOk()) {
             return sprintf(
@@ -496,7 +385,6 @@ class BotManager
             $text    = $result->getUpdateType();
 
             if ($update_content instanceof Message) {
-                /** @var Message $update_content */
                 $chat_id = $update_content->getChat()->getId();
                 $text    .= ";{$update_content->getType()}";
             } elseif ($update_content instanceof InlineQuery || $update_content instanceof ChosenInlineResult) {
@@ -504,7 +392,6 @@ class BotManager
                 $chat_id = $update_content->getFrom()->getId();
                 $text    .= ";{$update_content->getQuery()}";
             } elseif ($update_content instanceof CallbackQuery) {
-                /** @var CallbackQuery $update_content */
                 $message = $update_content->getMessage();
                 if ($message && $message->getChat()) {
                     $chat_id = $message->getChat()->getId();
@@ -524,23 +411,15 @@ class BotManager
     }
 
     /**
-     * Handle the updates using the Webhook method.
-     *
-     * @return BotManager
      * @throws TelegramException
      */
-    public function handleWebhook(): self
+    public function handleWebhook(): static
     {
         $this->telegram->handle();
 
         return $this;
     }
 
-    /**
-     * Return the current test output and clear it.
-     *
-     * @return string
-     */
     public function getOutput(): string
     {
         $output       = $this->output;
@@ -549,13 +428,6 @@ class BotManager
         return $output;
     }
 
-    /**
-     * Check if this is a valid request coming from a Telegram API IP address.
-     *
-     * @link https://core.telegram.org/bots/webhooks#the-short-version
-     *
-     * @return bool
-     */
     public function isValidRequest(): bool
     {
         // If we're running from CLI, requests are always valid, unless we're running the tests.
@@ -596,8 +468,6 @@ class BotManager
     }
 
     /**
-     * Make sure this is a valid request.
-     *
      * @throws InvalidAccessException
      */
     private function validateRequest(): void

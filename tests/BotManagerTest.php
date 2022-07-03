@@ -10,8 +10,6 @@
 
 namespace TelegramBot\TelegramBotManager\Tests;
 
-use Longman\TelegramBot\Entities\ServerResponse;
-use Longman\TelegramBot\Request;
 use Longman\TelegramBot\Telegram;
 use TelegramBot\TelegramBotManager\BotManager;
 use TelegramBot\TelegramBotManager\Exception\InvalidAccessException;
@@ -26,10 +24,8 @@ use TelegramBot\TelegramBotManager\Exception\InvalidParamsException;
  */
 class BotManagerTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var array Live params for testing with live bot (get set in BotManagerTest->setUp()).
-     */
-    public static $live_params = [];
+    /** @var array Live params for testing with live bot (get set in BotManagerTest->setUp()). */
+    public static array $live_params = [];
 
     public static function setUpBeforeClass(): void
     {
@@ -40,9 +36,9 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
             'mysql'        => [
                 'host'     => PHPUNIT_DB_HOST,
                 'port'     => PHPUNIT_DB_PORT,
+                'database' => PHPUNIT_DB_NAME,
                 'user'     => PHPUNIT_DB_USER,
-                'password' => PHPUNIT_DB_PASSWORD,
-                'database' => PHPUNIT_DB_DATABASE,
+                'password' => PHPUNIT_DB_PASS,
             ],
         ];
     }
@@ -209,6 +205,7 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @group live
+     * @runInSeparateProcess
      */
     public function testValidateAndSetWebhookSuccessLiveBot(): void
     {
@@ -250,9 +247,10 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         $botManager = new BotManager(array_merge(self::$live_params, [
             'webhook' => ['url' => 'https://example.com/hook.php'],
         ]));
-        $output     = $botManager->run()->getOutput();
 
-        self::assertRegExp('/Webhook.+deleted/', $output);
+        $output = $botManager->run()->getOutput();
+
+        self::assertMatchesRegularExpression('/Webhook.+deleted/', $output);
     }
 
     public function testValidateAndSetWebhookFailSetWithoutWebhook(): void
@@ -383,6 +381,8 @@ class BotManagerTest extends \PHPUnit\Framework\TestCase
         TestHelpers::callObjectMethod($botManager, 'handleOutput', ['some more demo output...']);
         TestHelpers::callObjectMethod($botManager, 'handleOutput', ['...and even more!!']);
         self::assertEquals('some more demo output......and even more!!', $botManager->getOutput());
+        self::assertEmpty($botManager->getOutput());
+
         self::assertEmpty($botManager->getOutput());
     }
 
