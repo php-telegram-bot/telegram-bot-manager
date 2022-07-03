@@ -206,6 +206,7 @@ class BotManager
                 'certificate'     => $webhook['certificate'] ?? null,
                 'max_connections' => $webhook['max_connections'] ?? null,
                 'allowed_updates' => $webhook['allowed_updates'] ?? null,
+                'secret_token'    => $webhook['secret_token'] ?? null,
             ], function ($v, $k) {
                 if ($k === 'allowed_updates') {
                     // Special case for allowed_updates, which can be an empty array.
@@ -562,6 +563,12 @@ class BotManager
             return true;
         }
 
+        return $this->isValidRequestIp()
+            && $this->isValidRequestSecretToken();
+    }
+
+    protected function isValidRequestIp(): bool
+    {
         $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
         foreach (['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR'] as $key) {
             if (filter_var($_SERVER[$key] ?? null, FILTER_VALIDATE_IP)) {
@@ -574,6 +581,18 @@ class BotManager
             self::TELEGRAM_IP_RANGES,
             (array) $this->params->getBotParam('valid_ips', [])
         ));
+    }
+
+    protected function isValidRequestSecretToken(): bool
+    {
+        $secret_token     = $this->params->getBotParam('webhook.secret_token');
+        $secret_token_api = $_SERVER['HTTP_X_TELEGRAM_BOT_API_SECRET_TOKEN'] ?? null;
+
+        if ($secret_token || $secret_token_api) {
+            return $secret_token === $secret_token_api;
+        }
+
+        return true;
     }
 
     /**

@@ -211,6 +211,8 @@ $bot = new BotManager([
         'max_connections' => 20,
         // (array) List the types of updates you want your bot to receive.
         'allowed_updates' => ['message', 'edited_channel_post', 'callback_query'],
+        // (string) Secret token to validate webhook requests.
+        'secret_token'    => 'super_secret_token',
     ],
 
     // (bool) Only allow webhook access from valid Telegram API IPs.
