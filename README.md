@@ -393,7 +393,7 @@ Thank you for keeping this project alive :pray:
 [code-quality]: https://scrutinizer-ci.com/g/php-telegram-bot/telegram-bot-manager/?branch=master "Code quality on Scrutinizer"
 [code-coverage-badge]: https://img.shields.io/codecov/c/github/php-telegram-bot/telegram-bot-manager.svg
 [code-coverage]: https://codecov.io/gh/php-telegram-bot/telegram-bot-manager "Code coverage on Codecov"
-[tests-status-badge]: https://github.com/php-telegram-bot/telegram-bot-manager/workflows/tests.yml/badge.svg?branch=master
+[tests-status-badge]: https://github.com/php-telegram-bot/telegram-bot-manager/actions/workflows/tests.yml/badge.svg?branch=master
 [tests-status]: https://github.com/php-telegram-bot/telegram-bot-manager/workflows/tests.yml "Tests status on GitHub Actions"
 
 [latest-version-badge]: https://img.shields.io/packagist/v/php-telegram-bot/telegram-bot-manager.svg
