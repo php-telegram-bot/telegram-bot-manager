@@ -10,6 +10,7 @@
 
 namespace TelegramBot\TelegramBotManager;
 
+use Closure;
 use Exception;
 use Longman\IPTools\Ip;
 use Longman\TelegramBot\Entities\CallbackQuery;
@@ -388,7 +389,6 @@ class BotManager
                 $chat_id = $update_content->getChat()->getId();
                 $text    .= ";{$update_content->getType()}";
             } elseif ($update_content instanceof InlineQuery || $update_content instanceof ChosenInlineResult) {
-                /** @var InlineQuery|ChosenInlineResult $update_content */
                 $chat_id = $update_content->getFrom()->getId();
                 $text    .= ";{$update_content->getQuery()}";
             } elseif ($update_content instanceof CallbackQuery) {
