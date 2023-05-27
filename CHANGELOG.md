@@ -13,6 +13,12 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 ### Fixed
 ### Security
 
+## [2.1.0] - 2023-05-27
+### Notes
+- [:ledger: View file changes][2.1.0]
+### Changed
+- Bumped core to version 0.81.*.
+
 ## [2.0.0] - 2022-07-04
 ### Notes
 - [:ledger: View file changes][2.0.0]
@@ -225,6 +231,7 @@ Exclamation symbols (:exclamation:) note something of importance e.g. breaking c
 [0.44.0-bc-parameter-structure]: https://github.com/php-telegram-bot/telegram-bot-manager/wiki/Breaking-backwards-compatibility#parameter-structure-changed "Parameter structure changed"
 
 [Unreleased]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/master...develop
+[2.1.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/2.0.0...2.1.0
 [2.0.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.7.0...2.0.0
 [1.7.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.6.0...1.7.0
 [1.6.0]: https://github.com/php-telegram-bot/telegram-bot-manager/compare/1.5.0...1.6.0

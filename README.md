@@ -22,7 +22,7 @@ Installation and usage is pretty straight forward:
 ### Require this package with [Composer]
 
 ```bash
-composer require php-telegram-bot/telegram-bot-manager:^2.0.0
+composer require php-telegram-bot/telegram-bot-manager:^2.1
 ```
 
 **NOTE:** This will automatically also install [PHP Telegram Bot][github-tgbot-core] into your project (if it isn't already).
@@ -33,12 +33,12 @@ It is possible however, to override the core version that this library requires:
 
 ```yaml
 "require": {
-    "php-telegram-bot/telegram-bot-manager": "^2.0.0",
-    "longman/telegram-bot": "dev-master as 0.78"
+    "php-telegram-bot/telegram-bot-manager": "^2.1",
+    "longman/telegram-bot": "dev-master as 0.81"
 }
 ```
 
-This example will pull the master version of the core library, making it appear to be version 0.78, which then satisfies the requirement.
+This example will pull the master version of the core library, making it appear to be version 0.81, which then satisfies the requirement.
 
 ### Performing actions
 
